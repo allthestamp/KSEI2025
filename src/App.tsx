@@ -251,7 +251,7 @@ export default function App() {
       {/* Hero Section */}
       <div className="relative h-screen min-h-[600px] flex items-center justify-center overflow-hidden snap-start">
         <div className="absolute inset-0">
-          <img src="https://images.unsplash.com/photo-1618424876654-10651662132e?q=80&w=2070&auto=format&fit=crop" alt="Background" className="w-full h-full object-cover opacity-30 scale-105 animate-pulse" style={{ animationDuration: '20s' }} />
+          <img src="https://i.ibb.co/Lh0gDPck/Kakao-Talk-20240626-100558300.jpg" alt="Background" className="w-full h-full object-cover opacity-30 scale-105 animate-pulse" style={{ animationDuration: '20s' }} />
           <div className="absolute inset-0 bg-gradient-to-b from-black/80 via-black/40 to-white dark:to-[#121212] transition-colors duration-300"></div>
         </div>
         <div className="relative z-10 text-center px-4 w-full max-w-7xl mx-auto flex flex-col items-center mt-20">
