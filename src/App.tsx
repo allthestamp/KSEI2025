@@ -182,7 +182,7 @@ export default function App() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center">
             <div className="flex items-center gap-2 cursor-pointer" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>
-              <img src="/img/Logo.png" alt="한국스탬프교육진흥원 로고" className="h-8 object-contain" />
+              <img src={`${import.meta.env.BASE_URL}img/Logo.png`} alt="한국스탬프교육진흥원 로고" className="h-8 object-contain" />
               <span className={`hidden md:block text-xl font-serif font-bold tracking-tight ${isScrolled ? 'text-black dark:text-white' : 'text-white'}`}>{t('한국스탬프교육진흥원', 'Korea Stamp Education Institute')}</span>
               <span className={`md:hidden text-xl font-serif font-bold tracking-tight ${isScrolled ? 'text-black dark:text-white' : 'text-white'}`}>{t('한국스탬프교육진흥원', 'KSEI')}</span>
             </div>
@@ -698,7 +698,7 @@ export default function App() {
           <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8">
             <div className="mb-8 md:mb-0">
               <h2 className="text-xl font-serif font-bold text-black dark:text-white mb-4 flex items-center gap-2">
-                <img src="/img/Logo.png" alt="한국스탬프교육진흥원 로고" className="h-6 object-contain" />
+                <img src={`${import.meta.env.BASE_URL}img/Logo.png`} alt="한국스탬프교육진흥원 로고" className="h-6 object-contain" />
                 {t('한국스탬프교육진흥원', 'Korea Stamp Education Institute')}
               </h2>
               <div className="flex gap-4 text-xs text-gray-600 dark:text-gray-400">
