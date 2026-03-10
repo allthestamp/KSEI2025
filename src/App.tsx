@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { Menu, X, Stamp, BookOpen, Briefcase, Award, Video, FileText, MapPin, Phone, Sun, Moon, ArrowUp, Mail, Globe, Clock, ChevronDown } from 'lucide-react';
-import { motion } from 'motion/react';
+import { Menu, X, Stamp, BookOpen, Briefcase, Award, Video, FileText, MapPin, Phone, Sun, Moon, ArrowUp, Mail, Globe, Clock, ChevronDown, MessageCircle } from 'lucide-react';
+import { motion, AnimatePresence } from 'motion/react';
 import emailjs from '@emailjs/browser';
 
 export default function App() {
@@ -11,7 +11,7 @@ export default function App() {
   
   const [theme, setTheme] = useState<'light' | 'dark'>(() => {
     const saved = localStorage.getItem('theme');
-    return (saved as 'light' | 'dark') || 'light';
+    return (saved as 'light' | 'dark') || 'dark';
   });
 
   const [language, setLanguage] = useState<'ko' | 'en'>(() => {
@@ -29,6 +29,48 @@ export default function App() {
   const [showApplyModal, setShowApplyModal] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [formErrors, setFormErrors] = useState<Record<string, string>>({});
+  const [activeTestimonial, setActiveTestimonial] = useState(0);
+  const [careerKey, setCareerKey] = useState(0);
+  const [selectedImage, setSelectedImage] = useState<string | null>(null);
+
+  useEffect(() => {
+    let lastPosition = 'top';
+    const handleScroll = () => {
+      const scrollY = window.scrollY;
+      const isTop = scrollY < 50;
+      const isBottom = window.innerHeight + scrollY >= document.documentElement.scrollHeight - 50;
+      
+      let currentPosition = 'middle';
+      if (isTop) currentPosition = 'top';
+      else if (isBottom) currentPosition = 'bottom';
+
+      if (currentPosition !== 'middle' && currentPosition !== lastPosition) {
+        setCareerKey(Date.now());
+      }
+      lastPosition = currentPosition;
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  const testimonials = [
+    {
+      name: "김*지",
+      role: t("1급 자격증 취득", "Level 1 Certified"),
+      content: t("평소 다꾸(다이어리 꾸미기)에 관심이 많았는데, 스탬프 아트라는 새로운 세계를 알게 되어 너무 즐거웠습니다. 체계적인 커리큘럼 덕분에 기초부터 탄탄하게 배울 수 있었고, 지금은 작은 공방 창업을 준비하고 있습니다.", "I was always interested in diary decorating, and learning about the new world of stamp art was so much fun. Thanks to the systematic curriculum, I was able to learn solidly from the basics, and now I'm preparing to open a small workshop."),
+    },
+    {
+      name: "이*현",
+      role: t("마스터 자격증 취득", "Master Certified"),
+      content: t("미술 학원을 운영하면서 아이들에게 새로운 미술 활동을 제공하고 싶어 수강하게 되었습니다. 아이들의 반응이 폭발적이고, 학부모님들의 만족도도 매우 높습니다. 강사로서의 역량을 한 단계 높일 수 있는 훌륭한 과정이었습니다.", "I took this course because I wanted to provide new art activities to children while running an art academy. The children's reactions are explosive, and the parents' satisfaction is very high. It was an excellent course to elevate my skills as an instructor."),
+    },
+    {
+      name: "박*윤",
+      role: t("2급 자격증 취득", "Level 2 Certified"),
+      content: t("취미로 시작했지만, 자격증까지 취득하게 되어 정말 뿌듯합니다. 온라인으로도 충분히 꼼꼼한 피드백을 받을 수 있어서 직장 생활과 병행하기 좋았습니다. 나만의 굿즈를 만드는 재미에 푹 빠져있어요.", "I started it as a hobby, but I'm really proud to have obtained the certification. It was great to balance with work because I could get thorough feedback online. I'm totally into the fun of making my own goods."),
+    }
+  ];
 
   const [formData, setFormData] = useState({
     name: '',
@@ -66,8 +108,9 @@ export default function App() {
     }
 
     setIsSubmitting(true);
-    /* EmailJS */
+
     try {
+      // 환경 변수 로딩 문제를 원천 차단하기 위해 키 값을 직접 하드코딩합니다.
       const serviceId = "service_x0n73he";
       const templateId = "template_83t38jy";
       const publicKey = "L4HCP63W6HPlwC0hH";
@@ -85,10 +128,12 @@ export default function App() {
         examMethod
       };
 
+      // EmailJS v4 초기화 및 전송
       emailjs.init({
         publicKey: publicKey,
       });
       
+      // v4에서는 send 함수에 publicKey를 직접 넘기는 방식도 지원/권장합니다.
       const sendPromise = emailjs.send(serviceId, templateId, templateParams, {
         publicKey: publicKey,
       });
@@ -110,6 +155,7 @@ export default function App() {
       if (error?.message === 'timeout') {
         errorMessage = t('서버 응답이 지연되고 있습니다. 잠시 후 다시 시도해주세요.', 'Server response is delayed. Please try again later.');
       } else if (error?.text) {
+        // EmailJS에서 반환하는 구체적인 에러 메시지를 사용자에게 보여줍니다.
         errorMessage = `발송 실패: ${error.text}`;
       }
       
@@ -164,53 +210,36 @@ export default function App() {
 
   return (
     <div className="min-h-screen bg-white dark:bg-[#121212] text-gray-800 dark:text-gray-200 font-sans selection:bg-black/10 dark:selection:bg-white/20 transition-colors duration-300 break-keep">
-      {/* Top Bar */}
-      <div className="hidden md:block bg-gray-100 dark:bg-[#0a0a0a] border-b border-black/5 dark:border-white/5 py-2 text-xs text-gray-600 dark:text-gray-400 transition-colors duration-300">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-between items-center">
-          <div className="flex items-center gap-6">
-            <span className="flex items-center gap-1"><MapPin className="w-3 h-3" /> {t('대전광역시 서구 갈마역로 155', '155 Galma-yeok-ro, Seo-gu, Daejeon')}</span>
-            <span className="flex items-center gap-1"><Phone className="w-3 h-3" /> 010-8409-2802</span>
-          </div>
-          <div className="flex items-center gap-4">
-            <span className="flex items-center gap-1"><Clock className="w-3 h-3" /> {t('운영시간: 평일 09:00 - 18:00', 'Hours: Weekdays 09:00 - 18:00')}</span>
-          </div>
-        </div>
-      </div>
-
       {/* Navbar */}
-      <nav className={`fixed w-full z-50 transition-all duration-300 border-b ${isScrolled ? 'bg-white/95 dark:bg-[#121212]/95 backdrop-blur-md border-black/10 dark:border-white/10 py-4 top-0' : 'bg-transparent border-transparent dark:border-transparent py-6 top-0 md:top-8'}`}>
+      <nav className={`fixed w-full z-50 transition-all duration-300 border-b ${isScrolled ? 'bg-white/95 dark:bg-[#121212]/95 backdrop-blur-md border-black/10 dark:border-white/10 py-4' : 'bg-transparent border-transparent py-6'}`}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center">
-            <div className="flex items-center gap-2 cursor-pointer" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>
-              <img src="https://i.ibb.co/Dfv01BhW/Logo.png" alt="한국스탬프교육진흥원 로고" className="h-8 object-contain" />
-              <span className={`hidden md:block text-xl font-serif font-bold tracking-tight ${isScrolled ? 'text-black dark:text-white' : 'text-white'}`}>{t('한국스탬프교육진흥원', 'Korea Stamp Education Institute')}</span>
-              <span className={`md:hidden text-xl font-serif font-bold tracking-tight ${isScrolled ? 'text-black dark:text-white' : 'text-white'}`}>{t('한국스탬프교육진흥원', 'KSEI')}</span>
+            <div className="flex items-center gap-3 cursor-pointer" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>
+              <img src="https://i.ibb.co/Dfv01BhW/Logo.png" alt="KSEI Logo" className="w-8 h-8 object-contain" />
+              <span className={`hidden md:block text-sm font-sans font-bold tracking-widest uppercase ${isScrolled ? 'text-black dark:text-white' : 'text-white'}`}>{t('한국스탬프교육진흥원', 'Korea Stamp Education Institute')}</span>
             </div>
             
             {/* Desktop Menu */}
-            <div className="hidden md:flex items-center gap-8">
-              <button onClick={() => scrollTo('about')} className={`text-sm font-medium transition-colors ${isScrolled ? 'text-gray-600 hover:text-black dark:text-gray-300 dark:hover:text-white' : 'text-gray-200 hover:text-white'}`}>{t('기관소개', 'About Us')}</button>
-              <button onClick={() => scrollTo('cert')} className={`text-sm font-medium transition-colors ${isScrolled ? 'text-gray-600 hover:text-black dark:text-gray-300 dark:hover:text-white' : 'text-gray-200 hover:text-white'}`}>{t('자격증안내', 'Certifications')}</button>
-              <button onClick={() => scrollTo('exam')} className={`text-sm font-medium transition-colors ${isScrolled ? 'text-gray-600 hover:text-black dark:text-gray-300 dark:hover:text-white' : 'text-gray-200 hover:text-white'}`}>{t('시험안내', 'Exam Info')}</button>
-              <button onClick={() => scrollTo('exam')} className={`text-sm font-medium transition-colors ${isScrolled ? 'text-gray-600 hover:text-black dark:text-gray-300 dark:hover:text-white' : 'text-gray-200 hover:text-white'}`}>{t('접수방법', 'How to Apply')}</button>
-              <button onClick={() => scrollTo('faq')} className={`text-sm font-medium transition-colors ${isScrolled ? 'text-gray-600 hover:text-black dark:text-gray-300 dark:hover:text-white' : 'text-gray-200 hover:text-white'}`}>{t('자주묻는질문', 'FAQ')}</button>
-              <div className="flex items-center gap-4 border-l border-gray-300 dark:border-gray-700 pl-8">
-                <button onClick={() => setLanguage(language === 'ko' ? 'en' : 'ko')} className={`p-2 rounded-full transition-colors ${isScrolled ? 'text-gray-600 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-800' : 'text-white/80 hover:bg-white/10'}`} aria-label="언어 변경">
-                  <Globe className="w-5 h-5" />
+            <div className="hidden md:flex items-center gap-10">
+              <button onClick={() => scrollTo('about')} className={`text-[11px] font-semibold tracking-[0.15em] uppercase transition-colors ${isScrolled ? 'text-gray-600 hover:text-black dark:text-gray-300 dark:hover:text-white' : 'text-gray-300 hover:text-white'}`}>{t('기관소개', 'COMPANY')}</button>
+              <button onClick={() => scrollTo('cert')} className={`text-[11px] font-semibold tracking-[0.15em] uppercase transition-colors ${isScrolled ? 'text-gray-600 hover:text-black dark:text-gray-300 dark:hover:text-white' : 'text-gray-300 hover:text-white'}`}>{t('자격증안내', 'CERTIFICATION')}</button>
+              <button onClick={() => scrollTo('exam')} className={`text-[11px] font-semibold tracking-[0.15em] uppercase transition-colors ${isScrolled ? 'text-gray-600 hover:text-black dark:text-gray-300 dark:hover:text-white' : 'text-gray-300 hover:text-white'}`}>{t('시험안내', 'EXAM')}</button>
+              <button onClick={() => scrollTo('faq')} className={`text-[11px] font-semibold tracking-[0.15em] uppercase transition-colors ${isScrolled ? 'text-gray-600 hover:text-black dark:text-gray-300 dark:hover:text-white' : 'text-gray-300 hover:text-white'}`}>{t('자주묻는질문', 'FAQ')}</button>
+              
+              <div className="flex items-center gap-6 ml-4">
+                <button onClick={() => setLanguage(language === 'ko' ? 'en' : 'ko')} className={`transition-colors ${isScrolled ? 'text-gray-600 hover:text-black dark:text-gray-300 dark:hover:text-white' : 'text-gray-300 hover:text-white'}`} aria-label="언어 변경">
+                  <Globe className="w-4 h-4" />
                 </button>
-                <button onClick={() => setTheme(theme === 'light' ? 'dark' : 'light')} className={`p-2 rounded-full transition-colors ${isScrolled ? 'text-gray-600 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-800' : 'text-white/80 hover:bg-white/10'}`} aria-label="테마 변경">
-                  {theme === 'light' ? <Moon className="w-5 h-5" /> : <Sun className="w-5 h-5" />}
+                <button onClick={() => setTheme(theme === 'light' ? 'dark' : 'light')} className={`transition-colors ${isScrolled ? 'text-gray-600 hover:text-black dark:text-gray-300 dark:hover:text-white' : 'text-gray-300 hover:text-white'}`} aria-label="테마 변경">
+                  {theme === 'light' ? <Moon className="w-4 h-4" /> : <Sun className="w-4 h-4" />}
                 </button>
               </div>
-              <button onClick={() => setShowConsultModal(true)} className={`ml-4 px-5 py-2 text-sm font-bold rounded-full transition-colors ${isScrolled ? 'bg-black text-white hover:bg-gray-800 dark:bg-white dark:text-black dark:hover:bg-gray-200' : 'bg-white text-black hover:bg-gray-200'}`}>
-                {t('상담신청', 'Consultation')}
-              </button>
             </div>
 
             {/* Mobile Menu Button */}
             <div className="md:hidden flex items-center gap-4">
               <button onClick={() => setIsMobileMenuOpen(true)} className={`p-2 ${isScrolled ? 'text-black dark:text-white' : 'text-white'}`}>
-                <Menu className="w-6 h-6" />
+                <Menu className="w-5 h-5" />
               </button>
             </div>
           </div>
@@ -249,100 +278,125 @@ export default function App() {
       </div>
 
       {/* Hero Section */}
-      <div className="relative h-screen min-h-[600px] flex items-center justify-center overflow-hidden snap-start">
-        <div className="absolute inset-0">
-          <img src="https://i.ibb.co/Lh0gDPck/Kakao-Talk-20240626-100558300.jpg" alt="Background" className="w-full h-full object-cover opacity-30 scale-105 animate-pulse" style={{ animationDuration: '20s' }} />
-          <div className="absolute inset-0 bg-gradient-to-b from-black/80 via-black/40 to-white dark:to-[#121212] transition-colors duration-300"></div>
+      <div className="relative h-screen min-h-[600px] flex flex-col items-center justify-center overflow-hidden snap-start bg-white dark:bg-[#121212] transition-colors duration-300">
+        {/* Background Image & Gradient */}
+        <div className="absolute inset-0 z-0">
+          <img 
+            src="https://i.ibb.co/Lh0gDPck/Kakao-Talk-20240626-100558300.jpg" 
+            alt="Background" 
+            className="w-full h-full object-cover opacity-60 dark:opacity-30"
+            style={{ 
+              maskImage: 'linear-gradient(to bottom, rgba(0,0,0,1) 0%, rgba(0,0,0,0) 90%)',
+              WebkitMaskImage: 'linear-gradient(to bottom, rgba(0,0,0,1) 0%, rgba(0,0,0,0) 90%)'
+            }}
+            referrerPolicy="no-referrer"
+          />
+          <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-transparent to-white dark:to-[#121212]"></div>
         </div>
-        <div className="relative z-10 text-center px-4 w-full max-w-7xl mx-auto flex flex-col items-center mt-20">
-          <div className="flex justify-center items-center w-full max-w-5xl mb-12 relative">
-            <h1 className="text-7xl md:text-[10rem] lg:text-[12rem] font-serif font-bold text-white/90 tracking-tighter leading-none">STAMP</h1>
-            <h1 className="text-5xl md:text-[7rem] lg:text-[9rem] font-serif font-light text-white/30 tracking-widest absolute right-0 bottom-0 translate-y-1/4 hidden md:block">EDU</h1>
-          </div>
-          <div className="bg-black/40 backdrop-blur-md border border-white/10 p-8 md:p-10 rounded-2xl max-w-2xl transform translate-y-8">
-            <p className="text-lg md:text-xl text-gray-200 font-light leading-relaxed mb-6">
-              {t('스탬프 제작 및 활용 교육을 전문적으로 연구·보급하여', 'Professionally researching and distributing stamp making and utilization education')}
-              <br className="hidden md:block"/>
-              {t('공예·교육·창업 분야의 전문 인력을 양성합니다.', 'to train professionals in crafts, education, and startups.')}
-            </p>
-            <div className="flex items-center justify-center gap-2 text-sm text-gray-400 font-medium tracking-widest uppercase">
-              <span className="w-8 h-[1px] bg-gray-600"></span>
-              Korea Stamp Education Institute
-              <span className="w-8 h-[1px] bg-gray-600"></span>
-            </div>
-          </div>
+
+        <motion.div
+          animate={{ scale: [1, 1.2, 1], opacity: [0.5, 0.8, 0.5] }}
+          transition={{ repeat: Infinity, duration: 4, ease: "easeInOut" }}
+          className="absolute w-64 h-64 md:w-80 md:h-80 bg-emerald-500/30 dark:bg-emerald-500/40 blur-2xl rounded-full pointer-events-none z-0"
+        />
+        
+        <div className="relative z-10 flex flex-col items-center justify-center flex-1 w-full -mt-16 px-4">
+          <motion.div 
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: false, margin: "-50px" }}
+            transition={{ duration: 1.2, ease: "easeOut" }}
+            className="text-center max-w-4xl mx-auto relative z-10"
+          >
+            <h2 
+              className="text-2xl md:text-4xl lg:text-5xl font-sans font-medium text-white leading-tight tracking-tight"
+              style={{ textShadow: '0 4px 20px rgba(0,0,0,0.8), 0 2px 8px rgba(0,0,0,0.9)' }}
+            >
+              {t('우리는 스탬프 교육의 표준을 만들어', 'We set the standard for stamp education')}
+              <br className="hidden md:block" />
+              <span className="md:hidden"> </span>
+              {t('전문적인 창작자와 교육자를 양성합니다.', 'to train professional creators and educators.')}
+            </h2>
+          </motion.div>
         </div>
-        <div className="absolute bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 animate-bounce opacity-50 text-black dark:text-white">
-          <span className="text-xs tracking-widest uppercase">Scroll</span>
-          <div className="w-[1px] h-12 bg-black dark:bg-white"></div>
+
+        <div className="absolute bottom-12 left-1/2 -translate-x-1/2 flex flex-col items-center gap-4 opacity-60">
+          <span className="text-[10px] tracking-[0.2em] uppercase text-black dark:text-white font-light">scroll down</span>
+          <motion.div 
+            animate={{ y: [0, 10, 0] }}
+            transition={{ repeat: Infinity, duration: 2, ease: "easeInOut" }}
+            className="w-[1px] h-12 bg-gradient-to-b from-black dark:from-white to-transparent"
+          ></motion.div>
         </div>
       </div>
 
       {/* Intro Section */}
-      <div className="py-24 bg-white dark:bg-[#121212] border-b border-black/5 dark:border-white/10 transition-colors duration-300 snap-start" id="about">
+      <div className="py-24 bg-gray-50 dark:bg-[#121212] border-b border-black/5 dark:border-white/5 transition-colors duration-300 snap-start" id="about">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col md:flex-row gap-16">
             <div className="md:w-1/3">
-              <h2 className="text-4xl md:text-5xl font-serif font-bold text-black dark:text-white leading-tight mb-6">
-                {t('기관소개', 'About Us')}
+              <h2 className="text-sm font-bold tracking-widest uppercase text-black dark:text-white mb-6 flex items-center gap-2">
+                ABOUT US
+                <span className="w-4 h-[1px] bg-black dark:bg-white"></span>
               </h2>
-              <p className="text-xl text-gray-600 dark:text-gray-300 font-light leading-relaxed">
-                {t('한국스탬프교육진흥원은 스탬프 제작을 배우고 싶은 분들에게 체계적인 교육과 자격증 과정을 제공하는 전문 기관입니다.', 'Korea Stamp Education Institute is a professional organization providing systematic education and certification courses for those who want to learn stamp making.')}
+              <p className="text-2xl md:text-3xl font-sans font-medium text-black dark:text-white leading-tight mb-6">
+                {t('한국스탬프교육진흥원', 'Korea Stamp Education Institute')}
+              </p>
+              <p className="text-gray-600 dark:text-gray-400 font-light leading-relaxed">
+                {t('스탬프 제작을 배우고 싶은 분들에게 체계적인 교육과 자격증 과정을 제공하는 전문 기관입니다.', 'A professional organization providing systematic education and certification courses for those who want to learn stamp making.')}
               </p>
             </div>
-            <div className="md:w-2/3 space-y-12">
-              <div>
-                <h3 className="text-2xl font-bold text-black dark:text-white mb-4 flex items-center gap-2">
-                  <span className="w-8 h-[1px] bg-black/50 dark:bg-white/50 inline-block"></span>
-                  {t('설립 목적', 'Purpose of Establishment')}
-                </h3>
-                <p className="text-lg text-gray-700 dark:text-gray-300 mb-4 font-medium">
+            <div className="md:w-2/3 space-y-8">
+              <div className="bg-white dark:bg-[#1e1e1e] p-8 md:p-10 rounded-2xl border border-black/5 dark:border-white/5 hover:border-black/10 dark:hover:border-white/10 transition-colors">
+                <div className="flex items-center justify-between mb-6">
+                  <h3 className="text-lg font-bold text-black dark:text-white">
+                    {t('설립 목적', 'Purpose')}
+                  </h3>
+                  <span className="text-xs font-mono text-gray-400">01</span>
+                </div>
+                <p className="text-lg text-black dark:text-gray-200 mb-6 font-medium">
                   {t('"누구나 쉽고 즐겁게 배운 스탬프 기술을 자신의 삶과 일에 활용할 수 있도록 돕자."', '"To help anyone easily and enjoyably learn stamp skills and apply them to their life and work."')}
                 </p>
-                <ul className="space-y-2 text-gray-600 dark:text-gray-400 text-sm leading-relaxed">
-                  <li>• {t('취미로 시작해도, 전문 자격증으로 이어져 자신감을 얻을 수 있고', 'Even starting as a hobby can lead to professional certification and confidence')}</li>
-                  <li>• {t('작은 체험부스 운영부터 공방 창업까지 현실적인 길이 열리며', 'Practical paths open up from running small experience booths to starting a workshop')}</li>
-                  <li>• {t('교육과정을 통해 단순히 기술뿐 아니라 강사로서 활동할 수 있는 힘을 키울 수 있습니다.', 'Through the curriculum, you can develop not only skills but also the ability to work as an instructor.')}</li>
+                <ul className="space-y-3 text-gray-600 dark:text-gray-400 text-sm leading-relaxed">
+                  <li className="flex gap-3"><span className="text-emerald-500">•</span> {t('취미로 시작해도, 전문 자격증으로 이어져 자신감을 얻을 수 있고', 'Even starting as a hobby can lead to professional certification and confidence')}</li>
+                  <li className="flex gap-3"><span className="text-emerald-500">•</span> {t('작은 체험부스 운영부터 공방 창업까지 현실적인 길이 열리며', 'Practical paths open up from running small experience booths to starting a workshop')}</li>
+                  <li className="flex gap-3"><span className="text-emerald-500">•</span> {t('교육과정을 통해 단순히 기술뿐 아니라 강사로서 활동할 수 있는 힘을 키울 수 있습니다.', 'Through the curriculum, you can develop not only skills but also the ability to work as an instructor.')}</li>
                 </ul>
-                <p className="mt-4 text-gray-600 dark:text-gray-400 text-sm leading-relaxed">
-                  {t('즉, 스탬프 제작은 단순한 공예가 아니라 나를 표현하는 방법, 새로운 수입원이 되는 기회, 사람들과 나누는 즐거움이 될 수 있습니다.', 'In other words, stamp making is not just a simple craft, but a way to express yourself, an opportunity for a new source of income, and a joy to share with others.')}
-                </p>
               </div>
               
-              <div>
-                <h3 className="text-2xl font-bold text-black dark:text-white mb-4 flex items-center gap-2">
-                  <span className="w-8 h-[1px] bg-black/50 dark:bg-white/50 inline-block"></span>
-                  {t('주요 활동', 'Main Activities')}
-                </h3>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-gray-600 dark:text-gray-400 text-sm">
-                  <div className="flex items-start gap-2">
-                    <div className="w-1.5 h-1.5 rounded-full bg-black/50 dark:bg-white/50 mt-1.5 shrink-0"></div>
+              <div className="bg-white dark:bg-[#1e1e1e] p-8 md:p-10 rounded-2xl border border-black/5 dark:border-white/5 hover:border-black/10 dark:hover:border-white/10 transition-colors">
+                <div className="flex items-center justify-between mb-6">
+                  <h3 className="text-lg font-bold text-black dark:text-white">
+                    {t('주요 활동', 'Main Activities')}
+                  </h3>
+                  <span className="text-xs font-mono text-gray-400">02</span>
+                </div>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-y-4 gap-x-8 text-gray-600 dark:text-gray-400 text-sm">
+                  <div className="flex items-start gap-3">
+                    <span className="text-emerald-500 mt-0.5">→</span>
                     <p>{t('스탬프제작지도사 자격증 검정 및 발급', 'Stamp Making Instructor Certification Exam and Issuance')}</p>
                   </div>
-                  <div className="flex items-start gap-2">
-                    <div className="w-1.5 h-1.5 rounded-full bg-black/50 dark:bg-white/50 mt-1.5 shrink-0"></div>
+                  <div className="flex items-start gap-3">
+                    <span className="text-emerald-500 mt-0.5">→</span>
                     <p>{t('스탬프 제작 교육과정 운영 (기초·심화·강사 과정)', 'Stamp Making Curriculum Operation (Basic, Advanced, Instructor Courses)')}</p>
                   </div>
-                  <div className="flex items-start gap-2">
-                    <div className="w-1.5 h-1.5 rounded-full bg-black/50 dark:bg-white/50 mt-1.5 shrink-0"></div>
+                  <div className="flex items-start gap-3">
+                    <span className="text-emerald-500 mt-0.5">→</span>
                     <p>{t('공방 창업 및 체험 프로그램 컨설팅', 'Workshop Startup and Experience Program Consulting')}</p>
                   </div>
-                  <div className="flex items-start gap-2">
-                    <div className="w-1.5 h-1.5 rounded-full bg-black/50 dark:bg-white/50 mt-1.5 shrink-0"></div>
+                  <div className="flex items-start gap-3">
+                    <span className="text-emerald-500 mt-0.5">→</span>
                     <p>{t('온라인·오프라인 교육 콘텐츠 연구 및 개발', 'Online/Offline Educational Content Research and Development')}</p>
                   </div>
-                  <div className="flex items-start gap-2">
-                    <div className="w-1.5 h-1.5 rounded-full bg-black/50 dark:bg-white/50 mt-1.5 shrink-0"></div>
+                  <div className="flex items-start gap-3">
+                    <span className="text-emerald-500 mt-0.5">→</span>
                     <p>{t('스탬프 강사와 기관·학교·지자체 연결 지원', 'Support for Connecting Stamp Instructors with Institutions, Schools, and Local Governments')}</p>
                   </div>
-                  <div className="flex items-start gap-2">
-                    <div className="w-1.5 h-1.5 rounded-full bg-black/50 dark:bg-white/50 mt-1.5 shrink-0"></div>
+                  <div className="flex items-start gap-3">
+                    <span className="text-emerald-500 mt-0.5">→</span>
                     <p>{t('스탬프 체험 행사 기획 및 운영', 'Stamp Experience Event Planning and Operation')}</p>
                   </div>
                 </div>
-                <p className="mt-6 text-gray-700 dark:text-gray-300 text-sm font-medium">
-                  {t('한국스탬프교육진흥원은 이러한 과정을 안전하고 체계적으로 안내하는 길잡이 역할을 합니다.', 'Korea Stamp Education Institute serves as a guide to safely and systematically navigate these processes.')}
-                </p>
               </div>
             </div>
           </div>
@@ -350,85 +404,93 @@ export default function App() {
       </div>
 
       {/* Certification Section */}
-      <div className="bg-gray-50 dark:bg-[#121212] py-24 transition-colors duration-300 snap-start" id="cert">
+      <div className="bg-white dark:bg-[#121212] py-24 border-b border-black/5 dark:border-white/5 transition-colors duration-300 snap-start" id="cert">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-serif font-bold text-black dark:text-white mb-4">
-              {t('스탬프제작지도사', 'Stamp Making Instructor')}
-              <br className="md:hidden" />
-              <span className="hidden md:inline"> </span>
-              {t('자격증', 'Certification')}
+            <h2 className="text-sm font-bold tracking-widest uppercase text-black dark:text-white mb-6 flex items-center justify-center gap-2">
+              <span className="w-4 h-[1px] bg-black dark:bg-white"></span>
+              CERTIFICATION
+              <span className="w-4 h-[1px] bg-black dark:bg-white"></span>
             </h2>
-            <p className="text-gray-600 dark:text-gray-400">{t('스탬프 제작 기술을 습득하고, 교육·체험·창업 등 다양한 영역에서 활동할 수 있는 전문 민간자격증입니다.', 'A professional private certification that allows you to acquire stamp making skills and work in various fields such as education, experience, and startups.')}</p>
+            <p className="text-2xl md:text-3xl font-sans font-medium text-black dark:text-white leading-tight mb-4">
+              {t('스탬프제작지도사 자격증', 'Stamp Making Instructor Certification')}
+            </p>
+            <p className="text-gray-600 dark:text-gray-400 font-light">{t('스탬프 제작 기술을 습득하고, 교육·체험·창업 등 다양한 영역에서 활동할 수 있는 전문 민간자격증입니다.', 'A professional private certification that allows you to acquire stamp making skills and work in various fields such as education, experience, and startups.')}</p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-0 border border-black/10 dark:border-white/10 rounded-xl overflow-hidden">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {/* Card 1 */}
-            <div className="bg-blue-50 dark:bg-[#1e293b] p-10 flex flex-col h-full min-h-[550px] group relative overflow-hidden transition-transform hover:-translate-y-2 hover:shadow-2xl hover:shadow-blue-900/20 z-10">
-              <div className="absolute top-0 right-0 w-32 h-32 bg-blue-500/10 rounded-bl-full -z-10"></div>
-              <h3 className="text-4xl font-bold text-black dark:text-white mb-2">{t('2급', 'Level 2')}</h3>
-              <span className="text-xl font-light text-blue-600 dark:text-blue-300 mb-6">{t('기초 과정', 'Basic Course')}</span>
-              <p className="text-gray-700 dark:text-white/80 text-sm mb-6 pb-6 border-b border-black/10 dark:border-white/10">
+            <div className="bg-gray-50 dark:bg-[#1e1e1e] p-10 flex flex-col h-full min-h-[550px] rounded-2xl border border-black/5 dark:border-white/5 hover:border-black/10 dark:hover:border-white/10 transition-colors group relative overflow-hidden">
+              <div className="flex justify-between items-start mb-6">
+                <h3 className="text-4xl font-bold text-black dark:text-white">{t('2급', 'Level 2')}</h3>
+                <span className="text-xs font-mono text-gray-400">01</span>
+              </div>
+              <span className="text-lg font-medium text-gray-800 dark:text-gray-300 mb-6">{t('기초 과정', 'Basic Course')}</span>
+              <p className="text-gray-600 dark:text-gray-400 text-sm mb-6 pb-6 border-b border-black/5 dark:border-white/5">
                 <span className="font-bold text-black dark:text-white">{t('입문자용', 'For Beginners')}</span><br/>
                 {t('스탬프 제작을 처음 배우는 사람', 'Those learning stamp making for the first time')}
               </p>
-              <ul className="text-gray-600 dark:text-white/70 text-sm space-y-3 flex-grow">
-                <li className="flex gap-2"><span className="text-blue-500 dark:text-blue-400">•</span> {t('만년스탬프 원리와 재료 이해', 'Understanding the principles and materials of pre-inked stamps')}</li>
-                <li className="flex gap-2"><span className="text-blue-500 dark:text-blue-400">•</span> {t('기본 도안 제작 실습', 'Basic design creation practice')}</li>
-                <li className="flex gap-2"><span className="text-blue-500 dark:text-blue-400">•</span> {t('팝핑머신 실습 (소형 스탬프)', 'Popping machine practice (small stamps)')}</li>
-                <li className="flex gap-2"><span className="text-blue-500 dark:text-blue-400">•</span> {t('교육 보조 및 체험 프로그램 운영', 'Educational assistance and experience program operation')}</li>
+              <ul className="text-gray-600 dark:text-gray-400 text-sm space-y-3 flex-grow">
+                <li className="flex gap-3"><span className="text-emerald-500">•</span> {t('만년스탬프 원리와 재료 이해', 'Understanding the principles and materials of pre-inked stamps')}</li>
+                <li className="flex gap-3"><span className="text-emerald-500">•</span> {t('기본 도안 제작 실습', 'Basic design creation practice')}</li>
+                <li className="flex gap-3"><span className="text-emerald-500">•</span> {t('팝핑머신 실습 (소형 스탬프)', 'Popping machine practice (small stamps)')}</li>
+                <li className="flex gap-3"><span className="text-emerald-500">•</span> {t('교육 보조 및 체험 프로그램 운영', 'Educational assistance and experience program operation')}</li>
               </ul>
               <div className="mt-auto pt-6">
-                <p className="text-xs text-blue-800 dark:text-blue-200 mb-4 bg-blue-100 dark:bg-blue-900/30 p-3 rounded-lg border border-blue-200 dark:border-blue-500/20">
-                  <span className="font-bold">{t('결과:', 'Result:')}</span> {t('2급 자격증 취득 → 체험 보조, 간단한 제작 가능', 'Level 2 Certification -> Experience assistance, simple production possible')}
+                <p className="text-xs text-gray-500 dark:text-gray-400 mb-6 font-medium">
+                  <span className="text-black dark:text-white">{t('결과:', 'Result:')}</span> {t('체험 보조, 간단한 제작 가능', 'Experience assistance, simple production possible')}
                 </p>
-                <button onClick={() => { setSelectedCert('2급'); setShowCertModal(true); }} className="w-full py-3 rounded-full border border-blue-200 dark:border-white/30 text-blue-600 dark:text-white hover:bg-blue-600 hover:text-white dark:hover:bg-white dark:hover:text-[#1e293b] transition-colors text-sm font-medium">{t('자세히 보기', 'View Details')}</button>
+                <button onClick={() => { setSelectedCert('2급'); setShowCertModal(true); }} className="w-full py-3 rounded-full border border-black/10 dark:border-white/10 text-black dark:text-white hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black transition-colors text-sm font-medium tracking-widest uppercase">{t('자세히 보기', 'Details')}</button>
               </div>
             </div>
 
             {/* Card 2 */}
-            <div className="bg-emerald-50 dark:bg-[#2d4a3e] p-10 flex flex-col h-full min-h-[550px] border-t md:border-t-0 md:border-l border-black/10 dark:border-white/10 group relative overflow-hidden transition-transform hover:-translate-y-2 hover:shadow-2xl hover:shadow-emerald-900/20 z-20">
-              <div className="absolute top-0 right-0 w-32 h-32 bg-emerald-500/10 rounded-bl-full -z-10"></div>
-              <h3 className="text-4xl font-bold text-black dark:text-white mb-2">{t('1급', 'Level 1')}</h3>
-              <span className="text-xl font-light text-emerald-600 dark:text-emerald-300 mb-6">{t('심화 과정', 'Advanced Course')}</span>
-              <p className="text-gray-700 dark:text-white/80 text-sm mb-6 pb-6 border-b border-black/10 dark:border-white/10">
+            <div className="bg-gray-50 dark:bg-[#1e1e1e] p-10 flex flex-col h-full min-h-[550px] rounded-2xl border border-black/5 dark:border-white/5 hover:border-black/10 dark:hover:border-white/10 transition-colors group relative overflow-hidden">
+              <div className="flex justify-between items-start mb-6">
+                <h3 className="text-4xl font-bold text-black dark:text-white">{t('1급', 'Level 1')}</h3>
+                <span className="text-xs font-mono text-gray-400">02</span>
+              </div>
+              <span className="text-lg font-medium text-gray-800 dark:text-gray-300 mb-6">{t('심화 과정', 'Advanced Course')}</span>
+              <p className="text-gray-600 dark:text-gray-400 text-sm mb-6 pb-6 border-b border-black/5 dark:border-white/5">
                 <span className="font-bold text-black dark:text-white">{t('강사·창업 준비자용', 'For Instructors & Startups')}</span><br/>
                 {t('기본기를 갖춘 사람, 강의·체험·판매 활동 희망자', 'Those with basics, wishing to teach, experience, or sell')}
               </p>
-              <ul className="text-gray-600 dark:text-white/70 text-sm space-y-3 flex-grow">
-                <li className="flex gap-2"><span className="text-emerald-500 dark:text-emerald-400">•</span> {t('상업적 활용 가능한 도안 기획', 'Planning commercially viable designs')}</li>
-                <li className="flex gap-2"><span className="text-emerald-500 dark:text-emerald-400">•</span> {t('다양한 크기·종류의 스탬프 제작', 'Making stamps of various sizes and types')}</li>
-                <li className="flex gap-2"><span className="text-emerald-500 dark:text-emerald-400">•</span> {t('수업 지도안 작성 & 강의 시뮬레이션', 'Writing lesson plans & lecture simulation')}</li>
-                <li className="flex gap-2"><span className="text-emerald-500 dark:text-emerald-400">•</span> {t('공방 창업 기초 (재료, 가격, 운영)', 'Workshop startup basics (materials, pricing, operation)')}</li>
+              <ul className="text-gray-600 dark:text-gray-400 text-sm space-y-3 flex-grow">
+                <li className="flex gap-3"><span className="text-emerald-500">•</span> {t('상업적 활용 가능한 도안 기획', 'Planning commercially viable designs')}</li>
+                <li className="flex gap-3"><span className="text-emerald-500">•</span> {t('다양한 크기·종류의 스탬프 제작', 'Making stamps of various sizes and types')}</li>
+                <li className="flex gap-3"><span className="text-emerald-500">•</span> {t('수업 지도안 작성 & 강의 시뮬레이션', 'Writing lesson plans & lecture simulation')}</li>
+                <li className="flex gap-3"><span className="text-emerald-500">•</span> {t('공방 창업 기초 (재료, 가격, 운영)', 'Workshop startup basics (materials, pricing, operation)')}</li>
               </ul>
               <div className="mt-auto pt-6">
-                <p className="text-xs text-emerald-800 dark:text-emerald-200 mb-4 bg-emerald-100 dark:bg-emerald-900/30 p-3 rounded-lg border border-emerald-200 dark:border-emerald-500/20">
-                  <span className="font-bold">{t('결과:', 'Result:')}</span> {t('1급 자격증 취득 → 강의 활동, 창업·판매 가능', 'Level 1 Certification -> Teaching, startup, sales possible')}
+                <p className="text-xs text-gray-500 dark:text-gray-400 mb-6 font-medium">
+                  <span className="text-black dark:text-white">{t('결과:', 'Result:')}</span> {t('강의 활동, 창업·판매 가능', 'Teaching, startup, sales possible')}
                 </p>
-                <button onClick={() => { setSelectedCert('1급'); setShowCertModal(true); }} className="w-full py-3 rounded-full bg-emerald-600 text-white dark:bg-white dark:text-[#2d4a3e] hover:bg-emerald-700 dark:hover:bg-gray-200 transition-colors text-sm font-bold shadow-lg">{t('자세히 보기', 'View Details')}</button>
+                <button onClick={() => { setSelectedCert('1급'); setShowCertModal(true); }} className="w-full py-3 rounded-full bg-black text-white dark:bg-white dark:text-black hover:bg-gray-800 dark:hover:bg-gray-200 transition-colors text-sm font-medium tracking-widest uppercase">{t('자세히 보기', 'Details')}</button>
               </div>
             </div>
 
             {/* Card 3 */}
-            <div className="bg-purple-50 dark:bg-[#1a1a1a] p-10 flex flex-col h-full min-h-[550px] border-t md:border-t-0 md:border-l border-black/10 dark:border-white/10 group relative overflow-hidden transition-transform hover:-translate-y-2 hover:shadow-2xl hover:shadow-purple-900/20 z-10">
-              <div className="absolute top-0 right-0 w-32 h-32 bg-purple-500/10 rounded-bl-full -z-10"></div>
-              <h3 className="text-4xl font-bold text-black dark:text-white mb-2">{t('마스터', 'Master')}</h3>
-              <span className="text-xl font-light text-purple-600 dark:text-purple-300 mb-6">{t('전문가 과정', 'Expert Course')}</span>
-              <p className="text-gray-700 dark:text-gray-400 text-sm mb-6 pb-6 border-b border-black/10 dark:border-white/10">
+            <div className="bg-gray-50 dark:bg-[#1e1e1e] p-10 flex flex-col h-full min-h-[550px] rounded-2xl border border-black/5 dark:border-white/5 hover:border-black/10 dark:hover:border-white/10 transition-colors group relative overflow-hidden">
+              <div className="flex justify-between items-start mb-6">
+                <h3 className="text-4xl font-bold text-black dark:text-white">{t('마스터', 'Master')}</h3>
+                <span className="text-xs font-mono text-gray-400">03</span>
+              </div>
+              <span className="text-lg font-medium text-gray-800 dark:text-gray-300 mb-6">{t('전문가 과정', 'Expert Course')}</span>
+              <p className="text-gray-600 dark:text-gray-400 text-sm mb-6 pb-6 border-b border-black/5 dark:border-white/5">
                 <span className="font-bold text-black dark:text-white">{t('강사 양성·컨설턴트용', 'For Instructor Training & Consultants')}</span><br/>
                 {t('강사로 활동 중이거나 장기간 경력을 가진 전문가', 'Active instructors or experts with long-term experience')}
               </p>
-              <ul className="text-gray-600 dark:text-gray-500 text-sm space-y-3 flex-grow">
-                <li className="flex gap-2"><span className="text-purple-500 dark:text-purple-400">•</span> {t('고급 도안 제작 및 특수 기법 연구', 'Advanced design creation and special technique research')}</li>
-                <li className="flex gap-2"><span className="text-purple-500 dark:text-purple-400">•</span> {t('교육 커리큘럼 개발 방법론', 'Educational curriculum development methodology')}</li>
-                <li className="flex gap-2"><span className="text-purple-500 dark:text-purple-400">•</span> {t('강사 양성과정 운영 실습', 'Instructor training course operation practice')}</li>
-                <li className="flex gap-2"><span className="text-purple-500 dark:text-purple-400">•</span> {t('기업·기관 맞춤형 프로그램 컨설팅', 'Corporate/institutional customized program consulting')}</li>
+              <ul className="text-gray-600 dark:text-gray-400 text-sm space-y-3 flex-grow">
+                <li className="flex gap-3"><span className="text-emerald-500">•</span> {t('고급 도안 제작 및 특수 기법 연구', 'Advanced design creation and special technique research')}</li>
+                <li className="flex gap-3"><span className="text-emerald-500">•</span> {t('교육 커리큘럼 개발 방법론', 'Educational curriculum development methodology')}</li>
+                <li className="flex gap-3"><span className="text-emerald-500">•</span> {t('강사 양성과정 운영 실습', 'Instructor training course operation practice')}</li>
+                <li className="flex gap-3"><span className="text-emerald-500">•</span> {t('기업·기관 맞춤형 프로그램 컨설팅', 'Corporate/institutional customized program consulting')}</li>
               </ul>
               <div className="mt-auto pt-6">
-                <p className="text-xs text-purple-800 dark:text-purple-300 mb-4 bg-purple-100 dark:bg-purple-900/20 p-3 rounded-lg border border-purple-200 dark:border-purple-500/20">
-                  <span className="font-bold">{t('결과:', 'Result:')}</span> {t('마스터 자격증 취득 → 강사 양성, 기관 협력', 'Master Certification -> Instructor training, institutional cooperation')}
+                <p className="text-xs text-gray-500 dark:text-gray-400 mb-6 font-medium">
+                  <span className="text-black dark:text-white">{t('결과:', 'Result:')}</span> {t('강사 양성, 기관 협력', 'Instructor training, institutional cooperation')}
                 </p>
-                <button onClick={() => { setSelectedCert('마스터'); setShowCertModal(true); }} className="w-full py-3 rounded-full border border-purple-200 dark:border-white/30 text-purple-600 dark:text-white hover:bg-purple-600 hover:text-white dark:hover:bg-white dark:hover:text-black transition-colors text-sm font-medium">{t('자세히 보기', 'View Details')}</button>
+                <button onClick={() => { setSelectedCert('마스터'); setShowCertModal(true); }} className="w-full py-3 rounded-full border border-black/10 dark:border-white/10 text-black dark:text-white hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black transition-colors text-sm font-medium tracking-widest uppercase">{t('자세히 보기', 'Details')}</button>
               </div>
             </div>
           </div>
@@ -436,31 +498,38 @@ export default function App() {
       </div>
 
       {/* Career Section */}
-      <div className="py-24 bg-white dark:bg-[#1a1a1a] border-b border-black/5 dark:border-white/10 transition-colors duration-300 snap-start">
+      <div className="py-24 bg-gray-50 dark:bg-[#121212] border-b border-black/5 dark:border-white/5 transition-colors duration-300 snap-start">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-serif font-bold text-black dark:text-white mb-4">{t('취득 후 활용 방안', 'Career Opportunities After Certification')}</h2>
-            <p className="text-gray-600 dark:text-gray-400">{t('자격증 취득 후 다양한 분야에서 전문가로 활동할 수 있습니다.', 'After obtaining the certification, you can work as an expert in various fields.')}</p>
+            <h2 className="text-sm font-bold tracking-widest uppercase text-black dark:text-white mb-6 flex items-center justify-center gap-2">
+              <span className="w-4 h-[1px] bg-black dark:bg-white"></span>
+              CAREER
+              <span className="w-4 h-[1px] bg-black dark:bg-white"></span>
+            </h2>
+            <p className="text-2xl md:text-3xl font-sans font-medium text-black dark:text-white leading-tight mb-4">
+              {t('취득 후 활용 방안', 'Career Opportunities')}
+            </p>
+            <p className="text-gray-600 dark:text-gray-400 font-light">{t('자격증 취득 후 다양한 분야에서 전문가로 활동할 수 있습니다.', 'After obtaining the certification, you can work as an expert in various fields.')}</p>
           </div>
           
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div key={careerKey} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {/* 1. 강사 활동 */}
             <motion.div 
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: "-50px" }}
               transition={{ duration: 0.5, delay: 0.1 }}
-              className="bg-gray-50 dark:bg-[#121212] p-8 border border-black/5 dark:border-white/5 hover:border-black/20 dark:hover:border-white/20 transition-colors rounded-xl"
+              className="bg-white dark:bg-[#1e1e1e] p-8 border border-black/5 dark:border-white/5 hover:border-black/10 dark:hover:border-white/10 transition-colors rounded-2xl"
             >
-              <div className="w-12 h-12 bg-black/5 dark:bg-white/5 rounded-full flex items-center justify-center mb-6">
-                <BookOpen className="w-6 h-6 text-black dark:text-white" />
+              <div className="mb-6">
+                <BookOpen className="w-8 h-8 text-black dark:text-white" strokeWidth={1.5} />
               </div>
-              <h3 className="text-xl font-bold text-black dark:text-white mb-4">{t('1. 강사 활동', '1. Instructor Activities')}</h3>
-              <ul className="text-gray-600 dark:text-gray-400 text-sm space-y-2">
-                <li>• {t('문화센터, 평생교육원, 도서관 정규 강좌', 'Regular courses at cultural centers, lifelong education centers, and libraries')}</li>
-                <li>• {t('초·중·고등학교 및 방과후 프로그램 출강', 'Lectures at elementary, middle, and high schools and after-school programs')}</li>
-                <li>• {t('지자체·기관 주관 교육 프로그램 참여', 'Participation in educational programs hosted by local governments and institutions')}</li>
-                <li>• {t('원데이 클래스, 온라인 강좌 개설', 'Opening one-day classes and online courses')}</li>
+              <h3 className="text-lg font-bold text-black dark:text-white mb-4">{t('강사 활동', 'Instructor Activities')}</h3>
+              <ul className="text-gray-600 dark:text-gray-400 text-sm space-y-3">
+                <li className="flex gap-3"><span className="text-emerald-500">•</span> {t('문화센터, 평생교육원, 도서관 정규 강좌', 'Regular courses at cultural centers, lifelong education centers, and libraries')}</li>
+                <li className="flex gap-3"><span className="text-emerald-500">•</span> {t('초·중·고등학교 및 방과후 프로그램 출강', 'Lectures at elementary, middle, and high schools and after-school programs')}</li>
+                <li className="flex gap-3"><span className="text-emerald-500">•</span> {t('지자체·기관 주관 교육 프로그램 참여', 'Participation in educational programs hosted by local governments and institutions')}</li>
+                <li className="flex gap-3"><span className="text-emerald-500">•</span> {t('원데이 클래스, 온라인 강좌 개설', 'Opening one-day classes and online courses')}</li>
               </ul>
             </motion.div>
             
@@ -470,17 +539,17 @@ export default function App() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: "-50px" }}
               transition={{ duration: 0.5, delay: 0.2 }}
-              className="bg-gray-50 dark:bg-[#121212] p-8 border border-black/5 dark:border-white/5 hover:border-black/20 dark:hover:border-white/20 transition-colors rounded-xl"
+              className="bg-white dark:bg-[#1e1e1e] p-8 border border-black/5 dark:border-white/5 hover:border-black/10 dark:hover:border-white/10 transition-colors rounded-2xl"
             >
-              <div className="w-12 h-12 bg-black/5 dark:bg-white/5 rounded-full flex items-center justify-center mb-6">
-                <Stamp className="w-6 h-6 text-black dark:text-white" />
+              <div className="mb-6">
+                <Stamp className="w-8 h-8 text-black dark:text-white" strokeWidth={1.5} />
               </div>
-              <h3 className="text-xl font-bold text-black dark:text-white mb-4">{t('2. 체험 프로그램 운영', '2. Experience Program Operation')}</h3>
-              <ul className="text-gray-600 dark:text-gray-400 text-sm space-y-2">
-                <li>• {t('플리마켓, 박람회, 축제 체험 부스 운영', 'Operating experience booths at flea markets, fairs, and festivals')}</li>
-                <li>• {t('키즈카페, 미술학원 연계 클래스 진행', 'Conducting classes linked with kids cafes and art academies')}</li>
-                <li>• {t('기업 워크숍, 가족 체험 행사 기획', 'Planning corporate workshops and family experience events')}</li>
-                <li>• {t('교육기관/기관 행사 창의 체험 제공', 'Providing creative experiences for educational institutions/events')}</li>
+              <h3 className="text-lg font-bold text-black dark:text-white mb-4">{t('체험 프로그램 운영', 'Experience Program Operation')}</h3>
+              <ul className="text-gray-600 dark:text-gray-400 text-sm space-y-3">
+                <li className="flex gap-3"><span className="text-emerald-500">•</span> {t('플리마켓, 박람회, 축제 체험 부스 운영', 'Operating experience booths at flea markets, fairs, and festivals')}</li>
+                <li className="flex gap-3"><span className="text-emerald-500">•</span> {t('키즈카페, 미술학원 연계 클래스 진행', 'Conducting classes linked with kids cafes and art academies')}</li>
+                <li className="flex gap-3"><span className="text-emerald-500">•</span> {t('기업 워크숍, 가족 체험 행사 기획', 'Planning corporate workshops and family experience events')}</li>
+                <li className="flex gap-3"><span className="text-emerald-500">•</span> {t('교육기관/기관 행사 창의 체험 제공', 'Providing creative experiences for educational institutions/events')}</li>
               </ul>
             </motion.div>
             
@@ -490,17 +559,17 @@ export default function App() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: "-50px" }}
               transition={{ duration: 0.5, delay: 0.3 }}
-              className="bg-gray-50 dark:bg-[#121212] p-8 border border-black/5 dark:border-white/5 hover:border-black/20 dark:hover:border-white/20 transition-colors rounded-xl"
+              className="bg-white dark:bg-[#1e1e1e] p-8 border border-black/5 dark:border-white/5 hover:border-black/10 dark:hover:border-white/10 transition-colors rounded-2xl"
             >
-              <div className="w-12 h-12 bg-black/5 dark:bg-white/5 rounded-full flex items-center justify-center mb-6">
-                <Briefcase className="w-6 h-6 text-black dark:text-white" />
+              <div className="mb-6">
+                <Briefcase className="w-8 h-8 text-black dark:text-white" strokeWidth={1.5} />
               </div>
-              <h3 className="text-xl font-bold text-black dark:text-white mb-4">{t('3. 창업 및 비즈니스', '3. Startup and Business')}</h3>
-              <ul className="text-gray-600 dark:text-gray-400 text-sm space-y-2">
-                <li>• {t('스탬프 전문 공방 창업 (제작+클래스)', 'Starting a specialized stamp workshop (production + classes)')}</li>
-                <li>• {t('온라인 스토어 맞춤 스탬프 판매', 'Selling custom stamps on online stores')}</li>
-                <li>• {t('소상공인 대상 브랜딩·포장용 맞춤 제작', 'Custom production for branding and packaging for small business owners')}</li>
-                <li>• {t('공예·디자인 상품 결합 부가가치 창출', 'Creating added value by combining craft and design products')}</li>
+              <h3 className="text-lg font-bold text-black dark:text-white mb-4">{t('창업 및 비즈니스', 'Startup and Business')}</h3>
+              <ul className="text-gray-600 dark:text-gray-400 text-sm space-y-3">
+                <li className="flex gap-3"><span className="text-emerald-500">•</span> {t('스탬프 전문 공방 창업 (제작+클래스)', 'Starting a specialized stamp workshop (production + classes)')}</li>
+                <li className="flex gap-3"><span className="text-emerald-500">•</span> {t('온라인 스토어 맞춤 스탬프 판매', 'Selling custom stamps on online stores')}</li>
+                <li className="flex gap-3"><span className="text-emerald-500">•</span> {t('소상공인 대상 브랜딩·포장용 맞춤 제작', 'Custom production for branding and packaging for small business owners')}</li>
+                <li className="flex gap-3"><span className="text-emerald-500">•</span> {t('공예·디자인 상품 결합 부가가치 창출', 'Creating added value by combining craft and design products')}</li>
               </ul>
             </motion.div>
             
@@ -510,16 +579,16 @@ export default function App() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: "-50px" }}
               transition={{ duration: 0.5, delay: 0.4 }}
-              className="bg-gray-50 dark:bg-[#121212] p-8 border border-black/5 dark:border-white/5 hover:border-black/20 dark:hover:border-white/20 transition-colors rounded-xl"
+              className="bg-white dark:bg-[#1e1e1e] p-8 border border-black/5 dark:border-white/5 hover:border-black/10 dark:hover:border-white/10 transition-colors rounded-2xl"
             >
-              <div className="w-12 h-12 bg-black/5 dark:bg-white/5 rounded-full flex items-center justify-center mb-6">
-                <Award className="w-6 h-6 text-black dark:text-white" />
+              <div className="mb-6">
+                <Award className="w-8 h-8 text-black dark:text-white" strokeWidth={1.5} />
               </div>
-              <h3 className="text-xl font-bold text-black dark:text-white mb-4">{t('4. 브랜딩·디자인 활용', '4. Branding and Design Utilization')}</h3>
-              <ul className="text-gray-600 dark:text-gray-400 text-sm space-y-2">
-                <li>• {t('스탬프를 활용한 로고·패키지 디자인', 'Logo and package design using stamps')}</li>
-                <li>• {t('소상공인·작은 브랜드 브랜딩 컨설팅', 'Branding consulting for small business owners and small brands')}</li>
-                <li>• {t('문구, 엽서, 굿즈 제작 활용', 'Utilization in the production of stationery, postcards, and goods')}</li>
+              <h3 className="text-lg font-bold text-black dark:text-white mb-4">{t('브랜딩·디자인 활용', 'Branding and Design Utilization')}</h3>
+              <ul className="text-gray-600 dark:text-gray-400 text-sm space-y-3">
+                <li className="flex gap-3"><span className="text-emerald-500">•</span> {t('스탬프를 활용한 로고·패키지 디자인', 'Logo and package design using stamps')}</li>
+                <li className="flex gap-3"><span className="text-emerald-500">•</span> {t('소상공인·작은 브랜드 브랜딩 컨설팅', 'Branding consulting for small business owners and small brands')}</li>
+                <li className="flex gap-3"><span className="text-emerald-500">•</span> {t('문구, 엽서, 굿즈 제작 활용', 'Utilization in the production of stationery, postcards, and goods')}</li>
               </ul>
             </motion.div>
             
@@ -529,17 +598,17 @@ export default function App() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: "-50px" }}
               transition={{ duration: 0.5, delay: 0.5 }}
-              className="bg-gray-50 dark:bg-[#121212] p-8 border border-black/5 dark:border-white/5 hover:border-black/20 dark:hover:border-white/20 transition-colors rounded-xl md:col-span-2 lg:col-span-1"
+              className="bg-white dark:bg-[#1e1e1e] p-8 border border-black/5 dark:border-white/5 hover:border-black/10 dark:hover:border-white/10 transition-colors rounded-2xl md:col-span-2 lg:col-span-1"
             >
-              <div className="w-12 h-12 bg-black/5 dark:bg-white/5 rounded-full flex items-center justify-center mb-6">
-                <Award className="w-6 h-6 text-black dark:text-white" />
+              <div className="mb-6">
+                <Award className="w-8 h-8 text-black dark:text-white" strokeWidth={1.5} />
               </div>
-              <h3 className="text-xl font-bold text-black dark:text-white mb-4">{t('5. 전문가 및 교육자 과정', '5. Expert and Educator Courses')}</h3>
-              <ul className="text-gray-600 dark:text-gray-400 text-sm space-y-2">
-                <li>• {t('후배 강사 양성 및 멘토링', 'Training and mentoring junior instructors')}</li>
-                <li>• {t('교육 커리큘럼 개발 참여', 'Participation in educational curriculum development')}</li>
-                <li>• {t('기업·기관 대상 맞춤형 프로그램 기획', 'Planning customized programs for companies and institutions')}</li>
-                <li>• {t('스탬프 매개 예술·공예 프로젝트 진행', 'Conducting stamp-mediated art and craft projects')}</li>
+              <h3 className="text-lg font-bold text-black dark:text-white mb-4">{t('전문가 및 교육자 과정', 'Expert and Educator Courses')}</h3>
+              <ul className="text-gray-600 dark:text-gray-400 text-sm space-y-3">
+                <li className="flex gap-3"><span className="text-emerald-500">•</span> {t('후배 강사 양성 및 멘토링', 'Training and mentoring junior instructors')}</li>
+                <li className="flex gap-3"><span className="text-emerald-500">•</span> {t('교육 커리큘럼 개발 참여', 'Participation in educational curriculum development')}</li>
+                <li className="flex gap-3"><span className="text-emerald-500">•</span> {t('기업·기관 대상 맞춤형 프로그램 기획', 'Planning customized programs for companies and institutions')}</li>
+                <li className="flex gap-3"><span className="text-emerald-500">•</span> {t('스탬프 매개 예술·공예 프로젝트 진행', 'Conducting stamp-mediated art and craft projects')}</li>
               </ul>
             </motion.div>
           </div>
@@ -547,48 +616,51 @@ export default function App() {
       </div>
 
       {/* Exam & Application Section */}
-      <div className="bg-gray-50 dark:bg-[#121212] py-24 transition-colors duration-300 snap-start" id="exam">
+      <div className="bg-white dark:bg-[#121212] py-24 border-b border-black/5 dark:border-white/5 transition-colors duration-300 snap-start" id="exam">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-16">
             
             {/* Left: Exam Info */}
             <div>
-              <div className="flex items-center gap-3 mb-8 pb-4 border-b border-black/10 dark:border-white/10">
-                <Video className="w-6 h-6 text-gray-600 dark:text-white/70" />
-                <h3 className="text-2xl font-serif font-bold text-black dark:text-white">{t('시험 안내', 'Exam Information')}</h3>
+              <div className="mb-10">
+                <h2 className="text-sm font-bold tracking-widest uppercase text-black dark:text-white mb-4 flex items-center gap-2">
+                  EXAM INFO
+                  <span className="w-4 h-[1px] bg-black dark:bg-white"></span>
+                </h2>
+                <h3 className="text-2xl font-sans font-medium text-black dark:text-white">{t('시험 안내', 'Exam Information')}</h3>
               </div>
               
-              <div className="space-y-8">
-                <div className="bg-white dark:bg-[#1a1a1a] p-6 rounded-lg border border-black/5 dark:border-white/5 shadow-sm">
-                  <h4 className="text-lg font-bold text-black dark:text-white mb-4 flex items-center gap-2">
-                    <span className="w-1.5 h-1.5 rounded-full bg-blue-500 dark:bg-blue-400"></span>
+              <div className="space-y-6">
+                <div className="bg-gray-50 dark:bg-[#1e1e1e] p-8 rounded-2xl border border-black/5 dark:border-white/5 hover:border-black/10 dark:hover:border-white/10 transition-colors">
+                  <h4 className="text-lg font-bold text-black dark:text-white mb-6 flex items-center gap-3">
+                    <span className="w-2 h-2 rounded-full bg-emerald-500"></span>
                     {t('포트폴리오 제출', 'Portfolio Submission')}
                   </h4>
-                  <div className="space-y-3 text-sm">
-                    <div className="flex gap-4">
-                      <span className="text-black dark:text-white font-medium w-12 shrink-0">{t('2급', 'Level 2')}</span>
+                  <div className="space-y-4 text-sm">
+                    <div className="flex gap-4 items-start border-b border-black/5 dark:border-white/5 pb-4">
+                      <span className="text-black dark:text-white font-bold w-16 shrink-0">{t('2급', 'Level 2')}</span>
                       <span className="text-gray-600 dark:text-gray-400">{t('제작 스탬프 5종 + 손글씨 활동지', '5 types of custom stamps + handwriting activity sheet')}</span>
                     </div>
-                    <div className="flex gap-4">
-                      <span className="text-black dark:text-white font-medium w-12 shrink-0">{t('1급', 'Level 1')}</span>
+                    <div className="flex gap-4 items-start border-b border-black/5 dark:border-white/5 pb-4">
+                      <span className="text-black dark:text-white font-bold w-16 shrink-0">{t('1급', 'Level 1')}</span>
                       <span className="text-gray-600 dark:text-gray-400">{t('제작 스탬프 10종 + 강의 커리큘럼 기획안', '10 types of custom stamps + lecture curriculum proposal')}</span>
                     </div>
-                    <div className="flex gap-4">
-                      <span className="text-black dark:text-white font-medium w-12 shrink-0">{t('마스터', 'Master')}</span>
+                    <div className="flex gap-4 items-start">
+                      <span className="text-black dark:text-white font-bold w-16 shrink-0">{t('마스터', 'Master')}</span>
                       <span className="text-gray-600 dark:text-gray-400">{t('제작 스탬프 15종 + 강의 커리큘럼 기획안', '15 types of custom stamps + lecture curriculum proposal')}</span>
                     </div>
                   </div>
                 </div>
                 
-                <div className="bg-white dark:bg-[#1a1a1a] p-6 rounded-lg border border-black/5 dark:border-white/5 shadow-sm">
-                  <h4 className="text-lg font-bold text-black dark:text-white mb-4 flex items-center gap-2">
-                    <span className="w-1.5 h-1.5 rounded-full bg-green-500 dark:bg-green-400"></span>
+                <div className="bg-gray-50 dark:bg-[#1e1e1e] p-8 rounded-2xl border border-black/5 dark:border-white/5 hover:border-black/10 dark:hover:border-white/10 transition-colors">
+                  <h4 className="text-lg font-bold text-black dark:text-white mb-6 flex items-center gap-3">
+                    <span className="w-2 h-2 rounded-full bg-emerald-500"></span>
                     {t('영상 실기시험', 'Video Practical Exam')} <span className="text-xs font-normal text-gray-500 ml-2">{t('(온라인 응시 가능)', '(Online application available)')}</span>
                   </h4>
-                  <ul className="space-y-2 text-sm text-gray-600 dark:text-gray-400">
-                    <li className="flex gap-2"><span className="text-black/30 dark:text-white/30">•</span> {t('지정된 주제에 따른 스탬프 제작 과정 촬영 및 제출', 'Filming and submitting the stamp making process according to the designated theme')}</li>
-                    <li className="flex gap-2"><span className="text-black/30 dark:text-white/30">•</span> {t('촬영 시 얼굴·작업 과정이 명확히 확인되어야 함', 'Face and work process must be clearly visible during filming')}</li>
-                    <li className="flex gap-2"><span className="text-black/30 dark:text-white/30">•</span> {t('제출된 영상은 평가위원의 채점 기준에 따라 심사', 'Submitted videos are judged according to the evaluation criteria of the evaluation committee')}</li>
+                  <ul className="space-y-3 text-sm text-gray-600 dark:text-gray-400">
+                    <li className="flex gap-3"><span className="text-emerald-500">•</span> {t('지정된 주제에 따른 스탬프 제작 과정 촬영 및 제출', 'Filming and submitting the stamp making process according to the designated theme')}</li>
+                    <li className="flex gap-3"><span className="text-emerald-500">•</span> {t('촬영 시 얼굴·작업 과정이 명확히 확인되어야 함', 'Face and work process must be clearly visible during filming')}</li>
+                    <li className="flex gap-3"><span className="text-emerald-500">•</span> {t('제출된 영상은 평가위원의 채점 기준에 따라 심사', 'Submitted videos are judged according to the evaluation criteria of the evaluation committee')}</li>
                   </ul>
                 </div>
               </div>
@@ -596,52 +668,55 @@ export default function App() {
             
             {/* Right: Application Info */}
             <div>
-              <div className="flex items-center gap-3 mb-8 pb-4 border-b border-black/10 dark:border-white/10">
-                <FileText className="w-6 h-6 text-gray-600 dark:text-white/70" />
-                <h3 className="text-2xl font-serif font-bold text-black dark:text-white">{t('접수 방법', 'How to Apply')}</h3>
+              <div className="mb-10">
+                <h2 className="text-sm font-bold tracking-widest uppercase text-black dark:text-white mb-4 flex items-center gap-2">
+                  HOW TO APPLY
+                  <span className="w-4 h-[1px] bg-black dark:bg-white"></span>
+                </h2>
+                <h3 className="text-2xl font-sans font-medium text-black dark:text-white">{t('접수 방법', 'Application Process')}</h3>
               </div>
               
               <div className="space-y-8">
                 <div className="relative">
                   <div className="absolute left-[15px] top-8 bottom-4 w-[1px] bg-black/10 dark:bg-white/10"></div>
-                  <div className="space-y-6">
-                    <div className="relative pl-10">
-                      <div className="absolute left-0 top-1 w-8 h-8 rounded-full bg-gray-100 dark:bg-[#1a1a1a] border border-black/20 dark:border-white/20 flex items-center justify-center text-xs font-bold text-black dark:text-white">1</div>
-                      <h4 className="text-black dark:text-white font-medium mb-1">{t('온라인 신청서 작성', 'Fill out online application')}</h4>
+                  <div className="space-y-8">
+                    <div className="relative pl-12">
+                      <div className="absolute left-0 top-0 w-8 h-8 rounded-full bg-black dark:bg-white flex items-center justify-center text-xs font-bold text-white dark:text-black">1</div>
+                      <h4 className="text-black dark:text-white font-bold mb-2">{t('온라인 신청서 작성', 'Fill out online application')}</h4>
                       <p className="text-sm text-gray-600 dark:text-gray-400">{t('네이버폼 또는 홈페이지를 통해 접수합니다.', 'Apply via Naver Form or the website.')}</p>
                     </div>
-                    <div className="relative pl-10">
-                      <div className="absolute left-0 top-1 w-8 h-8 rounded-full bg-gray-100 dark:bg-[#1a1a1a] border border-black/20 dark:border-white/20 flex items-center justify-center text-xs font-bold text-black dark:text-white">2</div>
-                      <h4 className="text-black dark:text-white font-medium mb-1">{t('응시료 입금', 'Deposit application fee')}</h4>
+                    <div className="relative pl-12">
+                      <div className="absolute left-0 top-0 w-8 h-8 rounded-full bg-black dark:bg-white flex items-center justify-center text-xs font-bold text-white dark:text-black">2</div>
+                      <h4 className="text-black dark:text-white font-bold mb-2">{t('응시료 입금', 'Deposit application fee')}</h4>
                       <p className="text-sm text-gray-600 dark:text-gray-400">{t('등급별 안내된 계좌로 응시료를 입금합니다.', 'Deposit the application fee to the account provided for each level.')}</p>
                     </div>
-                    <div className="relative pl-10">
-                      <div className="absolute left-0 top-1 w-8 h-8 rounded-full bg-gray-100 dark:bg-[#1a1a1a] border border-black/20 dark:border-white/20 flex items-center justify-center text-xs font-bold text-black dark:text-white">3</div>
-                      <h4 className="text-black dark:text-white font-medium mb-1">{t('접수 확인', 'Confirm application')}</h4>
+                    <div className="relative pl-12">
+                      <div className="absolute left-0 top-0 w-8 h-8 rounded-full bg-black dark:bg-white flex items-center justify-center text-xs font-bold text-white dark:text-black">3</div>
+                      <h4 className="text-black dark:text-white font-bold mb-2">{t('접수 확인', 'Confirm application')}</h4>
                       <p className="text-sm text-gray-600 dark:text-gray-400">{t('접수 확인 문자 및 이메일이 발송됩니다.', 'A confirmation text message and email will be sent.')}</p>
                     </div>
-                    <div className="relative pl-10">
-                      <div className="absolute left-0 top-1 w-8 h-8 rounded-full bg-gray-100 dark:bg-[#1a1a1a] border border-black/20 dark:border-white/20 flex items-center justify-center text-xs font-bold text-black dark:text-white">4</div>
-                      <h4 className="text-black dark:text-white font-medium mb-1">{t('시험 진행', 'Take the exam')}</h4>
+                    <div className="relative pl-12">
+                      <div className="absolute left-0 top-0 w-8 h-8 rounded-full bg-black dark:bg-white flex items-center justify-center text-xs font-bold text-white dark:text-black">4</div>
+                      <h4 className="text-black dark:text-white font-bold mb-2">{t('시험 진행', 'Take the exam')}</h4>
                       <p className="text-sm text-gray-600 dark:text-gray-400">{t('포트폴리오 및 영상 제출 후 심사가 진행됩니다.', 'Evaluation will proceed after submitting the portfolio and video.')}</p>
                     </div>
                   </div>
                 </div>
                 
-                <div className="bg-black/5 dark:bg-white/5 p-6 rounded-lg mt-8">
-                  <h4 className="text-black dark:text-white font-medium mb-3">{t('필요 서류', 'Required Documents')}</h4>
-                  <ul className="text-sm text-gray-600 dark:text-gray-400 space-y-2">
-                    <li className="flex items-center gap-2"><div className="w-1 h-1 bg-black/50 dark:bg-white/50 rounded-full"></div> {t('응시 신청서 (온라인 작성)', 'Application form (filled out online)')}</li>
-                    <li className="flex items-center gap-2"><div className="w-1 h-1 bg-black/50 dark:bg-white/50 rounded-full"></div> {t('신분증 사본 (본인 확인용)', 'Copy of ID card (for identity verification)')}</li>
-                    <li className="flex items-center gap-2"><div className="w-1 h-1 bg-black/50 dark:bg-white/50 rounded-full"></div> {t('포트폴리오 파일 및 영상 링크', 'Portfolio file and video link')}</li>
+                <div className="bg-gray-50 dark:bg-[#1e1e1e] p-8 rounded-2xl border border-black/5 dark:border-white/5 mt-8">
+                  <h4 className="text-black dark:text-white font-bold mb-4">{t('필요 서류', 'Required Documents')}</h4>
+                  <ul className="text-sm text-gray-600 dark:text-gray-400 space-y-3">
+                    <li className="flex items-center gap-3"><span className="text-emerald-500">•</span> {t('응시 신청서 (온라인 작성)', 'Application form (filled out online)')}</li>
+                    <li className="flex items-center gap-3"><span className="text-emerald-500">•</span> {t('신분증 사본 (본인 확인용)', 'Copy of ID card (for identity verification)')}</li>
+                    <li className="flex items-center gap-3"><span className="text-emerald-500">•</span> {t('포트폴리오 파일 및 영상 링크', 'Portfolio file and video link')}</li>
                   </ul>
                 </div>
 
                 <div className="flex flex-col sm:flex-row gap-4 mt-8">
-                  <a href="https://form.naver.com/response/rVGLmuWiizZP0ebTi2CbNQ" target="_blank" rel="noopener noreferrer" className="flex-1 py-3 px-4 bg-green-500 hover:bg-green-600 text-white dark:bg-[#1a1a1a] dark:text-green-400 dark:hover:bg-[#2a2a2a] dark:border dark:border-green-500/30 text-center rounded-lg font-bold transition-colors shadow-md">
+                  <a href="https://form.naver.com/response/rVGLmuWiizZP0ebTi2CbNQ" target="_blank" rel="noopener noreferrer" className="flex-1 py-4 px-6 bg-emerald-600 hover:bg-emerald-700 text-white text-center rounded-full font-bold transition-colors shadow-lg text-sm tracking-widest uppercase">
                     {t('네이버폼 접수하기', 'Apply via Naver Form')}
                   </a>
-                  <button onClick={() => setShowApplyModal(true)} className="flex-1 py-3 px-4 bg-blue-600 hover:bg-blue-700 text-white dark:bg-[#1a1a1a] dark:text-blue-400 dark:hover:bg-[#2a2a2a] dark:border dark:border-blue-500/30 text-center rounded-lg font-bold transition-colors shadow-md">
+                  <button onClick={() => setShowApplyModal(true)} className="flex-1 py-4 px-6 bg-black hover:bg-gray-800 text-white dark:bg-white dark:text-black dark:hover:bg-gray-200 text-center rounded-full font-bold transition-colors shadow-lg text-sm tracking-widest uppercase">
                     {t('홈페이지 접수하기', 'Apply via Website')}
                   </button>
                 </div>
@@ -652,115 +727,310 @@ export default function App() {
         </div>
       </div>
 
-      {/* FAQ Section */}
-      <div className="py-24 bg-white dark:bg-[#1a1a1a] border-b border-black/5 dark:border-white/10 transition-colors duration-300 snap-start" id="faq">
-        <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-serif font-bold text-black dark:text-white mb-4">{t('자주 묻는 질문', 'Frequently Asked Questions')}</h2>
-          </div>
-          <div className="space-y-4">
-            {[
-              {
-                q: t('자격증 취득 후 바로 강사로 활동할 수 있나요?', 'Can I work as an instructor immediately after obtaining the certification?'),
-                a: t('1급 또는 마스터 자격증을 취득하시면 방과후 학교, 문화센터 등에서 강사로 활동하실 수 있는 자격이 주어집니다. 진흥원에서도 우수 수료자에게 출강 기회를 연결해 드리고 있습니다.', 'If you obtain a Level 1 or Master certification, you will be qualified to work as an instructor at after-school programs, cultural centers, etc. The Institute also connects excellent graduates with teaching opportunities.')
-              },
-              {
-                q: t('온라인으로도 시험 응시가 가능한가요?', 'Is it possible to take the exam online?'),
-                a: t('네, 포트폴리오 우편 제출 및 지정된 주제의 스탬프 제작 과정을 담은 영상 제출을 통해 온라인(비대면)으로도 충분히 응시 및 자격 취득이 가능합니다.', 'Yes, you can fully apply and obtain the certification online (non-face-to-face) by submitting your portfolio by mail and a video showing the stamp making process on a designated topic.')
-              },
-              {
-                q: t('수강료 결제는 어떻게 하나요?', 'How do I pay the tuition fee?'),
-                a: t('무통장 입금, 계좌이체 등을 통해 결제하실 수 있으며, 현금영수증 및 세금계산서 발행이 가능합니다. 자세한 계좌 정보는 접수 페이지를 참고해 주세요.', 'You can pay via bank transfer, etc., and cash receipts and tax invoices can be issued. Please refer to the application page for detailed account information.')
-              }
-            ].map((faq, index) => (
-              <div key={index} className="border border-black/10 dark:border-white/10 rounded-xl overflow-hidden bg-gray-50 dark:bg-[#121212] transition-colors">
-                <button 
-                  onClick={() => setOpenFaq(openFaq === index ? null : index)}
-                  className="w-full flex justify-between items-center p-6 text-left hover:bg-black/5 dark:hover:bg-white/5 transition-colors"
-                >
-                  <span className="font-bold text-black dark:text-white pr-8">{faq.q}</span>
-                  <ChevronDown className={`w-5 h-5 text-gray-500 shrink-0 transition-transform duration-300 ${openFaq === index ? 'rotate-180' : ''}`} />
-                </button>
-                <div className={`overflow-hidden transition-all duration-300 ${openFaq === index ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'}`}>
-                  <div className="p-6 pt-6 text-gray-600 dark:text-gray-400 text-sm leading-relaxed border-t border-black/5 dark:border-white/5 mt-0">
-                    {faq.a}
+      {/* FAQ & Location Section */}
+      <div className="py-24 bg-gray-50 dark:bg-[#121212] border-b border-black/5 dark:border-white/5 transition-colors duration-300 snap-start" id="faq">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-16">
+            {/* Left: FAQ */}
+            <div>
+              <div className="mb-10">
+                <h2 className="text-sm font-bold tracking-widest uppercase text-black dark:text-white mb-4 flex items-center gap-2">
+                  FAQ
+                  <span className="w-4 h-[1px] bg-black dark:bg-white"></span>
+                </h2>
+                <h3 className="text-2xl font-sans font-medium text-black dark:text-white">{t('자주 묻는 질문', 'Frequently Asked Questions')}</h3>
+              </div>
+              <div className="space-y-4">
+                {[
+                  {
+                    q: t('정식으로 허가된 자격증인가요?', 'Is it an officially licensed certificate?'),
+                    a: t('민간자격등록허가증을 받은 정식 자격증입니다.', 'It is an official certificate that has received a private qualification registration license.'),
+                    images: [
+                      'https://i.ibb.co/G43639Hq/1773106303264-9f665cd2-a080-4f8d-8360-12683a80e597-1.png',
+                      'https://i.ibb.co/kV3nWHL8/1773106303264-9f665cd2-a080-4f8d-8360-12683a80e597-2.png'
+                    ]
+                  },
+                  {
+                    q: t('자격증 취득 후 바로 강사로 활동할 수 있나요?', 'Can I work as an instructor immediately after obtaining the certification?'),
+                    a: t('1급 또는 마스터 자격증을 취득하시면 방과후 학교, 문화센터 등에서 강사로 활동하실 수 있는 자격이 주어집니다. 진흥원에서도 우수 수료자에게 출강 기회를 연결해 드리고 있습니다.', 'If you obtain a Level 1 or Master certification, you will be qualified to work as an instructor at after-school programs, cultural centers, etc. The Institute also connects excellent graduates with teaching opportunities.')
+                  },
+                  {
+                    q: t('온라인으로도 시험 응시가 가능한가요?', 'Is it possible to take the exam online?'),
+                    a: t('네, 포트폴리오 우편 제출 및 지정된 주제의 스탬프 제작 과정을 담은 영상 제출을 통해 온라인(비대면)으로도 충분히 응시 및 자격 취득이 가능합니다.', 'Yes, you can fully apply and obtain the certification online (non-face-to-face) by submitting your portfolio by mail and a video showing the stamp making process on a designated topic.')
+                  },
+                  {
+                    q: t('수강료 결제는 어떻게 하나요?', 'How do I pay the tuition fee?'),
+                    a: t('무통장 입금, 계좌이체 등을 통해 결제하실 수 있으며, 현금영수증 및 세금계산서 발행이 가능합니다. 자세한 계좌 정보는 접수 페이지를 참고해 주세요.', 'You can pay via bank transfer, etc., and cash receipts and tax invoices can be issued. Please refer to the application page for detailed account information.')
+                  }
+                ].map((faq, index) => (
+                  <div key={index} className="border border-black/10 dark:border-white/10 rounded-2xl overflow-hidden bg-white dark:bg-[#1e1e1e] transition-colors">
+                    <button 
+                      onClick={() => setOpenFaq(openFaq === index ? null : index)}
+                      className="w-full flex justify-between items-center p-6 md:p-8 text-left hover:bg-black/5 dark:hover:bg-white/5 transition-colors"
+                    >
+                      <span className="font-bold text-black dark:text-white pr-8">{faq.q}</span>
+                      <ChevronDown className={`w-5 h-5 text-gray-500 shrink-0 transition-transform duration-300 ${openFaq === index ? 'rotate-180' : ''}`} />
+                    </button>
+                    <div className={`overflow-hidden transition-all duration-300 ${openFaq === index ? 'max-h-[500px] opacity-100' : 'max-h-0 opacity-0'}`}>
+                      <div className="p-6 md:p-8 pt-0 text-gray-600 dark:text-gray-400 text-sm leading-relaxed">
+                        <p>{faq.a}</p>
+                        {faq.images && (
+                          <div className="flex gap-4 mt-4">
+                            {faq.images.map((img, i) => (
+                              <img 
+                                key={i} 
+                                src={img} 
+                                alt={`License ${i+1}`} 
+                                className="w-24 h-32 object-cover rounded-lg border border-black/10 dark:border-white/10 cursor-pointer hover:opacity-80 transition-opacity shadow-sm"
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  setSelectedImage(img);
+                                }}
+                              />
+                            ))}
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Right: Location */}
+            <div>
+              <div className="mb-10">
+                <h2 className="text-sm font-bold tracking-widest uppercase text-black dark:text-white mb-4 flex items-center gap-2">
+                  LOCATION
+                  <span className="w-4 h-[1px] bg-black dark:bg-white"></span>
+                </h2>
+                <h3 className="text-2xl font-sans font-medium text-black dark:text-white">{t('오시는 길', 'Directions')}</h3>
+              </div>
+              <div className="bg-white dark:bg-[#1e1e1e] p-8 rounded-2xl border border-black/5 dark:border-white/5 hover:border-black/10 dark:hover:border-white/10 transition-colors">
+                <div className="w-full h-48 bg-gray-50 dark:bg-[#2a2a2a] rounded-xl mb-6 flex items-center justify-center border border-black/5 dark:border-white/5 overflow-hidden relative">
+                  <img src="https://i.ibb.co/tT32PH3J/2026-03-10-095459.png" alt="Map" className="w-full h-full object-cover" referrerPolicy="no-referrer" />
+                </div>
+                <div className="space-y-6">
+                  <div className="flex items-start gap-4">
+                    <div className="w-10 h-10 rounded-full bg-emerald-50 dark:bg-emerald-900/20 flex items-center justify-center shrink-0">
+                      <MapPin className="w-5 h-5 text-emerald-500" />
+                    </div>
+                    <div>
+                      <h4 className="font-bold text-black dark:text-white mb-1">{t('주소', 'Address')}</h4>
+                      <p className="text-sm text-gray-600 dark:text-gray-400">{t('대전광역시 서구 갈마역로 155', '155 Galma-yeok-ro, Seo-gu, Daejeon')}</p>
+                    </div>
+                  </div>
+                  <div className="flex items-start gap-4">
+                    <div className="w-10 h-10 rounded-full bg-blue-50 dark:bg-blue-900/20 flex items-center justify-center shrink-0">
+                      <Phone className="w-5 h-5 text-blue-500" />
+                    </div>
+                    <div>
+                      <h4 className="font-bold text-black dark:text-white mb-1">{t('전화번호', 'Phone')}</h4>
+                      <p className="text-sm text-gray-600 dark:text-gray-400">010-8409-2802</p>
+                    </div>
                   </div>
                 </div>
               </div>
-            ))}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Testimonials & Gallery Section */}
+      <div className="py-24 bg-white dark:bg-[#121212] border-b border-black/5 dark:border-white/5 transition-colors duration-300 snap-start">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 lg:gap-8">
+            
+            {/* Testimonials Column */}
+            <div>
+              <div className="text-center lg:text-left mb-12">
+                <h2 className="text-sm font-bold tracking-widest uppercase text-black dark:text-white mb-4 flex items-center justify-center lg:justify-start gap-2">
+                  <span className="w-4 h-[1px] bg-black dark:bg-white"></span>
+                  REVIEW
+                </h2>
+                <p className="text-2xl md:text-3xl font-sans font-medium text-black dark:text-white leading-tight">
+                  {t('자격증 응시 후기', 'Certification Testimonials')}
+                </p>
+              </div>
+
+              <div className="relative w-full h-[450px] lg:h-[500px] overflow-hidden">
+                {testimonials.map((testimonial, index) => {
+                  const isActive = index === activeTestimonial;
+                  const isPrev = index === (activeTestimonial - 1 + testimonials.length) % testimonials.length;
+                  const isNext = index === (activeTestimonial + 1) % testimonials.length;
+
+                  let transform = 'translateY(100%) scale(0.8)';
+                  let opacity = 0;
+                  let zIndex = 0;
+
+                  if (isActive) {
+                    transform = 'translateY(0) scale(1)';
+                    opacity = 1;
+                    zIndex = 20;
+                  } else if (isPrev) {
+                    transform = 'translateY(-40%) scale(0.85)';
+                    opacity = 0.5;
+                    zIndex = 10;
+                  } else if (isNext) {
+                    transform = 'translateY(40%) scale(0.85)';
+                    opacity = 0.5;
+                    zIndex = 10;
+                  }
+
+                  return (
+                    <div
+                      key={index}
+                      className="absolute top-8 lg:top-1/2 left-1/2 lg:left-0 -translate-x-1/2 lg:translate-x-0 w-full max-w-[90%] sm:max-w-sm lg:max-w-[90%] transition-all duration-500 ease-in-out pointer-events-none"
+                      style={{ zIndex }}
+                    >
+                      <div 
+                        onClick={() => setActiveTestimonial(index)}
+                        className="w-full transition-all duration-500 ease-in-out lg:-translate-y-1/2 pointer-events-auto cursor-pointer"
+                        style={{ transform, opacity }}
+                      >
+                        <div className="bg-gray-50 dark:bg-[#1e1e1e] p-6 md:p-8 rounded-3xl border border-black/5 dark:border-white/5 shadow-xl">
+                          <div className="flex items-center gap-1 mb-4">
+                            {[...Array(5)].map((_, i) => (
+                              <svg key={i} className="w-4 h-4 text-emerald-500 fill-current" viewBox="0 0 24 24">
+                                <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z" />
+                              </svg>
+                            ))}
+                          </div>
+                          <p className="text-gray-600 dark:text-gray-300 mb-6 leading-relaxed line-clamp-4 text-sm md:text-base">
+                            "{testimonial.content}"
+                          </p>
+                          <div className="flex items-center gap-3">
+                            <div className="w-10 h-10 bg-black/5 dark:bg-white/10 rounded-full flex items-center justify-center shrink-0">
+                              <span className="font-bold text-black dark:text-white text-sm">{testimonial.name[0]}</span>
+                            </div>
+                            <div>
+                              <h4 className="font-bold text-black dark:text-white text-sm">{testimonial.name}</h4>
+                              <p className="text-xs text-gray-500 dark:text-gray-400">{testimonial.role}</p>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+
+            {/* Gallery Column */}
+            <div>
+              <div className="text-center lg:text-left mb-12">
+                <h2 className="text-sm font-bold tracking-widest uppercase text-black dark:text-white mb-4 flex items-center justify-center lg:justify-start gap-2">
+                  <span className="w-4 h-[1px] bg-black dark:bg-white"></span>
+                  GALLERY
+                </h2>
+                <p className="text-2xl md:text-3xl font-sans font-medium text-black dark:text-white leading-tight">
+                  {t('갤러리', 'Gallery')}
+                </p>
+              </div>
+              
+              <div className="grid grid-cols-2 gap-3 md:gap-4">
+                <div className="aspect-square rounded-2xl overflow-hidden bg-gray-200 dark:bg-gray-800 relative group">
+                  <img src="https://i.postimg.cc/hPdQJVRJ/2.jpg" alt="Gallery 1" className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" />
+                  <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors duration-500"></div>
+                </div>
+                <div className="aspect-square rounded-2xl overflow-hidden bg-gray-200 dark:bg-gray-800 relative group">
+                  <img src="https://i.postimg.cc/J4kHyjCX/20241024-140751.jpg" alt="Gallery 2" className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" />
+                  <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors duration-500"></div>
+                </div>
+                <div className="aspect-square rounded-2xl overflow-hidden bg-gray-200 dark:bg-gray-800 relative group">
+                  <img src="https://i.postimg.cc/qvHh2gpM/20241120-151453.jpg" alt="Gallery 3" className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" />
+                  <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors duration-500"></div>
+                </div>
+                <div className="aspect-square rounded-2xl overflow-hidden bg-gray-200 dark:bg-gray-800 relative group">
+                  <img src="https://i.postimg.cc/65v47CxQ/20251227-100613.jpg" alt="Gallery 4" className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" />
+                  <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors duration-500"></div>
+                </div>
+              </div>
+            </div>
+
           </div>
         </div>
       </div>
 
       {/* Footer */}
-      <footer className="bg-gray-100 dark:bg-[#0a0a0a] border-t border-black/10 dark:border-white/10 py-12 transition-colors duration-300 snap-start">
+      <footer className="bg-white dark:bg-[#121212] border-t border-black/5 dark:border-white/5 py-16 transition-colors duration-300 snap-start">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8">
-            <div className="mb-8 md:mb-0">
-              <h2 className="text-xl font-serif font-bold text-black dark:text-white mb-4 flex items-center gap-2">
-                <img src="https://i.ibb.co/Dfv01BhW/Logo.png" alt="한국스탬프교육진흥원 로고" className="h-6 object-contain" />
-                {t('한국스탬프교육진흥원', 'Korea Stamp Education Institute')}
+          <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-12">
+            <div className="mb-10 md:mb-0">
+              <h2 className="text-2xl font-sans font-bold tracking-tighter text-black dark:text-white mb-6 flex items-center gap-3">
+                <img src="https://i.ibb.co/Dfv01BhW/Logo.png" alt="KSEI Logo" className="w-8 h-8 object-contain" />
+                KSEI
               </h2>
-              <div className="flex gap-4 text-xs text-gray-600 dark:text-gray-400">
-                <button onClick={() => setShowPrivacyModal(true)} className="hover:text-black dark:hover:text-white border border-gray-300 dark:border-gray-700 px-3 py-1 rounded-full transition-colors">{t('개인정보처리방침', 'Privacy Policy')}</button>
-                <button onClick={() => setShowTermsModal(true)} className="hover:text-black dark:hover:text-white border border-gray-300 dark:border-gray-700 px-3 py-1 rounded-full transition-colors">{t('이용약관', 'Terms of Service')}</button>
+              <div className="flex gap-4 text-xs font-medium tracking-widest uppercase text-gray-500 dark:text-gray-400">
+                <button onClick={() => setShowPrivacyModal(true)} className="hover:text-black dark:hover:text-white transition-colors">{t('개인정보처리방침', 'Privacy Policy')}</button>
+                <span className="text-gray-300 dark:text-gray-700">|</span>
+                <button onClick={() => setShowTermsModal(true)} className="hover:text-black dark:hover:text-white transition-colors">{t('이용약관', 'Terms of Service')}</button>
               </div>
             </div>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-sm w-full md:w-auto">
               <div>
-                <h4 className="text-black dark:text-white font-medium mb-3">{t('기관소개', 'About Us')}</h4>
-                <ul className="text-gray-600 dark:text-gray-500 space-y-2">
-                  <li><button onClick={() => scrollTo('about')} className="hover:text-black dark:hover:text-white">{t('설립 목적', 'Purpose')}</button></li>
-                  <li><button onClick={() => scrollTo('about')} className="hover:text-black dark:hover:text-white">{t('주요 활동', 'Activities')}</button></li>
+                <h4 className="text-black dark:text-white font-bold mb-4 tracking-widest uppercase text-xs">{t('기관소개', 'About Us')}</h4>
+                <ul className="text-gray-500 dark:text-gray-400 space-y-3">
+                  <li><button onClick={() => scrollTo('about')} className="hover:text-black dark:hover:text-white transition-colors">{t('설립 목적', 'Purpose')}</button></li>
+                  <li><button onClick={() => scrollTo('about')} className="hover:text-black dark:hover:text-white transition-colors">{t('주요 활동', 'Activities')}</button></li>
                 </ul>
               </div>
               <div>
-                <h4 className="text-black dark:text-white font-medium mb-3">{t('자격증안내', 'Certification')}</h4>
-                <ul className="text-gray-600 dark:text-gray-500 space-y-2">
-                  <li><button onClick={() => scrollTo('cert')} className="hover:text-black dark:hover:text-white">{t('2급 (기초)', 'Level 2 (Basic)')}</button></li>
-                  <li><button onClick={() => scrollTo('cert')} className="hover:text-black dark:hover:text-white">{t('1급 (심화)', 'Level 1 (Advanced)')}</button></li>
-                  <li><button onClick={() => scrollTo('cert')} className="hover:text-black dark:hover:text-white">{t('마스터 (전문가)', 'Master (Expert)')}</button></li>
+                <h4 className="text-black dark:text-white font-bold mb-4 tracking-widest uppercase text-xs">{t('자격증안내', 'Certification')}</h4>
+                <ul className="text-gray-500 dark:text-gray-400 space-y-3">
+                  <li><button onClick={() => scrollTo('cert')} className="hover:text-black dark:hover:text-white transition-colors">{t('2급 (기초)', 'Level 2 (Basic)')}</button></li>
+                  <li><button onClick={() => scrollTo('cert')} className="hover:text-black dark:hover:text-white transition-colors">{t('1급 (심화)', 'Level 1 (Advanced)')}</button></li>
+                  <li><button onClick={() => scrollTo('cert')} className="hover:text-black dark:hover:text-white transition-colors">{t('마스터 (전문가)', 'Master (Expert)')}</button></li>
                 </ul>
               </div>
               <div>
-                <h4 className="text-black dark:text-white font-medium mb-3">{t('시험안내', 'Exam Info')}</h4>
-                <ul className="text-gray-600 dark:text-gray-500 space-y-2">
-                  <li><button onClick={() => scrollTo('exam')} className="hover:text-black dark:hover:text-white">{t('포트폴리오', 'Portfolio')}</button></li>
-                  <li><button onClick={() => scrollTo('exam')} className="hover:text-black dark:hover:text-white">{t('영상실기', 'Video Practical')}</button></li>
+                <h4 className="text-black dark:text-white font-bold mb-4 tracking-widest uppercase text-xs">{t('시험안내', 'Exam Info')}</h4>
+                <ul className="text-gray-500 dark:text-gray-400 space-y-3">
+                  <li><button onClick={() => scrollTo('exam')} className="hover:text-black dark:hover:text-white transition-colors">{t('포트폴리오', 'Portfolio')}</button></li>
+                  <li><button onClick={() => scrollTo('exam')} className="hover:text-black dark:hover:text-white transition-colors">{t('영상실기', 'Video Practical')}</button></li>
                 </ul>
               </div>
               <div>
-                <h4 className="text-black dark:text-white font-medium mb-3">{t('접수방법', 'How to Apply')}</h4>
-                <ul className="text-gray-600 dark:text-gray-500 space-y-2">
-                  <li><button onClick={() => scrollTo('exam')} className="hover:text-black dark:hover:text-white">{t('신청 절차', 'Application Process')}</button></li>
-                  <li><button onClick={() => scrollTo('exam')} className="hover:text-black dark:hover:text-white">{t('필요 서류', 'Required Documents')}</button></li>
+                <h4 className="text-black dark:text-white font-bold mb-4 tracking-widest uppercase text-xs">{t('접수방법', 'How to Apply')}</h4>
+                <ul className="text-gray-500 dark:text-gray-400 space-y-3">
+                  <li><button onClick={() => scrollTo('exam')} className="hover:text-black dark:hover:text-white transition-colors">{t('신청 절차', 'Application Process')}</button></li>
+                  <li><button onClick={() => scrollTo('exam')} className="hover:text-black dark:hover:text-white transition-colors">{t('필요 서류', 'Required Documents')}</button></li>
                 </ul>
               </div>
             </div>
           </div>
-          <div className="border-t border-black/10 dark:border-white/10 pt-8 text-xs text-gray-500 space-y-2 flex flex-col md:flex-row justify-between">
+          <div className="border-t border-black/5 dark:border-white/5 pt-8 text-xs text-gray-400 dark:text-gray-500 space-y-2 flex flex-col md:flex-row justify-between">
             <div>
-              <div className="mb-2 space-y-1">
+              <div className="mb-4 space-y-2 font-mono">
                 <p>{t('주소: 대전광역시 서구 갈마역로 155', 'Address: 155 Galma-yeok-ro, Seo-gu, Daejeon')}</p>
                 <p>{t('대표전화: 010-8409-2802', 'Phone: 010-8409-2802')}</p>
                 <p>{t('이메일: ksei2025@naver.com', 'Email: ksei2025@naver.com')}</p>
               </div>
-              <p>{t('Copyright © 2025 한국스탬프교육진흥원, All Rights Reserved', 'Copyright © 2025 Korea Stamp Education Institute, All Rights Reserved')}</p>
+              <p className="font-sans">{t('Copyright © 2025 한국스탬프교육진흥원, All Rights Reserved', 'Copyright © 2025 Korea Stamp Education Institute, All Rights Reserved')}</p>
             </div>
           </div>
         </div>
       </footer>
 
-      {/* Scroll to Top Button */}
-      {showScrollTop && (
+      {/* Floating Buttons */}
+      <div className="fixed bottom-8 right-8 flex flex-col gap-3 z-50">
+        {showScrollTop && (
+          <button 
+            onClick={scrollToTop}
+            className="p-3 bg-white text-black dark:bg-[#2a2a2a] dark:text-white border border-black/10 dark:border-white/10 rounded-full shadow-lg hover:scale-110 transition-transform"
+            aria-label="최상단으로 이동"
+          >
+            <ArrowUp className="w-5 h-5" />
+          </button>
+        )}
         <button 
-          onClick={scrollToTop}
-          className="fixed bottom-8 right-8 p-3 bg-black text-white dark:bg-white dark:text-black rounded-full shadow-lg hover:scale-110 transition-transform z-50"
-          aria-label="최상단으로 이동"
+          onClick={() => setShowConsultModal(true)}
+          className="p-3 bg-black text-white dark:bg-white dark:text-black rounded-full shadow-lg hover:scale-110 transition-transform"
+          aria-label="상담 신청"
         >
-          <ArrowUp className="w-6 h-6" />
+          <MessageCircle className="w-6 h-6" />
         </button>
-      )}
+      </div>
 
       {/* Consultation Modal */}
       {showConsultModal && (
@@ -817,7 +1087,7 @@ export default function App() {
               <p>{t('① 진흥원은 정보주체로부터 개인정보를 수집할 때 동의 받은 개인정보 보유․이용기간 또는 법령에 따른 개인정보 보유․이용기간 내에서 개인정보를 처리․보유합니다.', '① The Institute processes and retains personal information within the period of retention and use of personal information agreed upon when collecting personal information from the data subject or the period of retention and use of personal information according to laws and regulations.')}<br/>{t('② 구체적인 개인정보 처리 및 보유 기간은 다음과 같습니다.', '② The specific personal information processing and retention period is as follows.')}<br/>{t('- 고객 가입 및 관리 : 서비스 이용계약 또는 회원가입 해지시까지', '- Customer registration and management: Until the termination of the service use contract or membership')}</p>
               
               <h4 className="font-bold text-black dark:text-white text-base mt-6">{t('3. 처리하는 개인정보의 항목', '3. Items of Personal Information Processed')}</h4>
-              <p>{t('진흥원은 다음의 개인정보 항목을 처리하고 있습니다.', 'The Institute processes the following personal information items.')}<br/>{t('- 성명, 주민등록번호, 주소, 전화번호, 이메일주소 등', '- Name, date of birth, address, phone number, email address, etc.')}</p>
+              <p>{t('진흥원은 다음의 개인정보 항목을 처리하고 있습니다.', 'The Institute processes the following personal information items.')}<br/>{t('- 성명, 생년월일, 주소, 전화번호, 휴대전화번호, 성별, 이메일주소 등', '- Name, date of birth, address, phone number, mobile phone number, gender, email address, etc.')}</p>
             </div>
             <div className="p-6 border-t border-black/10 dark:border-white/10 shrink-0 flex justify-end">
               <button onClick={() => setShowPrivacyModal(false)} className="px-6 py-2 bg-black text-white dark:bg-white dark:text-black rounded-lg font-bold">{t('확인', 'Confirm')}</button>
@@ -998,6 +1268,34 @@ export default function App() {
           </div>
         </div>
       )}
+      {/* Image Modal */}
+      <AnimatePresence>
+        {selectedImage && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm"
+            onClick={() => setSelectedImage(null)}
+          >
+            <button 
+              onClick={() => setSelectedImage(null)}
+              className="absolute top-6 right-6 p-2 text-white hover:bg-white/20 rounded-full transition-colors"
+            >
+              <X className="w-8 h-8" />
+            </button>
+            <motion.img
+              initial={{ scale: 0.9, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.9, opacity: 0 }}
+              src={selectedImage}
+              alt="Enlarged view"
+              className="max-w-full max-h-[90vh] object-contain rounded-xl shadow-2xl"
+              onClick={(e) => e.stopPropagation()}
+            />
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }
