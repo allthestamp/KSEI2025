@@ -32,6 +32,14 @@ export default function App() {
   const [activeTestimonial, setActiveTestimonial] = useState(0);
   const [careerKey, setCareerKey] = useState(0);
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const checkMobile = () => setIsMobile(window.innerWidth < 768);
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
 
   useEffect(() => {
     let lastPosition = 'top';
@@ -310,7 +318,7 @@ export default function App() {
           >
             <h2 
               className="text-2xl md:text-4xl lg:text-5xl font-sans font-medium text-white leading-tight tracking-tight"
-              style={{ textShadow: '0 4px 20px rgba(0,0,0,0.8), 0 2px 8px rgba(0,0,0,0.9)' }}
+              style={{ textShadow: '0 4px 12px rgba(0,0,0,0.4), 0 2px 4px rgba(0,0,0,0.5)' }}
             >
               {t('우리는 스탬프 교육의 표준을 만들어', 'We set the standard for stamp education')}
               <br className="hidden md:block" />
@@ -518,7 +526,7 @@ export default function App() {
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: "-50px" }}
-              transition={{ duration: 0.5, delay: 0.1 }}
+              transition={{ duration: 0.5, delay: isMobile ? 0 : 0.1 }}
               className="bg-white dark:bg-[#1e1e1e] p-8 border border-black/5 dark:border-white/5 hover:border-black/10 dark:hover:border-white/10 transition-colors rounded-2xl"
             >
               <div className="mb-6">
@@ -538,7 +546,7 @@ export default function App() {
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: "-50px" }}
-              transition={{ duration: 0.5, delay: 0.2 }}
+              transition={{ duration: 0.5, delay: isMobile ? 0 : 0.2 }}
               className="bg-white dark:bg-[#1e1e1e] p-8 border border-black/5 dark:border-white/5 hover:border-black/10 dark:hover:border-white/10 transition-colors rounded-2xl"
             >
               <div className="mb-6">
@@ -558,7 +566,7 @@ export default function App() {
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: "-50px" }}
-              transition={{ duration: 0.5, delay: 0.3 }}
+              transition={{ duration: 0.5, delay: isMobile ? 0 : 0.3 }}
               className="bg-white dark:bg-[#1e1e1e] p-8 border border-black/5 dark:border-white/5 hover:border-black/10 dark:hover:border-white/10 transition-colors rounded-2xl"
             >
               <div className="mb-6">
@@ -578,7 +586,7 @@ export default function App() {
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: "-50px" }}
-              transition={{ duration: 0.5, delay: 0.4 }}
+              transition={{ duration: 0.5, delay: isMobile ? 0 : 0.4 }}
               className="bg-white dark:bg-[#1e1e1e] p-8 border border-black/5 dark:border-white/5 hover:border-black/10 dark:hover:border-white/10 transition-colors rounded-2xl"
             >
               <div className="mb-6">
@@ -597,7 +605,7 @@ export default function App() {
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: "-50px" }}
-              transition={{ duration: 0.5, delay: 0.5 }}
+              transition={{ duration: 0.5, delay: isMobile ? 0 : 0.5 }}
               className="bg-white dark:bg-[#1e1e1e] p-8 border border-black/5 dark:border-white/5 hover:border-black/10 dark:hover:border-white/10 transition-colors rounded-2xl md:col-span-2 lg:col-span-1"
             >
               <div className="mb-6">
@@ -880,12 +888,12 @@ export default function App() {
                   return (
                     <div
                       key={index}
-                      className="absolute top-8 lg:top-1/2 left-1/2 lg:left-0 -translate-x-1/2 lg:translate-x-0 w-full max-w-[90%] sm:max-w-sm lg:max-w-[90%] transition-all duration-500 ease-in-out pointer-events-none"
+                      className="absolute top-1/2 left-1/2 lg:left-0 -translate-x-1/2 -translate-y-1/2 lg:translate-x-0 w-full max-w-[90%] sm:max-w-sm lg:max-w-[90%] transition-all duration-500 ease-in-out pointer-events-none"
                       style={{ zIndex }}
                     >
                       <div 
                         onClick={() => setActiveTestimonial(index)}
-                        className="w-full transition-all duration-500 ease-in-out lg:-translate-y-1/2 pointer-events-auto cursor-pointer"
+                        className="w-full transition-all duration-500 ease-in-out pointer-events-auto cursor-pointer"
                         style={{ transform, opacity }}
                       >
                         <div className="bg-gray-50 dark:bg-[#1e1e1e] p-6 md:p-8 rounded-3xl border border-black/5 dark:border-white/5 shadow-xl">
