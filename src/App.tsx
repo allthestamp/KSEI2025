@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Menu, X, Stamp, BookOpen, Briefcase, Award, Video, FileText, MapPin, Phone, Sun, Moon, ArrowUp, Mail, Globe, Clock, ChevronDown, MessageCircle } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import emailjs from '@emailjs/browser';
+import CertificationPage from './components/CertificationPage';
 
 export default function App() {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -33,6 +34,7 @@ export default function App() {
   const [careerKey, setCareerKey] = useState(0);
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
   const [isMobile, setIsMobile] = useState(false);
+  const [currentPage, setCurrentPage] = useState<'home' | 'certification'>('home');
 
   useEffect(() => {
     const checkMobile = () => setIsMobile(window.innerWidth < 768);
@@ -196,24 +198,50 @@ export default function App() {
   }, [language]);
 
   const scrollTo = (id: string) => {
-    const element = document.getElementById(id);
-    if (element) {
-      const offset = 80;
-      const bodyRect = document.body.getBoundingClientRect().top;
-      const elementRect = element.getBoundingClientRect().top;
-      const elementPosition = elementRect - bodyRect;
-      const offsetPosition = elementPosition - offset;
+    if (currentPage !== 'home') {
+      setCurrentPage('home');
+      setTimeout(() => {
+        const element = document.getElementById(id);
+        if (element) {
+          const offset = 80;
+          const bodyRect = document.body.getBoundingClientRect().top;
+          const elementRect = element.getBoundingClientRect().top;
+          const elementPosition = elementRect - bodyRect;
+          const offsetPosition = elementPosition - offset;
 
-      window.scrollTo({
-        top: offsetPosition,
-        behavior: 'smooth'
-      });
+          window.scrollTo({
+            top: offsetPosition,
+            behavior: 'smooth'
+          });
+        }
+      }, 100);
+    } else {
+      const element = document.getElementById(id);
+      if (element) {
+        const offset = 80;
+        const bodyRect = document.body.getBoundingClientRect().top;
+        const elementRect = element.getBoundingClientRect().top;
+        const elementPosition = elementRect - bodyRect;
+        const offsetPosition = elementPosition - offset;
+
+        window.scrollTo({
+          top: offsetPosition,
+          behavior: 'smooth'
+        });
+      }
     }
     setIsMobileMenuOpen(false);
   };
 
   const scrollToTop = () => {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    if (currentPage !== 'home') {
+      setCurrentPage('home');
+      setTimeout(() => {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }, 100);
+    } else {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
   };
 
   return (
@@ -222,23 +250,24 @@ export default function App() {
       <nav className={`fixed w-full z-50 transition-all duration-300 border-b ${isScrolled ? 'bg-white/95 dark:bg-[#121212]/95 backdrop-blur-md border-black/10 dark:border-white/10 py-4' : 'bg-transparent border-transparent py-6'}`}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center">
-            <div className="flex items-center gap-3 cursor-pointer" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>
+            <div className="flex items-center gap-3 cursor-pointer" onClick={scrollToTop}>
               <img src="https://i.ibb.co/Dfv01BhW/Logo.png" alt="KSEI Logo" className="w-8 h-8 object-contain" />
-              <span className={`hidden md:block text-sm font-sans font-bold tracking-widest uppercase ${isScrolled ? 'text-black dark:text-white' : 'text-white'}`}>{t('한국스탬프교육진흥원', 'Korea Stamp Education Institute')}</span>
+              <span className={`hidden md:block text-sm font-sans font-bold tracking-widest uppercase ${isScrolled || currentPage !== 'home' ? 'text-black dark:text-white' : 'text-white'}`}>{t('한국스탬프교육진흥원', 'Korea Stamp Education Institute')}</span>
             </div>
             
             {/* Desktop Menu */}
             <div className="hidden md:flex items-center gap-10">
-              <button onClick={() => scrollTo('about')} className={`text-[11px] font-semibold tracking-[0.15em] uppercase transition-colors ${isScrolled ? 'text-gray-600 hover:text-black dark:text-gray-300 dark:hover:text-white' : 'text-gray-300 hover:text-white'}`}>{t('기관소개', 'COMPANY')}</button>
-              <button onClick={() => scrollTo('cert')} className={`text-[11px] font-semibold tracking-[0.15em] uppercase transition-colors ${isScrolled ? 'text-gray-600 hover:text-black dark:text-gray-300 dark:hover:text-white' : 'text-gray-300 hover:text-white'}`}>{t('자격증안내', 'CERTIFICATION')}</button>
-              <button onClick={() => scrollTo('exam')} className={`text-[11px] font-semibold tracking-[0.15em] uppercase transition-colors ${isScrolled ? 'text-gray-600 hover:text-black dark:text-gray-300 dark:hover:text-white' : 'text-gray-300 hover:text-white'}`}>{t('시험안내', 'EXAM')}</button>
-              <button onClick={() => scrollTo('faq')} className={`text-[11px] font-semibold tracking-[0.15em] uppercase transition-colors ${isScrolled ? 'text-gray-600 hover:text-black dark:text-gray-300 dark:hover:text-white' : 'text-gray-300 hover:text-white'}`}>{t('자주묻는질문', 'FAQ')}</button>
+              <button onClick={() => scrollTo('about')} className={`text-[11px] font-semibold tracking-[0.15em] uppercase transition-colors ${isScrolled || currentPage !== 'home' ? 'text-gray-600 hover:text-black dark:text-gray-300 dark:hover:text-white' : 'text-gray-300 hover:text-white'}`}>{t('기관소개', 'COMPANY')}</button>
+              <button onClick={() => scrollTo('cert')} className={`text-[11px] font-semibold tracking-[0.15em] uppercase transition-colors ${isScrolled || currentPage !== 'home' ? 'text-gray-600 hover:text-black dark:text-gray-300 dark:hover:text-white' : 'text-gray-300 hover:text-white'}`}>{t('자격증안내', 'CERTIFICATION')}</button>
+              <button onClick={() => { setCurrentPage('certification'); window.scrollTo(0, 0); }} className={`text-[11px] font-semibold tracking-[0.15em] uppercase transition-colors ${isScrolled || currentPage !== 'home' ? 'text-gray-600 hover:text-black dark:text-gray-300 dark:hover:text-white' : 'text-gray-300 hover:text-white'}`}>{t('자격증발급', 'ISSUANCE')}</button>
+              <button onClick={() => scrollTo('exam')} className={`text-[11px] font-semibold tracking-[0.15em] uppercase transition-colors ${isScrolled || currentPage !== 'home' ? 'text-gray-600 hover:text-black dark:text-gray-300 dark:hover:text-white' : 'text-gray-300 hover:text-white'}`}>{t('시험안내', 'EXAM')}</button>
+              <button onClick={() => scrollTo('faq')} className={`text-[11px] font-semibold tracking-[0.15em] uppercase transition-colors ${isScrolled || currentPage !== 'home' ? 'text-gray-600 hover:text-black dark:text-gray-300 dark:hover:text-white' : 'text-gray-300 hover:text-white'}`}>{t('자주묻는질문', 'FAQ')}</button>
               
               <div className="flex items-center gap-6 ml-4">
-                <button onClick={() => setLanguage(language === 'ko' ? 'en' : 'ko')} className={`transition-colors ${isScrolled ? 'text-gray-600 hover:text-black dark:text-gray-300 dark:hover:text-white' : 'text-gray-300 hover:text-white'}`} aria-label="언어 변경">
+                <button onClick={() => setLanguage(language === 'ko' ? 'en' : 'ko')} className={`transition-colors ${isScrolled || currentPage !== 'home' ? 'text-gray-600 hover:text-black dark:text-gray-300 dark:hover:text-white' : 'text-gray-300 hover:text-white'}`} aria-label="언어 변경">
                   <Globe className="w-4 h-4" />
                 </button>
-                <button onClick={() => setTheme(theme === 'light' ? 'dark' : 'light')} className={`transition-colors ${isScrolled ? 'text-gray-600 hover:text-black dark:text-gray-300 dark:hover:text-white' : 'text-gray-300 hover:text-white'}`} aria-label="테마 변경">
+                <button onClick={() => setTheme(theme === 'light' ? 'dark' : 'light')} className={`transition-colors ${isScrolled || currentPage !== 'home' ? 'text-gray-600 hover:text-black dark:text-gray-300 dark:hover:text-white' : 'text-gray-300 hover:text-white'}`} aria-label="테마 변경">
                   {theme === 'light' ? <Moon className="w-4 h-4" /> : <Sun className="w-4 h-4" />}
                 </button>
               </div>
@@ -246,7 +275,7 @@ export default function App() {
 
             {/* Mobile Menu Button */}
             <div className="md:hidden flex items-center gap-4">
-              <button onClick={() => setIsMobileMenuOpen(true)} className={`p-2 ${isScrolled ? 'text-black dark:text-white' : 'text-white'}`}>
+              <button onClick={() => setIsMobileMenuOpen(true)} className={`p-2 ${isScrolled || currentPage !== 'home' ? 'text-black dark:text-white' : 'text-white'}`}>
                 <Menu className="w-5 h-5" />
               </button>
             </div>
@@ -267,10 +296,10 @@ export default function App() {
           <div className="flex flex-col p-4 gap-4 flex-1">
             <button onClick={() => scrollTo('about')} className="text-left py-2 text-gray-800 dark:text-gray-200 font-medium">{t('기관소개', 'About Us')}</button>
             <button onClick={() => scrollTo('cert')} className="text-left py-2 text-gray-800 dark:text-gray-200 font-medium">{t('자격증안내', 'Certifications')}</button>
+            <button onClick={() => { setIsMobileMenuOpen(false); setCurrentPage('certification'); window.scrollTo(0, 0); }} className="text-left py-2 text-gray-800 dark:text-gray-200 font-medium">{t('자격증발급', 'Issuance')}</button>
             <button onClick={() => scrollTo('exam')} className="text-left py-2 text-gray-800 dark:text-gray-200 font-medium">{t('시험안내', 'Exam Info')}</button>
             <button onClick={() => scrollTo('exam')} className="text-left py-2 text-gray-800 dark:text-gray-200 font-medium">{t('접수방법', 'How to Apply')}</button>
             <button onClick={() => { setIsMobileMenuOpen(false); scrollTo('faq'); }} className="text-left py-2 text-gray-800 dark:text-gray-200 font-medium">{t('자주묻는질문', 'FAQ')}</button>
-            <button onClick={() => { setIsMobileMenuOpen(false); setShowConsultModal(true); }} className="text-left py-2 text-blue-600 dark:text-blue-400 font-bold">{t('상담신청', 'Consultation')}</button>
           </div>
           <div className="mt-auto p-4 border-t border-black/10 dark:border-white/10 flex justify-around">
             <button onClick={() => setLanguage(language === 'ko' ? 'en' : 'ko')} className="flex flex-col items-center gap-2 text-gray-600 dark:text-gray-400 hover:text-black dark:hover:text-white">
@@ -285,8 +314,11 @@ export default function App() {
         </div>
       </div>
 
-      {/* Hero Section */}
-      <div className="relative h-screen min-h-[600px] flex flex-col items-center justify-center overflow-hidden snap-start bg-white dark:bg-[#121212] transition-colors duration-300">
+      {/* Main Content Area */}
+      {currentPage === 'home' ? (
+        <>
+          {/* Hero Section */}
+          <div className="relative h-screen min-h-[600px] flex flex-col items-center justify-center overflow-hidden snap-start bg-white dark:bg-[#121212] transition-colors duration-300">
         {/* Background Image & Gradient */}
         <div className="absolute inset-0 z-0">
           <img 
@@ -448,7 +480,7 @@ export default function App() {
                 <p className="text-xs text-gray-500 dark:text-gray-400 mb-6 font-medium">
                   <span className="text-black dark:text-white">{t('결과:', 'Result:')}</span> {t('체험 보조, 간단한 제작 가능', 'Experience assistance, simple production possible')}
                 </p>
-                <button onClick={() => { setSelectedCert('2급'); setShowCertModal(true); }} className="w-full py-3 rounded-full border border-black/10 dark:border-white/10 text-black dark:text-white hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black transition-colors text-sm font-medium tracking-widest uppercase">{t('자세히 보기', 'Details')}</button>
+                <button onClick={() => { setSelectedCert('2급'); setShowCertModal(true); }} className="w-full py-3 rounded-full bg-black text-white dark:bg-white dark:text-black hover:bg-gray-800 dark:hover:bg-gray-200 transition-colors text-sm font-medium tracking-widest uppercase">{t('자세히 보기', 'Details')}</button>
               </div>
             </div>
 
@@ -498,7 +530,7 @@ export default function App() {
                 <p className="text-xs text-gray-500 dark:text-gray-400 mb-6 font-medium">
                   <span className="text-black dark:text-white">{t('결과:', 'Result:')}</span> {t('강사 양성, 기관 협력', 'Instructor training, institutional cooperation')}
                 </p>
-                <button onClick={() => { setSelectedCert('마스터'); setShowCertModal(true); }} className="w-full py-3 rounded-full border border-black/10 dark:border-white/10 text-black dark:text-white hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black transition-colors text-sm font-medium tracking-widest uppercase">{t('자세히 보기', 'Details')}</button>
+                <button onClick={() => { setSelectedCert('마스터'); setShowCertModal(true); }} className="w-full py-3 rounded-full bg-black text-white dark:bg-white dark:text-black hover:bg-gray-800 dark:hover:bg-gray-200 transition-colors text-sm font-medium tracking-widest uppercase">{t('자세히 보기', 'Details')}</button>
               </div>
             </div>
           </div>
@@ -735,115 +767,6 @@ export default function App() {
         </div>
       </div>
 
-      {/* FAQ & Location Section */}
-      <div className="py-24 bg-gray-50 dark:bg-[#121212] border-b border-black/5 dark:border-white/5 transition-colors duration-300 snap-start" id="faq">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-16">
-            {/* Left: FAQ */}
-            <div>
-              <div className="mb-10">
-                <h2 className="text-sm font-bold tracking-widest uppercase text-black dark:text-white mb-4 flex items-center gap-2">
-                  FAQ
-                  <span className="w-4 h-[1px] bg-black dark:bg-white"></span>
-                </h2>
-                <h3 className="text-2xl font-sans font-medium text-black dark:text-white">{t('자주 묻는 질문', 'Frequently Asked Questions')}</h3>
-              </div>
-              <div className="space-y-4">
-                {[
-                  {
-                    q: t('정식으로 허가된 자격증인가요?', 'Is it an officially licensed certificate?'),
-                    a: t('민간자격등록허가증을 받은 정식 자격증입니다.', 'It is an official certificate that has received a private qualification registration license.'),
-                    images: [
-                      'https://i.ibb.co/G43639Hq/1773106303264-9f665cd2-a080-4f8d-8360-12683a80e597-1.png',
-                      'https://i.ibb.co/kV3nWHL8/1773106303264-9f665cd2-a080-4f8d-8360-12683a80e597-2.png'
-                    ]
-                  },
-                  {
-                    q: t('자격증 취득 후 바로 강사로 활동할 수 있나요?', 'Can I work as an instructor immediately after obtaining the certification?'),
-                    a: t('1급 또는 마스터 자격증을 취득하시면 방과후 학교, 문화센터 등에서 강사로 활동하실 수 있는 자격이 주어집니다. 진흥원에서도 우수 수료자에게 출강 기회를 연결해 드리고 있습니다.', 'If you obtain a Level 1 or Master certification, you will be qualified to work as an instructor at after-school programs, cultural centers, etc. The Institute also connects excellent graduates with teaching opportunities.')
-                  },
-                  {
-                    q: t('온라인으로도 시험 응시가 가능한가요?', 'Is it possible to take the exam online?'),
-                    a: t('네, 포트폴리오 우편 제출 및 지정된 주제의 스탬프 제작 과정을 담은 영상 제출을 통해 온라인(비대면)으로도 충분히 응시 및 자격 취득이 가능합니다.', 'Yes, you can fully apply and obtain the certification online (non-face-to-face) by submitting your portfolio by mail and a video showing the stamp making process on a designated topic.')
-                  },
-                  {
-                    q: t('수강료 결제는 어떻게 하나요?', 'How do I pay the tuition fee?'),
-                    a: t('무통장 입금, 계좌이체 등을 통해 결제하실 수 있으며, 현금영수증 및 세금계산서 발행이 가능합니다. 자세한 계좌 정보는 접수 페이지를 참고해 주세요.', 'You can pay via bank transfer, etc., and cash receipts and tax invoices can be issued. Please refer to the application page for detailed account information.')
-                  }
-                ].map((faq, index) => (
-                  <div key={index} className="border border-black/10 dark:border-white/10 rounded-2xl overflow-hidden bg-white dark:bg-[#1e1e1e] transition-colors">
-                    <button 
-                      onClick={() => setOpenFaq(openFaq === index ? null : index)}
-                      className="w-full flex justify-between items-center p-6 md:p-8 text-left hover:bg-black/5 dark:hover:bg-white/5 transition-colors"
-                    >
-                      <span className="font-bold text-black dark:text-white pr-8">{faq.q}</span>
-                      <ChevronDown className={`w-5 h-5 text-gray-500 shrink-0 transition-transform duration-300 ${openFaq === index ? 'rotate-180' : ''}`} />
-                    </button>
-                    <div className={`overflow-hidden transition-all duration-300 ${openFaq === index ? 'max-h-[500px] opacity-100' : 'max-h-0 opacity-0'}`}>
-                      <div className="p-6 md:p-8 pt-0 text-gray-600 dark:text-gray-400 text-sm leading-relaxed">
-                        <p>{faq.a}</p>
-                        {faq.images && (
-                          <div className="flex gap-4 mt-4">
-                            {faq.images.map((img, i) => (
-                              <img 
-                                key={i} 
-                                src={img} 
-                                alt={`License ${i+1}`} 
-                                className="w-24 h-32 object-cover rounded-lg border border-black/10 dark:border-white/10 cursor-pointer hover:opacity-80 transition-opacity shadow-sm"
-                                onClick={(e) => {
-                                  e.stopPropagation();
-                                  setSelectedImage(img);
-                                }}
-                              />
-                            ))}
-                          </div>
-                        )}
-                      </div>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            {/* Right: Location */}
-            <div>
-              <div className="mb-10">
-                <h2 className="text-sm font-bold tracking-widest uppercase text-black dark:text-white mb-4 flex items-center gap-2">
-                  LOCATION
-                  <span className="w-4 h-[1px] bg-black dark:bg-white"></span>
-                </h2>
-                <h3 className="text-2xl font-sans font-medium text-black dark:text-white">{t('오시는 길', 'Directions')}</h3>
-              </div>
-              <div className="bg-white dark:bg-[#1e1e1e] p-8 rounded-2xl border border-black/5 dark:border-white/5 hover:border-black/10 dark:hover:border-white/10 transition-colors">
-                <div className="w-full h-48 bg-gray-50 dark:bg-[#2a2a2a] rounded-xl mb-6 flex items-center justify-center border border-black/5 dark:border-white/5 overflow-hidden relative">
-                  <img src="https://i.ibb.co/tT32PH3J/2026-03-10-095459.png" alt="Map" className="w-full h-full object-cover" referrerPolicy="no-referrer" />
-                </div>
-                <div className="space-y-6">
-                  <div className="flex items-start gap-4">
-                    <div className="w-10 h-10 rounded-full bg-emerald-50 dark:bg-emerald-900/20 flex items-center justify-center shrink-0">
-                      <MapPin className="w-5 h-5 text-emerald-500" />
-                    </div>
-                    <div>
-                      <h4 className="font-bold text-black dark:text-white mb-1">{t('주소', 'Address')}</h4>
-                      <p className="text-sm text-gray-600 dark:text-gray-400">{t('대전광역시 서구 갈마역로 155', '155 Galma-yeok-ro, Seo-gu, Daejeon')}</p>
-                    </div>
-                  </div>
-                  <div className="flex items-start gap-4">
-                    <div className="w-10 h-10 rounded-full bg-blue-50 dark:bg-blue-900/20 flex items-center justify-center shrink-0">
-                      <Phone className="w-5 h-5 text-blue-500" />
-                    </div>
-                    <div>
-                      <h4 className="font-bold text-black dark:text-white mb-1">{t('전화번호', 'Phone')}</h4>
-                      <p className="text-sm text-gray-600 dark:text-gray-400">010-8409-2802</p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
       {/* Testimonials & Gallery Section */}
       <div className="py-24 bg-white dark:bg-[#121212] border-b border-black/5 dark:border-white/5 transition-colors duration-300 snap-start">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -959,6 +882,119 @@ export default function App() {
           </div>
         </div>
       </div>
+
+      {/* FAQ & Location Section */}
+      <div className="py-24 bg-gray-50 dark:bg-[#121212] border-b border-black/5 dark:border-white/5 transition-colors duration-300 snap-start" id="faq">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-16">
+            {/* Left: FAQ */}
+            <div>
+              <div className="mb-10">
+                <h2 className="text-sm font-bold tracking-widest uppercase text-black dark:text-white mb-4 flex items-center gap-2">
+                  FAQ
+                  <span className="w-4 h-[1px] bg-black dark:bg-white"></span>
+                </h2>
+                <h3 className="text-2xl font-sans font-medium text-black dark:text-white">{t('자주 묻는 질문', 'Frequently Asked Questions')}</h3>
+              </div>
+              <div className="space-y-4">
+                {[
+                  {
+                    q: t('정식으로 허가된 자격증인가요?', 'Is it an officially licensed certificate?'),
+                    a: t('민간자격등록허가증을 받은 정식 자격증입니다.', 'It is an official certificate that has received a private qualification registration license.'),
+                    images: [
+                      'https://i.ibb.co/G43639Hq/1773106303264-9f665cd2-a080-4f8d-8360-12683a80e597-1.png',
+                      'https://i.ibb.co/kV3nWHL8/1773106303264-9f665cd2-a080-4f8d-8360-12683a80e597-2.png'
+                    ]
+                  },
+                  {
+                    q: t('자격증 취득 후 바로 강사로 활동할 수 있나요?', 'Can I work as an instructor immediately after obtaining the certification?'),
+                    a: t('1급 또는 마스터 자격증을 취득하시면 방과후 학교, 문화센터 등에서 강사로 활동하실 수 있는 자격이 주어집니다. 진흥원에서도 우수 수료자에게 출강 기회를 연결해 드리고 있습니다.', 'If you obtain a Level 1 or Master certification, you will be qualified to work as an instructor at after-school programs, cultural centers, etc. The Institute also connects excellent graduates with teaching opportunities.')
+                  },
+                  {
+                    q: t('온라인으로도 시험 응시가 가능한가요?', 'Is it possible to take the exam online?'),
+                    a: t('네, 포트폴리오 우편 제출 및 지정된 주제의 스탬프 제작 과정을 담은 영상 제출을 통해 온라인(비대면)으로도 충분히 응시 및 자격 취득이 가능합니다.', 'Yes, you can fully apply and obtain the certification online (non-face-to-face) by submitting your portfolio by mail and a video showing the stamp making process on a designated topic.')
+                  },
+                  {
+                    q: t('수강료 결제는 어떻게 하나요?', 'How do I pay the tuition fee?'),
+                    a: t('무통장 입금, 계좌이체 등을 통해 결제하실 수 있으며, 현금영수증 및 세금계산서 발행이 가능합니다. 자세한 계좌 정보는 접수 페이지를 참고해 주세요.', 'You can pay via bank transfer, etc., and cash receipts and tax invoices can be issued. Please refer to the application page for detailed account information.')
+                  }
+                ].map((faq, index) => (
+                  <div key={index} className="border border-black/10 dark:border-white/10 rounded-2xl overflow-hidden bg-white dark:bg-[#1e1e1e] transition-colors">
+                    <button 
+                      onClick={() => setOpenFaq(openFaq === index ? null : index)}
+                      className="w-full flex justify-between items-center p-6 md:p-8 text-left hover:bg-black/5 dark:hover:bg-white/5 transition-colors"
+                    >
+                      <span className="font-bold text-black dark:text-white pr-8">{faq.q}</span>
+                      <ChevronDown className={`w-5 h-5 text-gray-500 shrink-0 transition-transform duration-300 ${openFaq === index ? 'rotate-180' : ''}`} />
+                    </button>
+                    <div className={`overflow-hidden transition-all duration-300 ${openFaq === index ? 'max-h-[500px] opacity-100' : 'max-h-0 opacity-0'}`}>
+                      <div className="p-6 md:p-8 pt-0 text-gray-600 dark:text-gray-400 text-sm leading-relaxed">
+                        <p>{faq.a}</p>
+                        {faq.images && (
+                          <div className="flex gap-4 mt-4">
+                            {faq.images.map((img, i) => (
+                              <img 
+                                key={i} 
+                                src={img} 
+                                alt={`License ${i+1}`} 
+                                className="w-24 h-32 object-cover rounded-lg border border-black/10 dark:border-white/10 cursor-pointer hover:opacity-80 transition-opacity shadow-sm"
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  setSelectedImage(img);
+                                }}
+                              />
+                            ))}
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Right: Location */}
+            <div>
+              <div className="mb-10">
+                <h2 className="text-sm font-bold tracking-widest uppercase text-black dark:text-white mb-4 flex items-center gap-2">
+                  LOCATION
+                  <span className="w-4 h-[1px] bg-black dark:bg-white"></span>
+                </h2>
+                <h3 className="text-2xl font-sans font-medium text-black dark:text-white">{t('오시는 길', 'Directions')}</h3>
+              </div>
+              <div className="bg-white dark:bg-[#1e1e1e] p-8 rounded-2xl border border-black/5 dark:border-white/5 hover:border-black/10 dark:hover:border-white/10 transition-colors">
+                <div className="w-full h-48 bg-gray-50 dark:bg-[#2a2a2a] rounded-xl mb-6 flex items-center justify-center border border-black/5 dark:border-white/5 overflow-hidden relative">
+                  <img src="https://i.ibb.co/tT32PH3J/2026-03-10-095459.png" alt="Map" className="w-full h-full object-cover" referrerPolicy="no-referrer" />
+                </div>
+                <div className="space-y-6">
+                  <div className="flex items-start gap-4">
+                    <div className="w-10 h-10 rounded-full bg-emerald-50 dark:bg-emerald-900/20 flex items-center justify-center shrink-0">
+                      <MapPin className="w-5 h-5 text-emerald-500" />
+                    </div>
+                    <div>
+                      <h4 className="font-bold text-black dark:text-white mb-1">{t('주소', 'Address')}</h4>
+                      <p className="text-sm text-gray-600 dark:text-gray-400">{t('대전광역시 서구 갈마역로 155', '155 Galma-yeok-ro, Seo-gu, Daejeon')}</p>
+                    </div>
+                  </div>
+                  <div className="flex items-start gap-4">
+                    <div className="w-10 h-10 rounded-full bg-blue-50 dark:bg-blue-900/20 flex items-center justify-center shrink-0">
+                      <Phone className="w-5 h-5 text-blue-500" />
+                    </div>
+                    <div>
+                      <h4 className="font-bold text-black dark:text-white mb-1">{t('전화번호', 'Phone')}</h4>
+                      <p className="text-sm text-gray-600 dark:text-gray-400">010-8409-2802</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      </>
+      ) : (
+        <CertificationPage t={t} />
+      )}
 
       {/* Footer */}
       <footer className="bg-white dark:bg-[#121212] border-t border-black/5 dark:border-white/5 py-16 transition-colors duration-300 snap-start">
