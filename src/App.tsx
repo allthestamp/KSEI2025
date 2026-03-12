@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { Menu, X, Stamp, BookOpen, Briefcase, Award, Video, FileText, MapPin, Phone, Sun, Moon, ArrowUp, Mail, Globe, Clock, ChevronDown, MessageCircle, Building, Palette, GraduationCap, UserCheck, CreditCard, FileCheck, ChevronLeft, ChevronRight, FileEdit } from 'lucide-react';
+import React, { useState, useEffect, useLayoutEffect } from 'react';
+import { Menu, X, Stamp, BookOpen, Briefcase, Award, Video, FileText, MapPin, Phone, Sun, Moon, ArrowUp, Mail, Globe, Clock, ChevronDown, MessageCircle, Building, Palette, GraduationCap, UserCheck, CreditCard, FileCheck, ChevronLeft, ChevronRight, FileEdit, Store, ShoppingBag, Building2 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import emailjs from '@emailjs/browser';
 import CertificationPage from './components/CertificationPage';
@@ -39,6 +39,31 @@ export default function App() {
   const [isMobile, setIsMobile] = useState(false);
   const [currentPage, setCurrentPage] = useState<'home' | 'certification' | 'exam'>('home');
   const [activeSection, setActiveSection] = useState<string>('');
+  const [certAnimationKey, setCertAnimationKey] = useState(0);
+  const [pendingScrollTarget, setPendingScrollTarget] = useState<string | null>(null);
+
+  useLayoutEffect(() => {
+    if (currentPage === 'home' && pendingScrollTarget) {
+      if (pendingScrollTarget === 'top') {
+        window.scrollTo({ top: 0, behavior: 'auto' });
+      } else {
+        const element = document.getElementById(pendingScrollTarget);
+        if (element) {
+          const offset = 80;
+          const bodyRect = document.body.getBoundingClientRect().top;
+          const elementRect = element.getBoundingClientRect().top;
+          const elementPosition = elementRect - bodyRect;
+          const offsetPosition = elementPosition - offset;
+
+          window.scrollTo({
+            top: offsetPosition,
+            behavior: 'auto'
+          });
+        }
+      }
+      setPendingScrollTarget(null);
+    }
+  }, [currentPage, pendingScrollTarget]);
 
   useEffect(() => {
     const checkMobile = () => setIsMobile(window.innerWidth < 768);
@@ -276,22 +301,9 @@ export default function App() {
 
   const scrollTo = (id: string) => {
     if (currentPage !== 'home') {
+      if (id === 'cert') setCertAnimationKey(prev => prev + 1);
+      setPendingScrollTarget(id);
       setCurrentPage('home');
-      setTimeout(() => {
-        const element = document.getElementById(id);
-        if (element) {
-          const offset = 80;
-          const bodyRect = document.body.getBoundingClientRect().top;
-          const elementRect = element.getBoundingClientRect().top;
-          const elementPosition = elementRect - bodyRect;
-          const offsetPosition = elementPosition - offset;
-
-          window.scrollTo({
-            top: offsetPosition,
-            behavior: 'smooth'
-          });
-        }
-      }, 100);
     } else {
       const element = document.getElementById(id);
       if (element) {
@@ -312,10 +324,8 @@ export default function App() {
 
   const scrollToTop = () => {
     if (currentPage !== 'home') {
+      setPendingScrollTarget('top');
       setCurrentPage('home');
-      setTimeout(() => {
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-      }, 100);
     } else {
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
@@ -453,7 +463,7 @@ export default function App() {
                 ABOUT US
                 <span className="w-4 h-[1px] bg-black dark:bg-white"></span>
               </h2>
-              <p className="text-2xl md:text-3xl font-sans font-medium text-black dark:text-white leading-tight mb-6">
+              <p className="text-3xl md:text-4xl font-sans font-medium text-black dark:text-white leading-tight mb-6">
                 {t('한국스탬프교육진흥원', 'Korea Stamp Education Institute')}
               </p>
               <p className="text-gray-600 dark:text-gray-400 font-light leading-relaxed">
@@ -520,21 +530,34 @@ export default function App() {
       {/* Certification Section */}
       <div className="bg-white dark:bg-[#121212] py-24 border-b border-black/5 dark:border-white/5 transition-colors duration-300 snap-start" id="cert">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="text-sm font-bold tracking-widest uppercase text-black dark:text-white mb-6 flex items-center justify-center gap-2">
-              <span className="w-4 h-[1px] bg-black dark:bg-white"></span>
+          <motion.div 
+            key={`cert-header-${certAnimationKey}`}
+            initial={certAnimationKey > 0 ? { opacity: 0, y: 30 } : { opacity: 1, y: 0 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8 }}
+            className="text-center mb-16"
+          >
+            <h2 className="text-sm font-bold tracking-widest uppercase text-emerald-500 dark:text-emerald-400 mb-6 flex items-center justify-center gap-2">
+              <span className="w-4 h-[1px] bg-emerald-500 dark:bg-emerald-400"></span>
               CERTIFICATION
-              <span className="w-4 h-[1px] bg-black dark:bg-white"></span>
+              <span className="w-4 h-[1px] bg-emerald-500 dark:bg-emerald-400"></span>
             </h2>
-            <p className="text-2xl md:text-3xl font-sans font-medium text-black dark:text-white leading-tight mb-4">
+            <p className="text-3xl md:text-4xl font-sans font-medium text-black dark:text-white leading-tight mb-4">
               {t('스탬프제작지도사 자격증', 'Stamp Making Instructor Certification')}
             </p>
             <p className="text-gray-600 dark:text-gray-400 font-light">{t('스탬프 제작 기술을 습득하고, 교육·체험·창업 등 다양한 영역에서 활동할 수 있는 전문 민간자격증입니다.', 'A professional private certification that allows you to acquire stamp making skills and work in various fields such as education, experience, and startups.')}</p>
-          </div>
+          </motion.div>
 
           <div className="flex overflow-x-auto snap-x snap-mandatory md:grid md:grid-cols-3 gap-4 md:gap-6 pb-4 -mx-4 px-4 md:mx-0 md:px-0 hide-scrollbar">
             {/* Card 1 */}
-            <div className="bg-gray-50 dark:bg-[#1e1e1e] p-8 md:p-10 flex flex-col h-full min-h-[550px] min-w-[85vw] md:min-w-0 snap-center shrink-0 rounded-2xl border border-black/5 dark:border-white/5 hover:border-black/10 dark:hover:border-white/10 transition-colors group relative overflow-hidden">
+            <motion.div 
+              key={`cert-card-1-${certAnimationKey}`}
+              initial={certAnimationKey > 0 ? { opacity: 0, y: 30 } : { opacity: 1, y: 0 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: isMobile ? 0 : 0.1 }}
+              whileHover={{ y: -5 }}
+              className="bg-gray-50 dark:bg-[#1e1e1e] p-8 md:p-10 flex flex-col h-full min-h-[550px] min-w-[85vw] md:min-w-0 snap-center shrink-0 rounded-2xl border border-black/5 dark:border-white/5 hover:border-black/10 dark:hover:border-white/10 transition-all duration-300 hover:shadow-xl hover:shadow-black/5 dark:hover:shadow-white/5 group relative overflow-hidden"
+            >
               <div className="flex justify-between items-start mb-6">
                 <h3 className="text-4xl font-bold text-black dark:text-white">{t('2급', 'Level 2')}</h3>
                 <span className="text-xs font-mono text-gray-400">01</span>
@@ -554,12 +577,19 @@ export default function App() {
                 <p className="text-xs text-gray-500 dark:text-gray-400 mb-6 font-medium">
                   <span className="text-black dark:text-white">{t('결과:', 'Result:')}</span> {t('체험 보조, 간단한 제작 가능', 'Experience assistance, simple production possible')}
                 </p>
-                <button onClick={() => { setSelectedCert('2급'); setShowCertModal(true); }} className="w-full py-3 rounded-full bg-black text-white dark:bg-white dark:text-black hover:bg-gray-800 dark:hover:bg-gray-200 transition-colors text-sm font-medium tracking-widest uppercase">{t('자세히 보기', 'Details')}</button>
+                <button onClick={() => { setSelectedCert('2급'); setShowCertModal(true); }} className="w-full py-3 rounded-full bg-white text-black border border-black/20 dark:bg-[#121212] dark:text-white dark:border-white/20 hover:text-emerald-500 hover:border-emerald-500 dark:hover:text-emerald-400 dark:hover:border-emerald-400 transition-colors text-sm font-medium tracking-widest uppercase">{t('자세히 보기', 'Details')}</button>
               </div>
-            </div>
+            </motion.div>
 
             {/* Card 2 */}
-            <div className="bg-gray-50 dark:bg-[#1e1e1e] p-8 md:p-10 flex flex-col h-full min-h-[550px] min-w-[85vw] md:min-w-0 snap-center shrink-0 rounded-2xl border border-black/5 dark:border-white/5 hover:border-black/10 dark:hover:border-white/10 transition-colors group relative overflow-hidden">
+            <motion.div 
+              key={`cert-card-2-${certAnimationKey}`}
+              initial={certAnimationKey > 0 ? { opacity: 0, y: 30 } : { opacity: 1, y: 0 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: isMobile ? 0 : 0.2 }}
+              whileHover={{ y: -5 }}
+              className="bg-gray-50 dark:bg-[#1e1e1e] p-8 md:p-10 flex flex-col h-full min-h-[550px] min-w-[85vw] md:min-w-0 snap-center shrink-0 rounded-2xl border border-black/5 dark:border-white/5 hover:border-black/10 dark:hover:border-white/10 transition-all duration-300 hover:shadow-xl hover:shadow-black/5 dark:hover:shadow-white/5 group relative overflow-hidden"
+            >
               <div className="flex justify-between items-start mb-6">
                 <h3 className="text-4xl font-bold text-black dark:text-white">{t('1급', 'Level 1')}</h3>
                 <span className="text-xs font-mono text-gray-400">02</span>
@@ -579,12 +609,19 @@ export default function App() {
                 <p className="text-xs text-gray-500 dark:text-gray-400 mb-6 font-medium">
                   <span className="text-black dark:text-white">{t('결과:', 'Result:')}</span> {t('강의 활동, 창업·판매 가능', 'Teaching, startup, sales possible')}
                 </p>
-                <button onClick={() => { setSelectedCert('1급'); setShowCertModal(true); }} className="w-full py-3 rounded-full bg-black text-white dark:bg-white dark:text-black hover:bg-gray-800 dark:hover:bg-gray-200 transition-colors text-sm font-medium tracking-widest uppercase">{t('자세히 보기', 'Details')}</button>
+                <button onClick={() => { setSelectedCert('1급'); setShowCertModal(true); }} className="w-full py-3 rounded-full bg-white text-black border border-black/20 dark:bg-[#121212] dark:text-white dark:border-white/20 hover:text-emerald-500 hover:border-emerald-500 dark:hover:text-emerald-400 dark:hover:border-emerald-400 transition-colors text-sm font-medium tracking-widest uppercase">{t('자세히 보기', 'Details')}</button>
               </div>
-            </div>
+            </motion.div>
 
             {/* Card 3 */}
-            <div className="bg-gray-50 dark:bg-[#1e1e1e] p-8 md:p-10 flex flex-col h-full min-h-[550px] min-w-[85vw] md:min-w-0 snap-center shrink-0 rounded-2xl border border-black/5 dark:border-white/5 hover:border-black/10 dark:hover:border-white/10 transition-colors group relative overflow-hidden">
+            <motion.div 
+              key={`cert-card-3-${certAnimationKey}`}
+              initial={certAnimationKey > 0 ? { opacity: 0, y: 30 } : { opacity: 1, y: 0 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: isMobile ? 0 : 0.3 }}
+              whileHover={{ y: -5 }}
+              className="bg-gray-50 dark:bg-[#1e1e1e] p-8 md:p-10 flex flex-col h-full min-h-[550px] min-w-[85vw] md:min-w-0 snap-center shrink-0 rounded-2xl border border-black/5 dark:border-white/5 hover:border-black/10 dark:hover:border-white/10 transition-all duration-300 hover:shadow-xl hover:shadow-black/5 dark:hover:shadow-white/5 group relative overflow-hidden"
+            >
               <div className="flex justify-between items-start mb-6">
                 <h3 className="text-4xl font-bold text-black dark:text-white">{t('마스터', 'Master')}</h3>
                 <span className="text-xs font-mono text-gray-400">03</span>
@@ -604,9 +641,9 @@ export default function App() {
                 <p className="text-xs text-gray-500 dark:text-gray-400 mb-6 font-medium">
                   <span className="text-black dark:text-white">{t('결과:', 'Result:')}</span> {t('강사 양성, 기관 협력', 'Instructor training, institutional cooperation')}
                 </p>
-                <button onClick={() => { setSelectedCert('마스터'); setShowCertModal(true); }} className="w-full py-3 rounded-full bg-black text-white dark:bg-white dark:text-black hover:bg-gray-800 dark:hover:bg-gray-200 transition-colors text-sm font-medium tracking-widest uppercase">{t('자세히 보기', 'Details')}</button>
+                <button onClick={() => { setSelectedCert('마스터'); setShowCertModal(true); }} className="w-full py-3 rounded-full bg-white text-black border border-black/20 dark:bg-[#121212] dark:text-white dark:border-white/20 hover:text-emerald-500 hover:border-emerald-500 dark:hover:text-emerald-400 dark:hover:border-emerald-400 transition-colors text-sm font-medium tracking-widest uppercase">{t('자세히 보기', 'Details')}</button>
               </div>
-            </div>
+            </motion.div>
           </div>
         </div>
       </div>
@@ -620,131 +657,120 @@ export default function App() {
               CAREER
               <span className="w-4 h-[1px] bg-black dark:bg-white"></span>
             </h2>
-            <p className="text-2xl md:text-3xl font-sans font-medium text-black dark:text-white leading-tight mb-4">
+            <p className="text-3xl md:text-4xl font-sans font-medium text-black dark:text-white leading-tight mb-4">
               {t('취득 후 활용 방안', 'Career Opportunities')}
             </p>
             <p className="text-gray-600 dark:text-gray-400 font-light">{t('자격증 취득 후 다양한 분야에서 전문가로 활동할 수 있습니다.', 'After obtaining the certification, you can work as an expert in various fields.')}</p>
           </div>
           
-          <div key={careerKey} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {/* 1. 정규 수업 및 클래스 운영 */}
+          <div key={careerKey} className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            {/* 1. 방과후 학교 및 문화센터 강사 */}
             <motion.div 
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: "-50px" }}
               transition={{ duration: 0.5, delay: isMobile ? 0 : 0.1 }}
-              className="bg-white dark:bg-[#1e1e1e] p-8 border border-black/5 dark:border-white/5 hover:border-black/10 dark:hover:border-white/10 transition-colors rounded-2xl"
+              className="lg:col-span-2 bg-white dark:bg-[#1e1e1e] p-8 md:p-10 border border-black/5 dark:border-white/5 hover:border-black/10 dark:hover:border-white/10 transition-colors rounded-[2rem] flex flex-col md:flex-row justify-between items-start gap-8"
             >
-              <div className="mb-6">
-                <BookOpen className="w-8 h-8 text-black dark:text-white" strokeWidth={1.5} />
+              <div className="flex-1">
+                <h3 className="text-xl md:text-2xl font-bold text-black dark:text-white mb-6">{t('방과후 학교 및 문화센터 강사', 'After-school & Culture Center Instructor')}</h3>
+                <ul className="text-gray-600 dark:text-gray-400 text-sm md:text-base space-y-4">
+                  <li className="flex gap-3"><span className="text-emerald-500">•</span> {t('초·중·고등학교 방과후 학교 스탬프 아트 강사 활동', 'After-school stamp art instructor at elementary, middle, and high schools')}</li>
+                  <li className="flex gap-3"><span className="text-emerald-500">•</span> {t('대형 마트, 백화점 문화센터 및 도서관 정기 강좌 운영', 'Regular classes at large marts, department store culture centers, and libraries')}</li>
+                  <li className="flex gap-3"><span className="text-emerald-500">•</span> {t('청소년 수련관, 구민 회관 등 공공 교육 시설 출강', 'Lecturing at public education facilities like youth training centers and community halls')}</li>
+                </ul>
               </div>
-              <h3 className="text-lg font-bold text-black dark:text-white mb-4">{t('정규 수업 및 클래스 운영', 'Regular Classes & Operation')}</h3>
-              <ul className="text-gray-600 dark:text-gray-400 text-sm space-y-3">
-                <li className="flex gap-3"><span className="text-emerald-500">•</span> {t('문화센터, 평생교육원, 공방 등에서 정규 수업 운영', 'Regular classes at cultural centers, lifelong education centers, workshops')}</li>
-                <li className="flex gap-3"><span className="text-emerald-500">•</span> {t('성인 취미반, 원데이 클래스, 소규모 그룹 수업 진행', 'Adult hobby classes, one-day classes, small group classes')}</li>
-                <li className="flex gap-3"><span className="text-emerald-500">•</span> {t('초보자 대상 스탬프 제작 기초 교육 운영', 'Basic stamp making education for beginners')}</li>
-                <li className="flex gap-3"><span className="text-emerald-500">•</span> {t('오프라인·온라인 클래스 개설 및 관리', 'Opening and managing offline/online classes')}</li>
-              </ul>
+              <div className="w-16 h-16 rounded-full bg-emerald-50 dark:bg-emerald-900/20 flex items-center justify-center flex-shrink-0">
+                <Building className="w-8 h-8 text-emerald-600 dark:text-emerald-400" strokeWidth={1.5} />
+              </div>
             </motion.div>
             
-            {/* 2. 체험 프로그램 운영 */}
+            {/* 2. 공방 창업 및 운영 */}
             <motion.div 
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: "-50px" }}
               transition={{ duration: 0.5, delay: isMobile ? 0 : 0.2 }}
-              className="bg-white dark:bg-[#1e1e1e] p-8 border border-black/5 dark:border-white/5 hover:border-black/10 dark:hover:border-white/10 transition-colors rounded-2xl"
+              className="lg:col-span-1 bg-emerald-500 text-white p-8 md:p-10 rounded-[2rem] flex flex-col"
             >
               <div className="mb-6">
-                <Stamp className="w-8 h-8 text-black dark:text-white" strokeWidth={1.5} />
+                <Store className="w-8 h-8 text-white" strokeWidth={1.5} />
               </div>
-              <h3 className="text-lg font-bold text-black dark:text-white mb-4">{t('체험 프로그램 운영', 'Experience Program Operation')}</h3>
-              <ul className="text-gray-600 dark:text-gray-400 text-sm space-y-3">
-                <li className="flex gap-3"><span className="text-emerald-500">•</span> {t('플리마켓, 박람회, 축제 체험 부스 운영', 'Experience booths at flea markets, fairs, festivals')}</li>
-                <li className="flex gap-3"><span className="text-emerald-500">•</span> {t('키즈카페, 미술학원, 지역센터 연계 체험 클래스 진행', 'Experience classes linked with kids cafes, art academies, local centers')}</li>
-                <li className="flex gap-3"><span className="text-emerald-500">•</span> {t('가족 체험 행사 및 시즌별 프로그램 기획', 'Family experience events and seasonal program planning')}</li>
-                <li className="flex gap-3"><span className="text-emerald-500">•</span> {t('단기 체험형 수업 및 참여형 이벤트 운영', 'Short-term experience classes and participatory events')}</li>
-              </ul>
+              <h3 className="text-xl md:text-2xl font-bold mb-4">{t('공방 창업 및 운영', 'Workshop Startup & Operation')}</h3>
+              <p className="text-white/90 text-sm md:text-base leading-relaxed">
+                {t('개인 공방을 오픈하여 원데이 클래스, 취미반, 자격증반 등 다양한 교육 프로그램을 직접 운영하고 수익을 창출할 수 있습니다.', 'You can open a personal workshop and directly operate various educational programs such as one-day classes, hobby classes, and certification classes to generate income.')}
+              </p>
             </motion.div>
-            
-            {/* 3. 창업 및 판매 활동 */}
+
+            {/* Row 2 */}
+            {/* 3. 주문제작 및 온라인 판매 */}
             <motion.div 
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: "-50px" }}
               transition={{ duration: 0.5, delay: isMobile ? 0 : 0.3 }}
-              className="bg-white dark:bg-[#1e1e1e] p-8 border border-black/5 dark:border-white/5 hover:border-black/10 dark:hover:border-white/10 transition-colors rounded-2xl"
+              className="lg:col-span-1 bg-black text-white p-8 md:p-10 rounded-[2rem] flex flex-col"
             >
               <div className="mb-6">
-                <Briefcase className="w-8 h-8 text-black dark:text-white" strokeWidth={1.5} />
+                <div className="w-12 h-12 rounded-xl bg-white/10 flex items-center justify-center">
+                  <ShoppingBag className="w-6 h-6 text-emerald-400" strokeWidth={1.5} />
+                </div>
               </div>
-              <h3 className="text-lg font-bold text-black dark:text-white mb-4">{t('창업 및 판매 활동', 'Startup & Sales Activities')}</h3>
-              <ul className="text-gray-600 dark:text-gray-400 text-sm space-y-3">
-                <li className="flex gap-3"><span className="text-emerald-500">•</span> {t('스탬프 전문 공방 창업 및 클래스 운영', 'Starting a stamp workshop and running classes')}</li>
-                <li className="flex gap-3"><span className="text-emerald-500">•</span> {t('맞춤 스탬프 제작·판매 및 온라인 주문 운영', 'Custom stamp production/sales and online order management')}</li>
-                <li className="flex gap-3"><span className="text-emerald-500">•</span> {t('소상공인 대상 로고·포장용 스탬프 제작', 'Logo/packaging stamp production for small businesses')}</li>
-                <li className="flex gap-3"><span className="text-emerald-500">•</span> {t('체험과 판매를 연계한 수익형 비즈니스 확장', 'Expanding profitable business linking experience and sales')}</li>
-              </ul>
+              <h3 className="text-xl md:text-2xl font-bold mb-4">{t('주문제작 및 온라인 판매', 'Custom Orders & Online Sales')}</h3>
+              <p className="text-white/80 text-sm md:text-base leading-relaxed">
+                {t('아이디어스, 네이버 스마트스토어, SNS 등을 통해 세상에 하나뿐인 커스텀 스탬프와 굿즈를 제작하여 판매하는 작가로 활동합니다.', 'Work as an artist making and selling one-of-a-kind custom stamps and goods through platforms like Idus, Naver Smart Store, and SNS.')}
+              </p>
             </motion.div>
-            
-            {/* 4. 기관·기업 프로그램 기획 */}
+
+            {/* 4. 기관·기업 프로그램 기획 & 브랜딩/전문가 활동 */}
             <motion.div 
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: "-50px" }}
               transition={{ duration: 0.5, delay: isMobile ? 0 : 0.4 }}
-              className="bg-white dark:bg-[#1e1e1e] p-8 border border-black/5 dark:border-white/5 hover:border-black/10 dark:hover:border-white/10 transition-colors rounded-2xl"
+              className="lg:col-span-2 bg-white dark:bg-[#1e1e1e] p-8 md:p-10 border border-black/5 dark:border-white/5 hover:border-black/10 dark:hover:border-white/10 transition-colors rounded-[2rem] flex flex-col md:flex-row gap-8"
             >
-              <div className="mb-6">
-                <Building className="w-8 h-8 text-black dark:text-white" strokeWidth={1.5} />
+              {/* Left side */}
+              <div className="flex-1 flex flex-col">
+                <div className="mb-6">
+                  <div className="w-12 h-12 rounded-xl border border-black/10 dark:border-white/10 flex items-center justify-center">
+                    <Building2 className="w-6 h-6 text-black dark:text-white" strokeWidth={1.5} />
+                  </div>
+                </div>
+                <h3 className="text-xl md:text-2xl font-bold text-black dark:text-white mb-4">{t('기관·기업 프로그램 기획', 'Institution/Corporate Program Planning')}</h3>
+                <p className="text-gray-600 dark:text-gray-400 text-sm md:text-base leading-relaxed">
+                  {t('학교, 복지관, 공공기관 대상 프로그램 제안 및 지자체·기관 행사 맞춤형 체험 프로그램을 기획하고 운영합니다.', 'Propose programs for schools, welfare centers, and public institutions, and plan and operate customized experience programs for local government and institutional events.')}
+                </p>
               </div>
-              <h3 className="text-lg font-bold text-black dark:text-white mb-4">{t('기관·기업 프로그램 기획', 'Institutional & Corporate Programs')}</h3>
-              <ul className="text-gray-600 dark:text-gray-400 text-sm space-y-3">
-                <li className="flex gap-3"><span className="text-emerald-500">•</span> {t('학교, 복지관, 공공기관 대상 프로그램 제안', 'Program proposals for schools, welfare centers, public institutions')}</li>
-                <li className="flex gap-3"><span className="text-emerald-500">•</span> {t('지자체·기관 행사 맞춤형 체험 프로그램 기획', 'Customized experience programs for local government/institutional events')}</li>
-                <li className="flex gap-3"><span className="text-emerald-500">•</span> {t('기업 워크숍, 단체 수업, 협업 프로그램 구성', 'Corporate workshops, group classes, collaborative programs')}</li>
-                <li className="flex gap-3"><span className="text-emerald-500">•</span> {t('대상별 교육안, 제안서, 운영안 작성 및 협의', 'Drafting and negotiating education plans, proposals, and operation plans')}</li>
-              </ul>
-            </motion.div>
 
-            {/* 5. 브랜딩·디자인 활용 */}
-            <motion.div 
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: "-50px" }}
-              transition={{ duration: 0.5, delay: isMobile ? 0 : 0.5 }}
-              className="bg-white dark:bg-[#1e1e1e] p-8 border border-black/5 dark:border-white/5 hover:border-black/10 dark:hover:border-white/10 transition-colors rounded-2xl"
-            >
-              <div className="mb-6">
-                <Palette className="w-8 h-8 text-black dark:text-white" strokeWidth={1.5} />
+              {/* Right side (Stacked cards) */}
+              <div className="flex-1 flex flex-col gap-4">
+                {/* Sub-card 1 */}
+                <div className="bg-white dark:bg-[#252525] p-5 border border-black/5 dark:border-white/5 rounded-2xl flex items-start gap-4">
+                  <div className="mt-1">
+                    <Palette className="w-5 h-5 text-emerald-500" strokeWidth={2} />
+                  </div>
+                  <div>
+                    <h4 className="font-bold text-black dark:text-white mb-1">{t('브랜딩 활용', 'Branding Utilization')}</h4>
+                    <p className="text-xs md:text-sm text-gray-500 dark:text-gray-400">
+                      {t('로고, 패키지, 굿즈 디자인 등 브랜드 시각 요소 개발', 'Development of brand visual elements such as logo, package, and goods design')}
+                    </p>
+                  </div>
+                </div>
+                
+                {/* Sub-card 2 */}
+                <div className="bg-white dark:bg-[#252525] p-5 border border-black/5 dark:border-white/5 rounded-2xl flex items-start gap-4">
+                  <div className="mt-1">
+                    <GraduationCap className="w-5 h-5 text-emerald-500" strokeWidth={2} />
+                  </div>
+                  <div>
+                    <h4 className="font-bold text-black dark:text-white mb-1">{t('전문가 활동', 'Expert Activities')}</h4>
+                    <p className="text-xs md:text-sm text-gray-500 dark:text-gray-400">
+                      {t('후배 강사 양성 및 교육 커리큘럼 개발 멘토링', 'Mentoring for training junior instructors and developing educational curriculum')}
+                    </p>
+                  </div>
+                </div>
               </div>
-              <h3 className="text-lg font-bold text-black dark:text-white mb-4">{t('브랜딩·디자인 활용', 'Branding & Design Utilization')}</h3>
-              <ul className="text-gray-600 dark:text-gray-400 text-sm space-y-3">
-                <li className="flex gap-3"><span className="text-emerald-500">•</span> {t('스탬프를 활용한 로고, 패키지, 굿즈 디자인', 'Logo, package, and goods design using stamps')}</li>
-                <li className="flex gap-3"><span className="text-emerald-500">•</span> {t('소상공인·소규모 브랜드 맞춤 제작 제안', 'Custom production proposals for small businesses and brands')}</li>
-                <li className="flex gap-3"><span className="text-emerald-500">•</span> {t('문구, 엽서, 포장재 등 감성 상품 제작 활용', 'Utilization in emotional product production like stationery, postcards, packaging')}</li>
-                <li className="flex gap-3"><span className="text-emerald-500">•</span> {t('브랜드 콘셉트에 맞춘 시각 요소 개발', 'Development of visual elements tailored to brand concepts')}</li>
-              </ul>
-            </motion.div>
-            
-            {/* 6. 교육 기획 및 전문가 활동 */}
-            <motion.div 
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: "-50px" }}
-              transition={{ duration: 0.5, delay: isMobile ? 0 : 0.6 }}
-              className="bg-white dark:bg-[#1e1e1e] p-8 border border-black/5 dark:border-white/5 hover:border-black/10 dark:hover:border-white/10 transition-colors rounded-2xl"
-            >
-              <div className="mb-6">
-                <GraduationCap className="w-8 h-8 text-black dark:text-white" strokeWidth={1.5} />
-              </div>
-              <h3 className="text-lg font-bold text-black dark:text-white mb-4">{t('교육 기획 및 전문가 활동', 'Educational Planning & Expert Activities')}</h3>
-              <ul className="text-gray-600 dark:text-gray-400 text-sm space-y-3">
-                <li className="flex gap-3"><span className="text-emerald-500">•</span> {t('후배 강사 양성 및 멘토링 활동', 'Training and mentoring junior instructors')}</li>
-                <li className="flex gap-3"><span className="text-emerald-500">•</span> {t('연령·대상별 교육 커리큘럼 개발', 'Development of educational curriculum by age and target')}</li>
-                <li className="flex gap-3"><span className="text-emerald-500">•</span> {t('교육 콘텐츠, 교안, 활동지 제작', 'Production of educational content, teaching materials, and activity sheets')}</li>
-                <li className="flex gap-3"><span className="text-emerald-500">•</span> {t('전문 교육자 및 상위 과정 운영 역량 확장', 'Expanding capabilities as a professional educator and running advanced courses')}</li>
-              </ul>
             </motion.div>
           </div>
         </div>
@@ -760,7 +786,7 @@ export default function App() {
               REVIEW
               <span className="w-4 h-[1px] bg-black dark:bg-white"></span>
             </h2>
-            <p className="text-2xl md:text-3xl font-sans font-medium text-black dark:text-white leading-tight">
+            <p className="text-3xl md:text-4xl font-sans font-medium text-black dark:text-white leading-tight">
               {t('자격증 응시 후기', 'Certification Testimonials')}
             </p>
           </div>
@@ -878,7 +904,7 @@ export default function App() {
                   FAQ
                   <span className="w-4 h-[1px] bg-black dark:bg-white"></span>
                 </h2>
-                <h3 className="text-2xl font-sans font-medium text-black dark:text-white">{t('자주 묻는 질문', 'Frequently Asked Questions')}</h3>
+                <h3 className="text-3xl md:text-4xl font-sans font-medium text-black dark:text-white">{t('자주 묻는 질문', 'Frequently Asked Questions')}</h3>
               </div>
               <div className="space-y-4">
                 {[
@@ -944,7 +970,7 @@ export default function App() {
                   LOCATION
                   <span className="w-4 h-[1px] bg-black dark:bg-white"></span>
                 </h2>
-                <h3 className="text-2xl font-sans font-medium text-black dark:text-white">{t('오시는 길', 'Directions')}</h3>
+                <h3 className="text-3xl md:text-4xl font-sans font-medium text-black dark:text-white">{t('오시는 길', 'Directions')}</h3>
               </div>
               <div className="bg-white dark:bg-[#1e1e1e] p-8 rounded-2xl border border-black/5 dark:border-white/5 hover:border-black/10 dark:hover:border-white/10 transition-colors">
                 <div className="w-full h-48 bg-gray-50 dark:bg-[#2a2a2a] rounded-xl mb-6 flex items-center justify-center border border-black/5 dark:border-white/5 overflow-hidden relative">
@@ -985,7 +1011,7 @@ export default function App() {
               GALLERY
               <span className="w-4 h-[1px] bg-black dark:bg-white"></span>
             </h2>
-            <p className="text-2xl md:text-3xl font-sans font-medium text-black dark:text-white leading-tight">
+            <p className="text-3xl md:text-4xl font-sans font-medium text-black dark:text-white leading-tight">
               {t('갤러리', 'Gallery')}
             </p>
             <p className="text-gray-600 dark:text-gray-400 font-light mt-4">
@@ -1359,130 +1385,164 @@ export default function App() {
       )}
 
       {/* Apply Modal */}
-      {showApplyModal && (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
-          <div className="bg-white dark:bg-[#1e1e1e] rounded-2xl shadow-2xl w-full max-w-3xl max-h-[90vh] flex flex-col animate-in fade-in zoom-in duration-200">
-            <div className="p-6 border-b border-black/10 dark:border-white/10 flex justify-between items-center shrink-0">
-              <h3 className="text-xl font-bold text-black dark:text-white">{t('접수하기', 'Apply Now')}</h3>
-              <button onClick={() => setShowApplyModal(false)} className="text-gray-500 hover:text-black dark:hover:text-white transition-colors">
-                <X className="w-6 h-6" />
-              </button>
-            </div>
-            <div className="p-6 overflow-y-auto custom-scrollbar text-sm text-gray-600 dark:text-gray-300 space-y-6">
-              <div className="space-y-4">
+      <AnimatePresence>
+        {showApplyModal && (
+          <motion.div 
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-[100] flex items-center justify-center p-4 sm:p-6 bg-black/60 backdrop-blur-md"
+          >
+            <motion.div 
+              initial={{ opacity: 0, scale: 0.95, y: 20 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.95, y: 20 }}
+              transition={{ type: "spring", duration: 0.5 }}
+              className="bg-white dark:bg-[#1e1e1e] rounded-[2.5rem] shadow-2xl w-full max-w-3xl max-h-[90vh] flex flex-col relative overflow-hidden"
+            >
+              {/* Decorative background element */}
+              <div className="absolute top-0 right-0 w-64 h-64 bg-emerald-500/5 blur-3xl rounded-full -mr-32 -mt-32 pointer-events-none"></div>
+              
+              <div className="p-8 pb-6 flex justify-between items-center shrink-0 relative z-10">
                 <div>
-                  <label className="block text-sm font-bold text-black dark:text-white mb-1">
-                    {t('성함', 'Name')} {formErrors.name && <span className="text-red-500 font-normal ml-2">{formErrors.name}</span>}
-                  </label>
-                  <input type="text" value={formData.name} onChange={e => setFormData({...formData, name: e.target.value})} className="w-full p-3 rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-[#2a2a2a] text-black dark:text-white focus:ring-2 focus:ring-blue-500 outline-none" placeholder={t('성함을 입력해주세요', 'Please enter your name')} />
+                  <h3 className="text-2xl md:text-3xl font-bold text-black dark:text-white tracking-tight">{t('접수하기', 'Apply Now')}</h3>
+                  <p className="text-sm text-gray-500 dark:text-gray-400 mt-2">{t('아래 양식을 정확하게 작성해 주세요.', 'Please fill out the form below accurately.')}</p>
                 </div>
-                <div>
-                  <label className="block text-sm font-bold text-black dark:text-white mb-1">
-                    {t('주민등록번호', 'Resident Registration Number')} {formErrors.idNumber && <span className="text-red-500 font-normal ml-2">{formErrors.idNumber}</span>}
-                  </label>
-                  <input type="text" value={formData.idNumber} onChange={e => setFormData({...formData, idNumber: e.target.value})} className="w-full p-3 rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-[#2a2a2a] text-black dark:text-white focus:ring-2 focus:ring-blue-500 outline-none" placeholder="ex. 123456-7891111" />
-                </div>
-                <div>
-                  <label className="block text-sm font-bold text-black dark:text-white mb-1">
-                    {t('연락처', 'Contact Number')} {formErrors.phone && <span className="text-red-500 font-normal ml-2">{formErrors.phone}</span>}
-                  </label>
-                  <input type="text" value={formData.phone} onChange={e => setFormData({...formData, phone: e.target.value})} className="w-full p-3 rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-[#2a2a2a] text-black dark:text-white focus:ring-2 focus:ring-blue-500 outline-none" placeholder={t('연락처를 입력해주세요', 'Please enter your contact number')} />
-                </div>
-                <div>
-                  <label className="block text-sm font-bold text-black dark:text-white mb-1">
-                    {t('이메일주소', 'Email Address')} {formErrors.email && <span className="text-red-500 font-normal ml-2">{formErrors.email}</span>}
-                  </label>
-                  <p className="text-xs text-gray-500 dark:text-gray-400 mb-2">{t('검정 관련 세부 안내를 받을 수 있는 이메일 주소를 적어 주세요.', 'Please enter an email address where you can receive detailed information about the exam.')}</p>
-                  <input type="email" value={formData.email} onChange={e => setFormData({...formData, email: e.target.value})} className="w-full p-3 rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-[#2a2a2a] text-black dark:text-white focus:ring-2 focus:ring-blue-500 outline-none" placeholder={t('이메일을 입력해주세요', 'Please enter your email')} />
-                </div>
-                <div>
-                  <label className="block text-sm font-bold text-black dark:text-white mb-1">
-                    {t('주소', 'Address')} {formErrors.address && <span className="text-red-500 font-normal ml-2">{formErrors.address}</span>}
-                  </label>
-                  <p className="text-xs text-gray-500 dark:text-gray-400 mb-2">{t('자격증 원본 및 포트폴리오 스탬프를 수령 할 주소를 적어 주세요.', 'Please enter the address to receive the original certificate and portfolio stamps.')}</p>
-                  <input type="text" value={formData.address} onChange={e => setFormData({...formData, address: e.target.value})} className="w-full p-3 rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-[#2a2a2a] text-black dark:text-white focus:ring-2 focus:ring-blue-500 outline-none" placeholder={t('주소를 입력해주세요', 'Please enter your address')} />
-                </div>
-                <div>
-                  <label className="block text-sm font-bold text-black dark:text-white mb-1">
-                    {t('응시등급선택 (복수 선택 가능)', 'Select Exam Level (Multiple selections possible)')} {formErrors.levels && <span className="text-red-500 font-normal ml-2">{formErrors.levels}</span>}
-                  </label>
-                  <p className="text-xs text-gray-500 dark:text-gray-400 mb-2 whitespace-pre-wrap">{t('1급과 2급을 동시 응시 하시는 경우, 2급은 \'검정료+자격증발급비\'의 50%만 납부하시면 됩니다.\n수강생할인 적용시 1급 15만원 + 2급 5만원 = 합계 20만원', 'If you take Level 1 and Level 2 at the same time, you only need to pay 50% of the \'exam fee + certificate issuance fee\' for Level 2.\nWhen student discount is applied: Level 1 150,000 won + Level 2 50,000 won = Total 200,000 won')}</p>
-                  <div className="space-y-2">
-                    <label className="flex items-center gap-2">
-                      <input type="checkbox" checked={formData.levels.includes('1급')} onChange={(e) => {
-                        const newLevels = e.target.checked ? [...formData.levels, '1급'] : formData.levels.filter(l => l !== '1급');
-                        setFormData({...formData, levels: newLevels});
-                      }} className="w-4 h-4 text-blue-600 rounded border-gray-300" />
-                      <span>{t('스탬프제작지도사 1급(검정료 30만원 -> 이벤트 할인가 15만원)', 'Stamp Making Instructor Level 1 (Exam fee 300,000 won -> Event discount price 150,000 won)')}</span>
+                <button onClick={() => setShowApplyModal(false)} className="w-10 h-10 flex items-center justify-center rounded-full bg-gray-100 dark:bg-[#2a2a2a] text-gray-500 hover:text-black dark:hover:text-white hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors">
+                  <X className="w-5 h-5" />
+                </button>
+              </div>
+              
+              <div className="p-8 pt-2 overflow-y-auto custom-scrollbar text-sm text-gray-600 dark:text-gray-300 space-y-8 relative z-10">
+                <div className="space-y-6">
+                  {/* Form fields with updated styling */}
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                      <label className="block text-sm font-bold text-black dark:text-white mb-2">
+                        {t('성함', 'Name')} {formErrors.name && <span className="text-red-500 font-normal ml-2">{formErrors.name}</span>}
+                      </label>
+                      <input type="text" value={formData.name} onChange={e => setFormData({...formData, name: e.target.value})} className="w-full p-4 rounded-2xl border border-black/10 dark:border-white/10 bg-gray-50 dark:bg-[#2a2a2a] text-black dark:text-white focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 outline-none transition-all" placeholder={t('성함을 입력해주세요', 'Please enter your name')} />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-bold text-black dark:text-white mb-2">
+                        {t('연락처', 'Contact Number')} {formErrors.phone && <span className="text-red-500 font-normal ml-2">{formErrors.phone}</span>}
+                      </label>
+                      <input type="text" value={formData.phone} onChange={e => setFormData({...formData, phone: e.target.value})} className="w-full p-4 rounded-2xl border border-black/10 dark:border-white/10 bg-gray-50 dark:bg-[#2a2a2a] text-black dark:text-white focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 outline-none transition-all" placeholder={t('연락처를 입력해주세요', 'Please enter your contact number')} />
+                    </div>
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-bold text-black dark:text-white mb-2">
+                      {t('주민등록번호', 'Resident Registration Number')} {formErrors.idNumber && <span className="text-red-500 font-normal ml-2">{formErrors.idNumber}</span>}
                     </label>
-                    <label className="flex items-center gap-2">
-                      <input type="checkbox" checked={formData.levels.includes('2급')} onChange={(e) => {
-                        const newLevels = e.target.checked ? [...formData.levels, '2급'] : formData.levels.filter(l => l !== '2급');
-                        setFormData({...formData, levels: newLevels});
-                      }} className="w-4 h-4 text-blue-600 rounded border-gray-300" />
-                      <span>{t('스탬프제작지도사 2급(검정료 20만원 -> 이벤트 할인가 10만원)', 'Stamp Making Instructor Level 2 (Exam fee 200,000 won -> Event discount price 100,000 won)')}</span>
+                    <input type="text" value={formData.idNumber} onChange={e => setFormData({...formData, idNumber: e.target.value})} className="w-full p-4 rounded-2xl border border-black/10 dark:border-white/10 bg-gray-50 dark:bg-[#2a2a2a] text-black dark:text-white focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 outline-none transition-all" placeholder="ex. 123456-7891111" />
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-bold text-black dark:text-white mb-2">
+                      {t('이메일주소', 'Email Address')} {formErrors.email && <span className="text-red-500 font-normal ml-2">{formErrors.email}</span>}
+                    </label>
+                    <p className="text-xs text-gray-500 dark:text-gray-400 mb-3">{t('검정 관련 세부 안내를 받을 수 있는 이메일 주소를 적어 주세요.', 'Please enter an email address where you can receive detailed information about the exam.')}</p>
+                    <input type="email" value={formData.email} onChange={e => setFormData({...formData, email: e.target.value})} className="w-full p-4 rounded-2xl border border-black/10 dark:border-white/10 bg-gray-50 dark:bg-[#2a2a2a] text-black dark:text-white focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 outline-none transition-all" placeholder={t('이메일을 입력해주세요', 'Please enter your email')} />
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-bold text-black dark:text-white mb-2">
+                      {t('주소', 'Address')} {formErrors.address && <span className="text-red-500 font-normal ml-2">{formErrors.address}</span>}
+                    </label>
+                    <p className="text-xs text-gray-500 dark:text-gray-400 mb-3">{t('자격증 원본 및 포트폴리오 스탬프를 수령 할 주소를 적어 주세요.', 'Please enter the address to receive the original certificate and portfolio stamps.')}</p>
+                    <input type="text" value={formData.address} onChange={e => setFormData({...formData, address: e.target.value})} className="w-full p-4 rounded-2xl border border-black/10 dark:border-white/10 bg-gray-50 dark:bg-[#2a2a2a] text-black dark:text-white focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 outline-none transition-all" placeholder={t('주소를 입력해주세요', 'Please enter your address')} />
+                  </div>
+
+                  <div className="p-6 bg-emerald-50/50 dark:bg-emerald-900/10 rounded-3xl border border-emerald-100 dark:border-emerald-800/30">
+                    <label className="block text-sm font-bold text-black dark:text-white mb-2">
+                      {t('응시등급선택 (복수 선택 가능)', 'Select Exam Level (Multiple selections possible)')} {formErrors.levels && <span className="text-red-500 font-normal ml-2">{formErrors.levels}</span>}
+                    </label>
+                    <p className="text-xs text-emerald-600 dark:text-emerald-400 mb-4 whitespace-pre-wrap leading-relaxed">{t('1급과 2급을 동시 응시 하시는 경우, 2급은 \'검정료+자격증발급비\'의 50%만 납부하시면 됩니다.\n수강생할인 적용시 1급 15만원 + 2급 5만원 = 합계 20만원', 'If you take Level 1 and Level 2 at the same time, you only need to pay 50% of the \'exam fee + certificate issuance fee\' for Level 2.\nWhen student discount is applied: Level 1 150,000 won + Level 2 50,000 won = Total 200,000 won')}</p>
+                    <div className="space-y-3">
+                      <label className="flex items-center gap-3 p-3 rounded-xl hover:bg-white dark:hover:bg-[#1e1e1e] transition-colors cursor-pointer border border-transparent hover:border-black/5 dark:hover:border-white/5">
+                        <input type="checkbox" checked={formData.levels.includes('1급')} onChange={(e) => {
+                          const newLevels = e.target.checked ? [...formData.levels, '1급'] : formData.levels.filter(l => l !== '1급');
+                          setFormData({...formData, levels: newLevels});
+                        }} className="w-5 h-5 text-emerald-600 rounded-md border-gray-300 focus:ring-emerald-500" />
+                        <span className="font-medium">{t('스탬프제작지도사 1급(검정료 30만원 -> 이벤트 할인가 15만원)', 'Stamp Making Instructor Level 1 (Exam fee 300,000 won -> Event discount price 150,000 won)')}</span>
+                      </label>
+                      <label className="flex items-center gap-3 p-3 rounded-xl hover:bg-white dark:hover:bg-[#1e1e1e] transition-colors cursor-pointer border border-transparent hover:border-black/5 dark:hover:border-white/5">
+                        <input type="checkbox" checked={formData.levels.includes('2급')} onChange={(e) => {
+                          const newLevels = e.target.checked ? [...formData.levels, '2급'] : formData.levels.filter(l => l !== '2급');
+                          setFormData({...formData, levels: newLevels});
+                        }} className="w-5 h-5 text-emerald-600 rounded-md border-gray-300 focus:ring-emerald-500" />
+                        <span className="font-medium">{t('스탬프제작지도사 2급(검정료 20만원 -> 이벤트 할인가 10만원)', 'Stamp Making Instructor Level 2 (Exam fee 200,000 won -> Event discount price 100,000 won)')}</span>
+                      </label>
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                      <label className="block text-sm font-bold text-black dark:text-white mb-2">
+                        {t('입금자명', 'Payer Name')} {formErrors.payerName && <span className="text-red-500 font-normal ml-2">{formErrors.payerName}</span>}
+                      </label>
+                      <p className="text-xs text-gray-500 dark:text-gray-400 mb-3 leading-relaxed">{t('송금자 성함을 기재 해 주세요. (응시료 납부 완료 후, 안내 메일이 발송됩니다.)', 'Please enter the remitter\'s name. (A guide email will be sent after the exam fee payment is completed.)')}<br/><strong className="text-emerald-600 dark:text-emerald-400">{t('농협 351-1372-1557-33 (한국스탬프교육진흥원)', 'Nonghyup 351-1372-1557-33 (Korea Stamp Education Institute)')}</strong></p>
+                      <input type="text" value={formData.payerName} onChange={e => setFormData({...formData, payerName: e.target.value})} className="w-full p-4 rounded-2xl border border-black/10 dark:border-white/10 bg-gray-50 dark:bg-[#2a2a2a] text-black dark:text-white focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 outline-none transition-all" placeholder={t('송금자 성함', 'Remitter\'s name')} />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-bold text-black dark:text-white mb-2">
+                        {t('입금시간', 'Deposit Time')} {formErrors.depositTime && <span className="text-red-500 font-normal ml-2">{formErrors.depositTime}</span>}
+                      </label>
+                      <p className="text-xs text-gray-500 dark:text-gray-400 mb-3 leading-relaxed">{t('이체 날짜 및 시간을 기재 해 주세요.', 'Please enter the transfer date and time.')}</p>
+                      <input type="text" value={formData.depositTime} onChange={e => setFormData({...formData, depositTime: e.target.value})} className="w-full p-4 rounded-2xl border border-black/10 dark:border-white/10 bg-gray-50 dark:bg-[#2a2a2a] text-black dark:text-white focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 outline-none transition-all" placeholder={t('이체 날짜 및 시간 (예: 2024-05-20 14:30)', 'Transfer date and time (e.g., 2024-05-20 14:30)')} />
+                    </div>
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-bold text-black dark:text-white mb-2">
+                      {t('응시료 현금영수증/세금계산서 발행 정보', 'Cash Receipt/Tax Invoice Issuance Information')} {formErrors.receiptInfo && <span className="text-red-500 font-normal ml-2">{formErrors.receiptInfo}</span>}
+                    </label>
+                    <input type="text" value={formData.receiptInfo} onChange={e => setFormData({...formData, receiptInfo: e.target.value})} className="w-full p-4 rounded-2xl border border-black/10 dark:border-white/10 bg-gray-50 dark:bg-[#2a2a2a] text-black dark:text-white focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 outline-none transition-all" placeholder={t('발행 정보를 입력해주세요', 'Please enter issuance information')} />
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-bold text-black dark:text-white mb-3">
+                      {t('검정방식선택', 'Select Exam Method')} {formErrors.examMethod && <span className="text-red-500 font-normal ml-2">{formErrors.examMethod}</span>}
+                    </label>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                      <label className={`flex items-start gap-3 p-4 rounded-2xl border cursor-pointer transition-all ${formData.examMethod === '우편' ? 'border-emerald-500 bg-emerald-50/50 dark:bg-emerald-900/20' : 'border-black/10 dark:border-white/10 hover:border-black/20 dark:hover:border-white/20'}`}>
+                        <input type="radio" name="method" checked={formData.examMethod === '우편'} onChange={() => setFormData({...formData, examMethod: '우편'})} className="w-5 h-5 mt-0.5 text-emerald-600 focus:ring-emerald-500" />
+                        <span className="font-medium leading-tight">{t('우편 포트폴리오 & 영상 제출', 'Mail Portfolio & Video Submission')}</span>
+                      </label>
+                      <label className={`flex items-start gap-3 p-4 rounded-2xl border cursor-pointer transition-all ${formData.examMethod === '현장' ? 'border-emerald-500 bg-emerald-50/50 dark:bg-emerald-900/20' : 'border-black/10 dark:border-white/10 hover:border-black/20 dark:hover:border-white/20'}`}>
+                        <input type="radio" name="method" checked={formData.examMethod === '현장'} onChange={() => setFormData({...formData, examMethod: '현장'})} className="w-5 h-5 mt-0.5 text-emerald-600 focus:ring-emerald-500" />
+                        <span className="font-medium leading-tight">{t('현장 포트폴리오 제출 & 현장 검정 진행(현장검정비 5만원 추가)', 'On-site Portfolio Submission & On-site Exam (Additional 50,000 won for on-site exam)')}</span>
+                      </label>
+                    </div>
+                  </div>
+
+                  <div className="bg-gray-50 dark:bg-[#2a2a2a] p-6 rounded-3xl border border-black/5 dark:border-white/5">
+                    <label className="block text-sm font-bold text-black dark:text-white mb-2">
+                      {t('개인정보 수집 및 이용동의', 'Consent to Collection and Use of Personal Information')} {formErrors.agreePrivacy && <span className="text-red-500 font-normal ml-2">{formErrors.agreePrivacy}</span>}
+                    </label>
+                    <p className="text-xs text-gray-500 dark:text-gray-400 mb-4">{t('동의를 거부하실 수 있으나 설문 참여가 불가능합니다.', 'You may refuse to consent, but you will not be able to participate in the survey.')}</p>
+                    <div className="text-xs text-gray-600 dark:text-gray-400 space-y-3 mb-5 bg-white dark:bg-[#1e1e1e] p-4 rounded-2xl border border-black/5 dark:border-white/5 h-32 overflow-y-auto custom-scrollbar">
+                      <p><strong className="text-black dark:text-white">{t('수집하는 개인정보 항목', 'Items of Personal Information Collected')}</strong><br/>{t('이름, 연락처, 이메일, 주소', 'Name, Contact Number, Email, Address')}</p>
+                      <p><strong className="text-black dark:text-white">{t('수집 및 이용 목적', 'Purpose of Collection and Use')}</strong><br/>{t('한국스탬프교육진흥원 교육과정 운영 및 공지사항 안내, 스탬프제작지도사 자격검정시험 관련 내용 등', 'Operation of Korea Stamp Education Institute curriculum and notice guidance, contents related to Stamp Making Instructor qualification exam, etc.')}</p>
+                      <p><strong className="text-black dark:text-white">{t('보유 및 이용기간', 'Retention and Use Period')}</strong><br/>{t('동의일로부터 3년간', '3 years from the date of consent')}</p>
+                    </div>
+                    <label className="flex items-center gap-3 cursor-pointer">
+                      <input type="checkbox" checked={formData.agreePrivacy} onChange={e => setFormData({...formData, agreePrivacy: e.target.checked})} className="w-5 h-5 text-emerald-600 rounded-md border-gray-300 focus:ring-emerald-500" />
+                      <span className="font-bold text-black dark:text-white">{t('개인정보 수집 및 이용에 동의합니다.', 'I agree to the collection and use of personal information.')}</span>
                     </label>
                   </div>
-                </div>
-                <div>
-                  <label className="block text-sm font-bold text-black dark:text-white mb-1">
-                    {t('입금자명', 'Payer Name')} {formErrors.payerName && <span className="text-red-500 font-normal ml-2">{formErrors.payerName}</span>}
-                  </label>
-                  <p className="text-xs text-gray-500 dark:text-gray-400 mb-2">{t('송금자 성함을 기재 해 주세요. (응시료 납부 완료 후, 안내 메일이 발송됩니다.)', 'Please enter the remitter\'s name. (A guide email will be sent after the exam fee payment is completed.)')}<br/>{t('농협 351-1372-1557-33 (한국스탬프교육진흥원)', 'Nonghyup 351-1372-1557-33 (Korea Stamp Education Institute)')}</p>
-                  <input type="text" value={formData.payerName} onChange={e => setFormData({...formData, payerName: e.target.value})} className="w-full p-3 rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-[#2a2a2a] text-black dark:text-white focus:ring-2 focus:ring-blue-500 outline-none" placeholder={t('송금자 성함', 'Remitter\'s name')} />
-                </div>
-                <div>
-                  <label className="block text-sm font-bold text-black dark:text-white mb-1">
-                    {t('입금시간', 'Deposit Time')} {formErrors.depositTime && <span className="text-red-500 font-normal ml-2">{formErrors.depositTime}</span>}
-                  </label>
-                  <p className="text-xs text-gray-500 dark:text-gray-400 mb-2">{t('이체 날짜 및 시간을 기재 해 주세요.', 'Please enter the transfer date and time.')}</p>
-                  <input type="text" value={formData.depositTime} onChange={e => setFormData({...formData, depositTime: e.target.value})} className="w-full p-3 rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-[#2a2a2a] text-black dark:text-white focus:ring-2 focus:ring-blue-500 outline-none" placeholder={t('이체 날짜 및 시간 (예: 2024-05-20 14:30)', 'Transfer date and time (e.g., 2024-05-20 14:30)')} />
-                </div>
-                <div>
-                  <label className="block text-sm font-bold text-black dark:text-white mb-1">
-                    {t('응시료 현금영수증/세금계산서 발행 정보', 'Cash Receipt/Tax Invoice Issuance Information')} {formErrors.receiptInfo && <span className="text-red-500 font-normal ml-2">{formErrors.receiptInfo}</span>}
-                  </label>
-                  <input type="text" value={formData.receiptInfo} onChange={e => setFormData({...formData, receiptInfo: e.target.value})} className="w-full p-3 rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-[#2a2a2a] text-black dark:text-white focus:ring-2 focus:ring-blue-500 outline-none" placeholder={t('발행 정보를 입력해주세요', 'Please enter issuance information')} />
-                </div>
-                <div>
-                  <label className="block text-sm font-bold text-black dark:text-white mb-1">
-                    {t('검정방식선택', 'Select Exam Method')} {formErrors.examMethod && <span className="text-red-500 font-normal ml-2">{formErrors.examMethod}</span>}
-                  </label>
-                  <div className="space-y-2">
-                    <label className="flex items-center gap-2">
-                      <input type="radio" name="method" checked={formData.examMethod === '우편'} onChange={() => setFormData({...formData, examMethod: '우편'})} className="w-4 h-4 text-blue-600" />
-                      <span>{t('우편 포트폴리오 & 영상 제출', 'Mail Portfolio & Video Submission')}</span>
-                    </label>
-                    <label className="flex items-center gap-2">
-                      <input type="radio" name="method" checked={formData.examMethod === '현장'} onChange={() => setFormData({...formData, examMethod: '현장'})} className="w-4 h-4 text-blue-600" />
-                      <span>{t('현장 포트폴리오 제출 & 현장 검정 진행(현장검정비 5만원 추가)', 'On-site Portfolio Submission & On-site Exam (Additional 50,000 won for on-site exam)')}</span>
-                    </label>
-                  </div>
-                </div>
-                <div className="bg-gray-50 dark:bg-[#2a2a2a] p-4 rounded-lg border border-gray-200 dark:border-gray-700">
-                  <label className="block text-sm font-bold text-black dark:text-white mb-1">
-                    {t('개인정보 수집 및 이용동의', 'Consent to Collection and Use of Personal Information')} {formErrors.agreePrivacy && <span className="text-red-500 font-normal ml-2">{formErrors.agreePrivacy}</span>}
-                  </label>
-                  <p className="text-xs text-gray-500 dark:text-gray-400 mb-4">{t('동의를 거부하실 수 있으나 설문 참여가 불가능합니다.', 'You may refuse to consent, but you will not be able to participate in the survey.')}</p>
-                  <div className="text-xs text-gray-600 dark:text-gray-400 space-y-2 mb-4 bg-white dark:bg-[#1e1e1e] p-3 rounded border border-gray-200 dark:border-gray-700 h-32 overflow-y-auto">
-                    <p><strong>{t('수집하는 개인정보 항목', 'Items of Personal Information Collected')}</strong><br/>{t('이름, 연락처, 이메일, 주소', 'Name, Contact Number, Email, Address')}</p>
-                    <p><strong>{t('수집 및 이용 목적', 'Purpose of Collection and Use')}</strong><br/>{t('한국스탬프교육진흥원 교육과정 운영 및 공지사항 안내, 스탬프제작지도사 자격검정시험 관련 내용 등', 'Operation of Korea Stamp Education Institute curriculum and notice guidance, contents related to Stamp Making Instructor qualification exam, etc.')}</p>
-                    <p><strong>{t('보유 및 이용기간', 'Retention and Use Period')}</strong><br/>{t('동의일로부터 3년간', '3 years from the date of consent')}</p>
-                  </div>
-                  <label className="flex items-center gap-2">
-                    <input type="checkbox" checked={formData.agreePrivacy} onChange={e => setFormData({...formData, agreePrivacy: e.target.checked})} className="w-4 h-4 text-blue-600 rounded border-gray-300" />
-                    <span className="font-bold text-black dark:text-white">{t('개인정보 수집 및 이용에 동의합니다.', 'I agree to the collection and use of personal information.')}</span>
-                  </label>
                 </div>
               </div>
-            </div>
-            <div className="p-6 border-t border-black/10 dark:border-white/10 shrink-0 flex justify-end gap-3">
-              <button onClick={() => setShowApplyModal(false)} className="px-6 py-2 bg-gray-200 text-black dark:bg-[#2a2a2a] dark:text-white rounded-lg font-bold hover:bg-gray-300 dark:hover:bg-gray-700 transition-colors">{t('취소', 'Cancel')}</button>
-              <button onClick={handleApplySubmit} disabled={isSubmitting} className="px-6 py-2 bg-blue-600 text-white rounded-lg font-bold hover:bg-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed">{isSubmitting ? t('접수 중...', 'Submitting...') : t('접수하기', 'Apply')}</button>
-            </div>
-          </div>
-        </div>
-      )}
+              
+              <div className="p-8 pt-6 shrink-0 flex justify-end gap-4 relative z-10 bg-white dark:bg-[#1e1e1e] rounded-b-[2.5rem]">
+                <button onClick={() => setShowApplyModal(false)} className="px-8 py-4 bg-gray-100 text-black dark:bg-[#2a2a2a] dark:text-white rounded-2xl font-bold hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors">{t('취소', 'Cancel')}</button>
+                <button onClick={handleApplySubmit} disabled={isSubmitting} className="px-10 py-4 bg-emerald-600 text-white rounded-2xl font-bold hover:bg-emerald-700 transition-all shadow-lg shadow-emerald-500/20 disabled:opacity-50 disabled:cursor-not-allowed disabled:shadow-none">{isSubmitting ? t('접수 중...', 'Submitting...') : t('접수하기', 'Apply')}</button>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
       {/* Image Modal */}
       <AnimatePresence>
         {selectedImage && (
