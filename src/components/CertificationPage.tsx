@@ -294,42 +294,75 @@ export default function CertificationPage({ t }: Props) {
         </div>
       </div>
 
-      {/* Benefits Section - White Background */}
-      <div className="py-24 bg-white dark:bg-[#121212]">
+      {/* Benefits Section - Bento Layout */}
+      <div className="py-24">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="text-sm font-bold tracking-widest uppercase text-black dark:text-white mb-4 flex items-center justify-center gap-2">
-              <span className="w-8 h-[1px] bg-black dark:bg-white"></span>
-              BENEFITS
-              <span className="w-8 h-[1px] bg-black dark:bg-white"></span>
-            </h2>
-            <h3 className="text-3xl md:text-4xl font-sans font-medium text-black dark:text-white mb-4">{t('자격증 취득 혜택', 'Benefits of Certification')}</h3>
-            <p className="text-gray-600 dark:text-gray-400 font-light max-w-2xl mx-auto">
+          <div className="text-center mb-20">
+            <h3 className="text-4xl font-serif font-bold text-black dark:text-white mb-6">{t('자격증 취득 혜택', 'Benefits of Certification')}</h3>
+            <p className="text-gray-600 dark:text-gray-400 font-light max-w-2xl mx-auto text-lg">
               {t('자격증 취득 후 한국스탬프교육진흥원에서 제공하는 다양한 혜택을 누리실 수 있습니다.', 'After obtaining the certification, you can enjoy various benefits provided by the Korea Stamp Education Institute.')}
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {[
-              { icon: Award, title: t('전문 강사 활동 지원', 'Instructor Support'), desc: t('협회 네트워크를 통한 강의 연결 및 활동 기회를 우선적으로 제공합니다.', 'We prioritize providing teaching connections and activity opportunities through the association network.') },
-              { icon: FileCheck, title: t('교육 자료 제공', 'Educational Materials'), desc: t('수업에 바로 활용 가능한 강의 커리큘럼 및 교안 자료를 공유해 드립니다.', 'We share lecture curricula and teaching materials that can be used immediately in class.') },
-              { icon: Send, title: t('창업 컨설팅', 'Startup Consulting'), desc: t('공방 창업 및 프로그램 운영에 필요한 실무적인 컨설팅을 지원합니다.', 'We support practical consulting necessary for starting a workshop and running programs.') }
-            ].map((benefit, idx) => (
-              <motion.div 
-                key={idx}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: idx * 0.1 }}
-                className="p-8 bg-gray-50 dark:bg-[#1e1e1e] rounded-3xl border border-black/5 dark:border-white/5 hover:border-emerald-500/20 transition-all group"
-              >
-                <div className="w-12 h-12 rounded-2xl bg-emerald-500/10 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
-                  <benefit.icon className="w-6 h-6 text-emerald-600 dark:text-emerald-400" />
+          <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-8">
+            {/* Main Benefit Card */}
+            <div className="md:col-span-2 lg:col-span-2 bg-emerald-600 dark:bg-emerald-700 p-12 rounded-[3.5rem] text-white relative overflow-hidden group shadow-2xl shadow-emerald-500/20">
+              <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 blur-[100px] rounded-full -mr-32 -mt-32 group-hover:bg-white/20 transition-all duration-700"></div>
+              <div className="relative z-10">
+                <div className="w-16 h-16 rounded-2xl bg-white/20 backdrop-blur-md flex items-center justify-center mb-10 shadow-lg">
+                  <Award className="w-9 h-9 text-white" />
                 </div>
-                <h4 className="text-lg font-bold text-black dark:text-white mb-3">{benefit.title}</h4>
-                <p className="text-sm text-gray-600 dark:text-gray-400 leading-relaxed">{benefit.desc}</p>
-              </motion.div>
-            ))}
+                <h4 className="text-3xl font-bold mb-6">{t('전문 강사 활동 지원', 'Instructor Support')}</h4>
+                <p className="text-emerald-50/90 leading-relaxed mb-10 text-lg">
+                  {t('협회 네트워크를 통한 강의 연결 및 활동 기회를 우선적으로 제공합니다. 공공기관, 학교, 지자체 등 다양한 교육 현장에서 전문가로 활동할 수 있도록 전폭적으로 지원합니다.', 'We prioritize providing teaching connections and activity opportunities through the association network. We fully support you to work as an expert in various educational fields such as public institutions, schools, and local governments.')}
+                </p>
+                <div className="flex items-center gap-3 text-sm font-bold uppercase tracking-widest bg-white/10 w-fit px-6 py-3 rounded-full border border-white/10">
+                  <CheckCircle className="w-5 h-5" />
+                  {t('우선 매칭 시스템 운영', 'Priority Matching')}
+                </div>
+              </div>
+            </div>
+
+            {/* Educational Materials Card */}
+            <div className="md:col-span-1 lg:col-span-2 bg-gray-50 dark:bg-white/5 p-12 rounded-[3.5rem] border border-black/5 dark:border-white/5 hover:border-emerald-500/20 transition-all group flex flex-col shadow-sm hover:shadow-xl">
+              <div className="w-16 h-16 rounded-2xl bg-emerald-500/10 flex items-center justify-center mb-10 group-hover:scale-110 transition-transform">
+                <FileCheck className="w-9 h-9 text-emerald-600" />
+              </div>
+              <h4 className="text-2xl font-bold text-black dark:text-white mb-6">{t('교육 자료 제공', 'Educational Materials')}</h4>
+              <p className="text-gray-600 dark:text-gray-400 leading-relaxed mb-10">
+                {t('수업에 바로 활용 가능한 강의 커리큘럼 및 교안 자료를 공유해 드립니다. 최신 트렌드를 반영한 교육 콘텐츠를 지속적으로 업데이트합니다.', 'We share lecture curricula and teaching materials that can be used immediately in class. We continuously update educational content reflecting the latest trends.')}
+              </p>
+              <div className="mt-auto flex gap-3">
+                <span className="px-4 py-2 bg-white dark:bg-black/40 rounded-xl text-xs font-bold text-gray-500 uppercase tracking-wider border border-black/5 dark:border-white/5">Curriculum</span>
+                <span className="px-4 py-2 bg-white dark:bg-black/40 rounded-xl text-xs font-bold text-gray-500 uppercase tracking-wider border border-black/5 dark:border-white/5">Teaching Plan</span>
+              </div>
+            </div>
+
+            {/* Startup Consulting Card */}
+            <div className="md:col-span-2 lg:col-span-2 bg-gray-50 dark:bg-white/5 p-12 rounded-[3.5rem] border border-black/5 dark:border-white/5 hover:border-emerald-500/20 transition-all group flex flex-col md:flex-row gap-12 items-center shadow-sm hover:shadow-xl">
+              <div className="shrink-0">
+                <div className="w-24 h-24 rounded-[2rem] bg-emerald-500/10 flex items-center justify-center group-hover:rotate-12 transition-transform">
+                  <Send className="w-12 h-12 text-emerald-600" />
+                </div>
+              </div>
+              <div>
+                <h4 className="text-2xl font-bold text-black dark:text-white mb-4">{t('창업 컨설팅', 'Startup Consulting')}</h4>
+                <p className="text-gray-600 dark:text-gray-400 leading-relaxed">
+                  {t('공방 창업 및 프로그램 운영에 필요한 실무적인 컨설팅을 지원합니다. 브랜딩부터 마케팅, 운영 노하우까지 전문가의 조언을 받으실 수 있습니다.', 'We support practical consulting necessary for starting a workshop and running programs. You can receive expert advice from branding to marketing and operational know-how.')}
+                </p>
+              </div>
+            </div>
+
+            {/* Community Card */}
+            <div className="md:col-span-1 lg:col-span-2 bg-black dark:bg-white p-12 rounded-[3.5rem] flex flex-col justify-center items-center text-center group shadow-xl">
+              <div className="w-16 h-16 rounded-full bg-emerald-500 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+                <PackageCheck className="w-8 h-8 text-white" />
+              </div>
+              <h4 className="text-2xl font-bold text-white dark:text-black mb-4">{t('정기 세미나 초대', 'Seminar Invitation')}</h4>
+              <p className="text-gray-400 dark:text-gray-500 leading-relaxed">
+                {t('자격증 취득자 대상 정기 세미나 및 네트워킹 데이에 초대합니다.', 'Invite to regular seminars and networking days for certificate holders.')}
+              </p>
+            </div>
           </div>
         </div>
       </div>
