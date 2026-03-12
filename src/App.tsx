@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Menu, X, Stamp, BookOpen, Briefcase, Award, Video, FileText, MapPin, Phone, Sun, Moon, ArrowUp, Mail, Globe, Clock, ChevronDown, MessageCircle, Building, Palette, GraduationCap, UserCheck, CreditCard, FileCheck, ChevronLeft, ChevronRight } from 'lucide-react';
+import { Menu, X, Stamp, BookOpen, Briefcase, Award, Video, FileText, MapPin, Phone, Sun, Moon, ArrowUp, Mail, Globe, Clock, ChevronDown, MessageCircle, Building, Palette, GraduationCap, UserCheck, CreditCard, FileCheck, ChevronLeft, ChevronRight, FileEdit } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import emailjs from '@emailjs/browser';
 import CertificationPage from './components/CertificationPage';
@@ -13,7 +13,7 @@ export default function App() {
   
   const [theme, setTheme] = useState<'light' | 'dark'>(() => {
     const saved = localStorage.getItem('theme');
-    return (saved as 'light' | 'dark') || 'dark';
+    return (saved as 'light' | 'dark') || 'light';
   });
 
   const [language, setLanguage] = useState<'ko' | 'en'>(() => {
@@ -101,7 +101,7 @@ export default function App() {
     },
     {
       name: "이*현",
-      role: t("1급 자격증 취득", "Level 1 Certified"),
+      role: t("마스터 자격증 취득", "Master Certified"),
       content: t("미술 학원을 운영하면서 아이들에게 새로운 미술 활동을 제공하고 싶어 수강하게 되었습니다. 아이들의 반응이 폭발적이고, 학부모님들의 만족도도 매우 높습니다. 강사로서의 역량을 한 단계 높일 수 있는 훌륭한 과정이었습니다.", "I took this course because I wanted to provide new art activities to children while running an art academy. The children's reactions are explosive, and the parents' satisfaction is very high. It was an excellent course to elevate my skills as an instructor."),
     },
     {
@@ -338,8 +338,6 @@ export default function App() {
               <button onClick={() => scrollTo('cert')} className={`text-[11px] font-semibold tracking-[0.15em] uppercase transition-colors ${currentPage === 'home' && activeSection === 'cert' ? 'text-green-600 dark:text-green-500' : isScrolled || currentPage !== 'home' ? 'text-gray-600 hover:text-black dark:text-gray-300 dark:hover:text-white' : 'text-gray-300 hover:text-white'}`}>{t('자격증안내', 'CERTIFICATION')}</button>
               <button onClick={() => { setCurrentPage('certification'); window.scrollTo(0, 0); }} className={`text-[11px] font-semibold tracking-[0.15em] uppercase transition-colors ${currentPage === 'certification' ? 'text-green-600 dark:text-green-500' : isScrolled || currentPage !== 'home' ? 'text-gray-600 hover:text-black dark:text-gray-300 dark:hover:text-white' : 'text-gray-300 hover:text-white'}`}>{t('자격증발급', 'ISSUANCE')}</button>
               <button onClick={() => { setCurrentPage('exam'); window.scrollTo(0, 0); }} className={`text-[11px] font-semibold tracking-[0.15em] uppercase transition-colors ${currentPage === 'exam' ? 'text-green-600 dark:text-green-500' : isScrolled || currentPage !== 'home' ? 'text-gray-600 hover:text-black dark:text-gray-300 dark:hover:text-white' : 'text-gray-300 hover:text-white'}`}>{t('시험안내', 'EXAM')}</button>
-              <button onClick={() => scrollTo('faq')} className={`text-[11px] font-semibold tracking-[0.15em] uppercase transition-colors ${currentPage === 'home' && activeSection === 'faq' ? 'text-green-600 dark:text-green-500' : isScrolled || currentPage !== 'home' ? 'text-gray-600 hover:text-black dark:text-gray-300 dark:hover:text-white' : 'text-gray-300 hover:text-white'}`}>{t('자주묻는질문', 'FAQ')}</button>
-              
               <div className="flex items-center gap-6 ml-4">
                 <button onClick={() => setLanguage(language === 'ko' ? 'en' : 'ko')} className={`transition-colors ${isScrolled || currentPage !== 'home' ? 'text-gray-600 hover:text-black dark:text-gray-300 dark:hover:text-white' : 'text-gray-300 hover:text-white'}`} aria-label="언어 변경">
                   <Globe className="w-4 h-4" />
@@ -376,7 +374,6 @@ export default function App() {
             <button onClick={() => { setIsMobileMenuOpen(false); setCurrentPage('certification'); window.scrollTo(0, 0); }} className={`text-left py-2 font-medium ${currentPage === 'certification' ? 'text-green-600 dark:text-green-500' : 'text-gray-800 dark:text-gray-200'}`}>{t('자격증발급', 'Issuance')}</button>
             <button onClick={() => { setIsMobileMenuOpen(false); setCurrentPage('exam'); window.scrollTo(0, 0); }} className={`text-left py-2 font-medium ${currentPage === 'exam' ? 'text-green-600 dark:text-green-500' : 'text-gray-800 dark:text-gray-200'}`}>{t('시험안내', 'Exam Info')}</button>
             <button onClick={() => { setIsMobileMenuOpen(false); setCurrentPage('exam'); window.scrollTo(0, 0); }} className={`text-left py-2 font-medium ${currentPage === 'exam' ? 'text-green-600 dark:text-green-500' : 'text-gray-800 dark:text-gray-200'}`}>{t('접수방법', 'How to Apply')}</button>
-            <button onClick={() => { setIsMobileMenuOpen(false); scrollTo('faq'); }} className={`text-left py-2 font-medium ${currentPage === 'home' && activeSection === 'faq' ? 'text-green-600 dark:text-green-500' : 'text-gray-800 dark:text-gray-200'}`}>{t('자주묻는질문', 'FAQ')}</button>
           </div>
           <div className="mt-auto p-4 border-t border-black/10 dark:border-white/10 flex justify-around">
             <button onClick={() => setLanguage(language === 'ko' ? 'en' : 'ko')} className="flex flex-col items-center gap-2 text-gray-600 dark:text-gray-400 hover:text-black dark:hover:text-white">
@@ -756,7 +753,7 @@ export default function App() {
 
       {/* Testimonials Section */}
       <div className="py-24 bg-white dark:bg-[#121212] border-b border-black/5 dark:border-white/5 transition-colors duration-300 snap-start overflow-hidden">
-        <div className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
             <h2 className="text-sm font-bold tracking-widest uppercase text-black dark:text-white mb-4 flex items-center justify-center gap-2">
               <span className="w-4 h-[1px] bg-black dark:bg-white"></span>
@@ -768,7 +765,7 @@ export default function App() {
             </p>
           </div>
 
-          <div className="relative w-full h-[300px] md:h-[320px] flex justify-center perspective-1000">
+          <div className="relative w-full h-[300px] md:h-[350px] flex justify-center perspective-1000">
             {testimonials.map((testimonial, index) => {
               const N = testimonials.length;
               let diff = (index - activeTestimonial) % N;
@@ -786,23 +783,23 @@ export default function App() {
                 opacity = 1;
                 zIndex = 30;
               } else if (diff === 1) {
-                translateX = '55%';
-                scale = 1;
-                opacity = 0.8;
+                translateX = '50%';
+                scale = 0.9;
+                opacity = 0.7;
                 zIndex = 20;
               } else if (diff === -1) {
-                translateX = '-55%';
-                scale = 1;
-                opacity = 0.8;
+                translateX = '-50%';
+                scale = 0.9;
+                opacity = 0.7;
                 zIndex = 20;
               } else if (diff === 2) {
-                translateX = '90%';
-                scale = 1;
+                translateX = '75%';
+                scale = 0.8;
                 opacity = 0.4;
                 zIndex = 10;
               } else if (diff === -2) {
-                translateX = '-90%';
-                scale = 1;
+                translateX = '-75%';
+                scale = 0.8;
                 opacity = 0.4;
                 zIndex = 10;
               }
@@ -996,7 +993,23 @@ export default function App() {
             </p>
           </div>
           
-          <div className="relative px-0 md:px-20">
+          <div className="relative">
+            {/* Gallery Navigation Buttons - Moved Outside */}
+            <div className="hidden md:block">
+              <button 
+                onClick={prevGallery}
+                className="absolute left-[-80px] top-1/2 -translate-y-1/2 w-14 h-14 bg-white dark:bg-[#1e1e1e] rounded-full shadow-xl flex items-center justify-center text-black dark:text-white hover:bg-emerald-500 hover:text-white transition-all z-10 border border-black/5 dark:border-white/5"
+              >
+                <ChevronLeft className="w-8 h-8" />
+              </button>
+              <button 
+                onClick={nextGallery}
+                className="absolute right-[-80px] top-1/2 -translate-y-1/2 w-14 h-14 bg-white dark:bg-[#1e1e1e] rounded-full shadow-xl flex items-center justify-center text-black dark:text-white hover:bg-emerald-500 hover:text-white transition-all z-10 border border-black/5 dark:border-white/5"
+              >
+                <ChevronRight className="w-8 h-8" />
+              </button>
+            </div>
+
             {/* Mobile View: Infinite Slider */}
             <div className="md:hidden overflow-hidden -mx-4 px-4 pb-4">
               <div 
@@ -1040,19 +1053,6 @@ export default function App() {
                 ))}
               </div>
             </div>
-            
-            <button 
-              onClick={prevGallery}
-              className={`hidden md:flex absolute left-0 top-1/2 -translate-y-1/2 w-14 h-14 bg-white rounded-full shadow-xl items-center justify-center text-gray-800 hover:bg-gray-50 hover:scale-110 transition-all z-10 border border-black/5`}
-            >
-              <ChevronLeft className="w-8 h-8" />
-            </button>
-            <button 
-              onClick={nextGallery}
-              className={`hidden md:flex absolute right-0 top-1/2 -translate-y-1/2 w-14 h-14 bg-white rounded-full shadow-xl items-center justify-center text-gray-800 hover:bg-gray-50 hover:scale-110 transition-all z-10 border border-black/5`}
-            >
-              <ChevronRight className="w-8 h-8" />
-            </button>
           </div>
         </div>
       </div>
@@ -1124,7 +1124,7 @@ export default function App() {
       </footer>
 
       {/* Floating Buttons */}
-      <div className="fixed bottom-8 right-8 flex flex-col gap-3 z-50">
+      <div className="fixed bottom-8 right-8 flex flex-col items-end gap-3 z-50">
         {showScrollTop && (
           <button 
             onClick={scrollToTop}
@@ -1135,11 +1135,12 @@ export default function App() {
           </button>
         )}
         <button 
-          onClick={() => setShowConsultModal(true)}
-          className="p-3 bg-black text-white dark:bg-white dark:text-black rounded-full shadow-lg hover:scale-110 transition-transform"
-          aria-label="상담 신청"
+          onClick={() => setShowApplyModal(true)}
+          className={`flex items-center justify-center gap-2 bg-black text-white dark:bg-white dark:text-black shadow-lg hover:scale-105 transition-all duration-300 ${isMobile ? 'w-12 h-12 rounded-full' : 'px-6 py-3 rounded-full'}`}
+          aria-label="접수하기"
         >
-          <MessageCircle className="w-6 h-6" />
+          <FileEdit className="w-5 h-5" />
+          {!isMobile && <span className="font-bold whitespace-nowrap">{t('접수하기', 'Apply Now')}</span>}
         </button>
       </div>
 
@@ -1362,7 +1363,7 @@ export default function App() {
         <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
           <div className="bg-white dark:bg-[#1e1e1e] rounded-2xl shadow-2xl w-full max-w-3xl max-h-[90vh] flex flex-col animate-in fade-in zoom-in duration-200">
             <div className="p-6 border-b border-black/10 dark:border-white/10 flex justify-between items-center shrink-0">
-              <h3 className="text-xl font-bold text-black dark:text-white">{t('홈페이지 접수하기', 'Apply via Website')}</h3>
+              <h3 className="text-xl font-bold text-black dark:text-white">{t('접수하기', 'Apply Now')}</h3>
               <button onClick={() => setShowApplyModal(false)} className="text-gray-500 hover:text-black dark:hover:text-white transition-colors">
                 <X className="w-6 h-6" />
               </button>
