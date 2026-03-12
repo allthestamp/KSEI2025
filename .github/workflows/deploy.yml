@@ -9,6 +9,9 @@ permissions:
   id-token: write
   contents: read
 
+# action 업데이트 시 변경 예정
+# actions/checkout@v5
+# actions/setup-node@v5
 jobs:
   build:
     runs-on: ubuntu-latest

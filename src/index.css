@@ -15,6 +15,7 @@ html {
   scroll-behavior: smooth;
 }
 
+/* Custom Scrollbar for Mobile */
 @media (max-width: 768px) {
   ::-webkit-scrollbar {
     width: 4px;
@@ -32,6 +33,7 @@ html {
   }
 }
 
+/* Custom Scrollbar for Modals */
 .custom-scrollbar::-webkit-scrollbar {
   width: 6px;
   height: 6px;
@@ -47,3 +49,31 @@ html {
   background: rgba(107, 114, 128, 0.8);
 }
 
+/* Hide scrollbar for horizontal scroll areas */
+.hide-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.hide-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+@layer utilities {
+  .perspective-1000 {
+    perspective: 1000px;
+  }
+}
+
+.gallery-slide {
+  --slide-width: 100%;
+}
+@media (min-width: 768px) {
+  .gallery-slide {
+    --slide-width: 50%;
+  }
+}
+@media (min-width: 1024px) {
+  .gallery-slide {
+    --slide-width: 25%;
+  }
+}
