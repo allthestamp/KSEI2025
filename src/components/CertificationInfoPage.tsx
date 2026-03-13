@@ -13,16 +13,19 @@ import {
   ShoppingBag, 
   Building2,
   Palette,
-  UserCheck
+  UserCheck,
+  Heart,
+  ChevronRight
 } from 'lucide-react';
 
 interface CertificationInfoPageProps {
   t: (ko: string, en: string) => string;
   setShowCertModal: (show: boolean) => void;
   setSelectedCert: (cert: string) => void;
+  setCurrentPage?: (page: string) => void;
 }
 
-const CertificationInfoPage: React.FC<CertificationInfoPageProps> = ({ t, setShowCertModal, setSelectedCert }) => {
+const CertificationInfoPage: React.FC<CertificationInfoPageProps> = ({ t, setShowCertModal, setSelectedCert, setCurrentPage }) => {
   const [openFaq, setOpenFaq] = useState<number | null>(null);
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
   const [activeTestimonial, setActiveTestimonial] = useState(0);
@@ -91,22 +94,22 @@ const CertificationInfoPage: React.FC<CertificationInfoPageProps> = ({ t, setSho
         </div>
         
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
-          <div className="text-center">
+          <div className="text-left md:text-center">
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6 }}
             >
-              <h2 className="text-sm font-bold tracking-[0.2em] uppercase text-emerald-600 dark:text-emerald-400 mb-6 flex items-center justify-center gap-3">
-                <span className="w-8 h-[1px] bg-emerald-600/30 dark:bg-emerald-400/30"></span>
+              <h2 className="text-sm font-bold tracking-[0.2em] uppercase text-emerald-600 dark:text-emerald-400 mb-6 flex items-center justify-start md:justify-center gap-3">
+                <span className="w-12 h-[1px] bg-emerald-600/30 dark:bg-emerald-400/30"></span>
                 CERTIFICATION INFO
-                <span className="w-8 h-[1px] bg-emerald-600/30 dark:bg-emerald-400/30"></span>
+                <span className="hidden md:block w-12 h-[1px] bg-emerald-600/30 dark:bg-emerald-400/30"></span>
               </h2>
               <h1 className="text-4xl md:text-6xl font-sans font-medium text-black dark:text-white leading-[1.1] mb-8 tracking-tight">
                 {t('스탬프제작지도사', 'Stamp Making Instructor')}<br />
                 <span className="text-emerald-500">{t('자격증 안내', 'Certification Guide')}</span>
               </h1>
-              <p className="text-gray-600 dark:text-gray-400 max-w-2xl mx-auto text-lg font-light leading-relaxed">
+              <p className="text-left md:text-center text-gray-600 dark:text-gray-400 max-w-2xl mx-0 md:mx-auto text-lg font-light leading-relaxed">
                 {t('전문적인 스탬프 제작 기술을 습득하고 교육 전문가로 거듭나기 위한 체계적인 교육 과정을 안내해 드립니다.', 'We guide you through a systematic curriculum to acquire professional stamp making skills and become an education expert.')}
               </p>
             </motion.div>
@@ -114,19 +117,121 @@ const CertificationInfoPage: React.FC<CertificationInfoPageProps> = ({ t, setSho
         </div>
       </div>
 
+      {/* Growth Stages Infographic */}
+      <div className="py-24 bg-emerald-50/40 dark:bg-white/5 border-y border-black/5 dark:border-white/5 transition-colors duration-300">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-left md:text-center mb-16">
+            <h2 className="text-[11px] font-bold tracking-[0.4em] uppercase text-black dark:text-white mb-4 flex items-center justify-start md:justify-center gap-4">
+              <span className="w-12 h-[1px] bg-black dark:bg-white"></span>
+              GROWTH STAGES
+              <span className="hidden md:block w-12 h-[1px] bg-black dark:bg-white"></span>
+            </h2>
+            <h3 className="text-3xl md:text-4xl font-sans font-medium text-black dark:text-white">{t('전문가로 거듭나는 체계적인 성장 단계', 'Systematic Growth Stages to Become an Expert')}</h3>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-12 relative">
+            {/* Connecting Line */}
+            <div className="hidden md:block absolute top-12 left-[10%] right-[10%] h-[1px] bg-gray-100 dark:bg-white/10 z-0" />
+            
+            {[
+              { icon: <BookOpen className="w-6 h-6" />, title: t('Step 01 교육 상담', 'Step 01 Consultation'), desc: t('개인의 목표에 맞는 교육 과정을 상담합니다.', 'Consult on the curriculum that fits your goals.') },
+              { icon: <Palette className="w-6 h-6" />, title: t('Step 02 이론 및 실기', 'Step 02 Theory & Practice'), desc: t('기초 이론부터 실전 테크닉까지 학습합니다.', 'Learn from basic theory to practical techniques.') },
+              { icon: <FileText className="w-6 h-6" />, title: t('Step 03 포트폴리오', 'Step 03 Portfolio'), desc: t('자신만의 독창적인 작품 세계를 구축합니다.', 'Build your own original world of work.') },
+              { icon: <Award className="w-6 h-6" />, title: t('Step 04 자격증 취득', 'Step 04 Certification'), desc: t('심사를 통해 공인된 전문가 자격을 부여받습니다.', 'Receive certified expert qualification through screening.') }
+            ].map((step, idx) => (
+              <motion.div 
+                key={idx}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: idx * 0.1 }}
+                className="relative z-10 flex flex-col items-center text-center group"
+              >
+                <div className="w-24 h-24 bg-gray-50 dark:bg-[#111] rounded-full flex items-center justify-center mb-8 border border-gray-100 dark:border-white/5 shadow-sm group-hover:border-emerald-500 transition-colors">
+                  <div className="w-16 h-16 bg-white dark:bg-[#1a1a1a] rounded-full flex items-center justify-center text-emerald-500 shadow-md">
+                    {step.icon}
+                  </div>
+                </div>
+                <h4 className="text-[18px] font-bold text-black dark:text-white mb-4">{step.title}</h4>
+                <p className="text-[14px] text-gray-500 dark:text-gray-400 leading-relaxed font-light">
+                  {step.desc}
+                </p>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      {/* Why We Are Special - Bento Grid Style */}
+      <section className="py-16 bg-white dark:bg-[#0a0a0a] transition-colors duration-500 relative overflow-hidden">
+        <div className="absolute top-0 left-0 w-full h-full opacity-[0.03] dark:opacity-[0.05] pointer-events-none">
+          <div className="absolute inset-0" style={{ backgroundImage: 'radial-gradient(#000 1px, transparent 1px)', backgroundSize: '40px 40px' }}></div>
+        </div>
+        
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+          <div className="text-left md:text-center mb-16">
+            <h2 className="text-[11px] font-bold tracking-[0.4em] uppercase text-black dark:text-white mb-4 flex items-center justify-start md:justify-center gap-4">
+              <span className="w-12 h-[1px] bg-black dark:bg-white"></span>
+              CORE STRENGTHS
+              <span className="hidden md:block w-12 h-[1px] bg-black dark:bg-white"></span>
+            </h2>
+            <h3 className="text-3xl md:text-4xl font-sans font-medium text-black dark:text-white">
+              {t('우리가 특별한 이유', 'Why We Are Special')}
+            </h3>
+          </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {[
+              {
+                icon: <BookOpen className="w-8 h-8" />,
+                title: t('체계적인 커리큘럼', 'Systematic Curriculum'),
+                desc: t('기초부터 전문가 과정까지, 단계별로 구성된 독보적인 교육 프로그램을 제공합니다.', 'We provide a unique educational program composed of steps from basics to expert courses.'),
+                colorClass: 'border-emerald-700 text-emerald-700 dark:border-emerald-400 dark:text-emerald-400'
+              },
+              {
+                icon: <Palette className="w-8 h-8" />,
+                title: t('실전 중심 교육', 'Practice-Oriented Education'),
+                desc: t('이론에 그치지 않고 실제 제작과 활용 능력을 키우는 실습 위주의 수업을 지향합니다.', 'We aim for practice-oriented classes that develop actual production and utilization skills beyond theory.'),
+                colorClass: 'border-emerald-500 text-emerald-500 dark:border-emerald-500 dark:text-emerald-500'
+              },
+              {
+                icon: <Heart className="w-8 h-8" />,
+                title: t('사후 관리 및 지원', 'Post-Management & Support'),
+                desc: t('자격증 취득 후에도 강사 활동 지원, 창업 컨설팅 등 지속적인 성장을 돕습니다.', 'We help continuous growth such as instructor activity support and startup consulting even after obtaining certification.'),
+                colorClass: 'border-emerald-300 text-emerald-300 dark:border-emerald-600 dark:text-emerald-600'
+              }
+            ].map((strength, idx) => (
+              <div 
+                key={idx}
+                className="bg-white dark:bg-[#111] p-10 rounded-[3rem] border border-black/5 dark:border-white/5 shadow-sm group"
+              >
+                <div className={`w-16 h-16 rounded-2xl flex items-center justify-center mb-8 border-2 ${strength.colorClass}`}>
+                  {strength.icon}
+                </div>
+                <h4 className="text-[20px] font-bold text-black dark:text-white mb-4 tracking-tight">{strength.title}</h4>
+                <p className="text-gray-500 dark:text-gray-400 leading-relaxed text-[15px] font-light">
+                  {strength.desc}
+                </p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
       {/* Certification Levels Section */}
       <div className="py-24 bg-emerald-50/40 dark:bg-white/5 border-y border-black/5 dark:border-white/5 transition-colors duration-300" id="cert-levels">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="text-sm font-bold tracking-widest uppercase text-black dark:text-white mb-4 flex items-center justify-center gap-2">
-              <span className="w-4 h-[1px] bg-black dark:bg-white"></span>
+          <div className="text-left md:text-center mb-16">
+            <h2 className="text-[11px] font-bold tracking-[0.4em] uppercase text-black dark:text-white mb-4 flex items-center justify-start md:justify-center gap-4">
+              <span className="w-12 h-[1px] bg-black dark:bg-white"></span>
               CURRICULUM
-              <span className="w-4 h-[1px] bg-black dark:bg-white"></span>
+              <span className="hidden md:block w-12 h-[1px] bg-black dark:bg-white"></span>
             </h2>
             <h3 className="text-3xl md:text-4xl font-sans font-medium text-black dark:text-white">{t('자격증 등급별 안내', 'Certification Levels')}</h3>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {/* ... cert levels mapping ... */}
             {[
               {
                 id: '2급',
@@ -140,7 +245,7 @@ const CertificationInfoPage: React.FC<CertificationInfoPageProps> = ({ t, setSho
                   t('간단한 문구 및 로고 제작', 'Simple text and logo production')
                 ],
                 icon: <BookOpen className="w-6 h-6" />,
-                color: 'bg-blue-500'
+                color: 'bg-emerald-300 text-emerald-950 dark:bg-emerald-800 dark:text-emerald-50'
               },
               {
                 id: '1급',
@@ -154,7 +259,7 @@ const CertificationInfoPage: React.FC<CertificationInfoPageProps> = ({ t, setSho
                   t('상업용 패키징 및 브랜딩 기초', 'Commercial packaging and branding basics')
                 ],
                 icon: <Stamp className="w-6 h-6" />,
-                color: 'bg-emerald-500',
+                color: 'bg-emerald-500 text-white dark:bg-emerald-600 dark:text-white',
                 popular: true
               },
               {
@@ -169,15 +274,11 @@ const CertificationInfoPage: React.FC<CertificationInfoPageProps> = ({ t, setSho
                   t('강사 활동을 위한 교수법 및 스피치', 'Teaching methods and speech for instructors')
                 ],
                 icon: <Award className="w-6 h-6" />,
-                color: 'bg-purple-500'
+                color: 'bg-emerald-700 text-white dark:bg-emerald-400 dark:text-emerald-950'
               }
             ].map((cert, index) => (
-              <motion.div 
+              <div 
                 key={index}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: index * 0.1 }}
                 className={`relative bg-white dark:bg-[#1e1e1e] p-8 rounded-3xl border ${cert.popular ? 'border-emerald-500 shadow-emerald-500/10' : 'border-black/5 dark:border-white/5'} shadow-xl flex flex-col h-full group hover:scale-[1.02] transition-all duration-300`}
               >
                 <button 
@@ -193,7 +294,7 @@ const CertificationInfoPage: React.FC<CertificationInfoPageProps> = ({ t, setSho
                     Most Popular
                   </div>
                 )}
-                <div className={`w-14 h-14 ${cert.color} text-white rounded-2xl flex items-center justify-center mb-6 shadow-lg group-hover:rotate-6 transition-transform`}>
+                <div className={`w-14 h-14 ${cert.color} rounded-2xl flex items-center justify-center mb-6 shadow-lg group-hover:rotate-6 transition-transform`}>
                   {cert.icon}
                 </div>
                 <div className="mb-6">
@@ -209,20 +310,21 @@ const CertificationInfoPage: React.FC<CertificationInfoPageProps> = ({ t, setSho
                     </div>
                   ))}
                 </div>
-              </motion.div>
+              </div>
             ))}
           </div>
         </div>
       </div>
 
+
       {/* Career Opportunities Section */}
       <div className="py-24 bg-white dark:bg-[#0a0a0a] transition-colors duration-300" id="career-paths">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="text-sm font-bold tracking-widest uppercase text-black dark:text-white mb-4 flex items-center justify-center gap-2">
-              <span className="w-4 h-[1px] bg-black dark:bg-white"></span>
+          <div className="text-left md:text-center mb-16">
+            <h2 className="text-[11px] font-bold tracking-[0.4em] uppercase text-black dark:text-white mb-4 flex items-center justify-start md:justify-center gap-4">
+              <span className="w-12 h-[1px] bg-black dark:bg-white"></span>
               CAREER PATHS
-              <span className="w-4 h-[1px] bg-black dark:bg-white"></span>
+              <span className="hidden md:block w-12 h-[1px] bg-black dark:bg-white"></span>
             </h2>
             <h3 className="text-3xl md:text-4xl font-sans font-medium text-black dark:text-white">{t('취득 후 활용 방안', 'Career Opportunities')}</h3>
           </div>
@@ -238,7 +340,7 @@ const CertificationInfoPage: React.FC<CertificationInfoPageProps> = ({ t, setSho
                   t('오프라인·온라인 클래스 개설 및 관리', 'Opening and managing offline/online classes')
                 ],
                 icon: <GraduationCap className="w-6 h-6" />,
-                color: 'bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400'
+                color: 'bg-emerald-200 dark:bg-emerald-900/60 text-emerald-800 dark:text-emerald-200'
               },
               {
                 title: t('2. 체험 프로그램 운영', '2. Experience Program Operation'),
@@ -249,7 +351,7 @@ const CertificationInfoPage: React.FC<CertificationInfoPageProps> = ({ t, setSho
                   t('단기 체험형 수업 및 참여형 이벤트 운영', 'Short-term experiential classes and participatory events')
                 ],
                 icon: <Palette className="w-6 h-6" />,
-                color: 'bg-emerald-50 dark:bg-emerald-900/20 text-emerald-600 dark:text-emerald-400'
+                color: 'bg-emerald-100 dark:bg-emerald-900/40 text-emerald-700 dark:text-emerald-300'
               },
               {
                 title: t('3. 창업 및 판매 활동', '3. Startup & Sales Activities'),
@@ -260,7 +362,7 @@ const CertificationInfoPage: React.FC<CertificationInfoPageProps> = ({ t, setSho
                   t('체험과 판매를 연계한 수익형 비즈니스 확장', 'Revenue-generating business expansion linking experience and sales')
                 ],
                 icon: <Store className="w-6 h-6" />,
-                color: 'bg-orange-50 dark:bg-orange-900/20 text-orange-600 dark:text-orange-400'
+                color: 'bg-emerald-50 dark:bg-emerald-900/20 text-emerald-600 dark:text-emerald-400'
               },
               {
                 title: t('4. 기관·기업 프로그램 기획', '4. Institutional & Corporate Program Planning'),
@@ -271,7 +373,7 @@ const CertificationInfoPage: React.FC<CertificationInfoPageProps> = ({ t, setSho
                   t('대상별 교육안, 제안서, 운영안 작성 및 협의', 'Writing and discussing education plans, proposals, and operation plans by target')
                 ],
                 icon: <Building2 className="w-6 h-6" />,
-                color: 'bg-purple-50 dark:bg-purple-900/20 text-purple-600 dark:text-purple-400'
+                color: 'bg-emerald-200 dark:bg-emerald-900/60 text-emerald-800 dark:text-emerald-200'
               },
               {
                 title: t('5. 브랜딩·디자인 활용', '5. Branding & Design Utilization'),
@@ -282,7 +384,7 @@ const CertificationInfoPage: React.FC<CertificationInfoPageProps> = ({ t, setSho
                   t('브랜드 콘셉트에 맞춘 시각 요소 개발', 'Visual element development tailored to brand concepts')
                 ],
                 icon: <ShoppingBag className="w-6 h-6" />,
-                color: 'bg-pink-50 dark:bg-pink-900/20 text-pink-600 dark:text-pink-400'
+                color: 'bg-emerald-100 dark:bg-emerald-900/40 text-emerald-700 dark:text-emerald-300'
               },
               {
                 title: t('6. 교육 기획 및 전문가 활동', '6. Education Planning & Expert Activities'),
@@ -293,7 +395,7 @@ const CertificationInfoPage: React.FC<CertificationInfoPageProps> = ({ t, setSho
                   t('전문 교육자 및 상위 과정 운영 역량 확장', 'Expansion of professional educator and advanced course operation capabilities')
                 ],
                 icon: <UserCheck className="w-6 h-6" />,
-                color: 'bg-indigo-50 dark:bg-indigo-900/20 text-indigo-600 dark:text-indigo-400'
+                color: 'bg-emerald-50 dark:bg-emerald-900/20 text-emerald-600 dark:text-emerald-400'
               }
             ].map((item, index) => (
               <motion.div 
@@ -323,13 +425,13 @@ const CertificationInfoPage: React.FC<CertificationInfoPageProps> = ({ t, setSho
       </div>
 
       {/* Testimonials Section */}
-      <div className="py-24 bg-white dark:bg-[#121212] border-b border-black/5 dark:border-white/5 transition-colors duration-300 overflow-hidden">
+      <div className="py-24 bg-[#f8f9fa] dark:bg-[#050505] border-y border-black/5 dark:border-white/5 transition-colors duration-300 overflow-hidden">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="text-sm font-bold tracking-widest uppercase text-black dark:text-white mb-4 flex items-center justify-center gap-2">
-              <span className="w-4 h-[1px] bg-black dark:bg-white"></span>
+          <div className="text-left md:text-center mb-16">
+            <h2 className="text-[11px] font-bold tracking-[0.4em] uppercase text-black dark:text-white mb-4 flex items-center justify-start md:justify-center gap-4">
+              <span className="w-12 h-[1px] bg-black dark:bg-white"></span>
               REVIEW
-              <span className="w-4 h-[1px] bg-black dark:bg-white"></span>
+              <span className="hidden md:block w-12 h-[1px] bg-black dark:bg-white"></span>
             </h2>
             <p className="text-3xl md:text-4xl font-sans font-medium text-black dark:text-white leading-tight">
               {t('자격증 응시 후기', 'Certification Testimonials')}
@@ -393,7 +495,7 @@ const CertificationInfoPage: React.FC<CertificationInfoPageProps> = ({ t, setSho
                     }
                   }}
                 >
-                  <div className="bg-gray-50 dark:bg-[#1e1e1e] p-6 md:p-8 rounded-3xl border border-black/5 dark:border-white/5 shadow-2xl h-full flex flex-col">
+                  <div className="bg-white dark:bg-[#141414] p-6 md:p-8 rounded-3xl border border-black/5 dark:border-white/5 shadow-xl h-full flex flex-col">
                     <div className="flex items-center gap-1 mb-4">
                       {[...Array(5)].map((_, i) => (
                         <svg key={i} className="w-4 h-4 md:w-5 md:h-5 text-emerald-500 fill-current" viewBox="0 0 24 24">
@@ -438,98 +540,32 @@ const CertificationInfoPage: React.FC<CertificationInfoPageProps> = ({ t, setSho
         </div>
       </div>
 
-      {/* FAQ Section */}
-      <div className="py-24 bg-emerald-50/40 dark:bg-white/5 border-y border-black/5 dark:border-white/5 transition-colors duration-300" id="faq">
-        <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="text-sm font-bold tracking-widest uppercase text-black dark:text-white mb-4 flex items-center justify-center gap-2">
-              <span className="w-4 h-[1px] bg-black dark:bg-white"></span>
-              FAQ
-              <span className="w-4 h-[1px] bg-black dark:bg-white"></span>
-            </h2>
-            <h3 className="text-3xl md:text-4xl font-sans font-medium text-black dark:text-white">{t('자주 묻는 질문', 'Frequently Asked Questions')}</h3>
-          </div>
-
-          <div className="space-y-4">
-            {[
-              {
-                q: t('정식으로 허가된 자격증인가요?', 'Is it an officially licensed certificate?'),
-                a: t('민간자격등록허가증을 받은 정식 자격증입니다.', 'It is an official certificate that has received a private qualification registration license.'),
-                images: [
-                  'https://i.ibb.co/G43639Hq/1773106303264-9f665cd2-a080-4f8d-8360-12683a80e597-1.png',
-                  'https://i.ibb.co/kV3nWHL8/1773106303264-9f665cd2-a080-4f8d-8360-12683a80e597-2.png'
-                ]
-              },
-              {
-                q: t('자격증 취득 후 바로 강사로 활동할 수 있나요?', 'Can I work as an instructor immediately after obtaining the certification?'),
-                a: t('1급 또는 마스터 자격증을 취득하시면 방과후 학교, 문화센터 등에서 강사로 활동하실 수 있는 자격이 주어집니다. 진흥원에서도 우수 수료자에게 출강 기회를 연결해 드리고 있습니다.', 'If you obtain a Level 1 or Master certification, you will be qualified to work as an instructor at after-school programs, cultural centers, etc. The Institute also connects excellent graduates with teaching opportunities.')
-              },
-              {
-                q: t('온라인으로도 시험 응시가 가능한가요?', 'Is it possible to take the exam online?'),
-                a: t('네, 포트폴리오 우편 제출 및 지정된 주제의 스탬프 제작 과정을 담은 영상 제출을 통해 온라인(비대면)으로도 충분히 응시 및 자격 취득이 가능합니다.', 'Yes, you can fully apply and obtain the certification online (non-face-to-face) by submitting your portfolio by mail and a video showing the stamp making process on a designated topic.')
-              },
-              {
-                q: t('수강료 결제는 어떻게 하나요?', 'How do I pay the tuition fee?'),
-                a: t('무통장 입금, 계좌이체 등을 통해 결제하실 수 있으며, 현금영수증 및 세금계산서 발행이 가능합니다. 자세한 계좌 정보는 접수 페이지를 참고해 주세요.', 'You can pay via bank transfer, etc., and cash receipts and tax invoices can be issued. Please refer to the application page for detailed account information.')
-              }
-            ].map((faq, index) => (
-              <div key={index} className="border border-black/10 dark:border-white/10 rounded-2xl overflow-hidden bg-white dark:bg-[#1e1e1e] transition-colors">
-                <button 
-                  onClick={() => setOpenFaq(openFaq === index ? null : index)}
-                  className="w-full flex justify-between items-center p-6 md:p-8 text-left hover:bg-black/5 dark:hover:bg-white/5 transition-colors"
-                >
-                  <span className="font-bold text-black dark:text-white pr-8">{faq.q}</span>
-                  <ChevronDown className={`w-5 h-5 text-gray-500 shrink-0 transition-transform duration-300 ${openFaq === index ? 'rotate-180' : ''}`} />
-                </button>
-                <div className={`overflow-hidden transition-all duration-300 ${openFaq === index ? 'max-h-[500px] opacity-100' : 'max-h-0 opacity-0'}`}>
-                  <div className="p-6 md:p-8 pt-0 text-gray-600 dark:text-gray-400 text-sm leading-relaxed">
-                    <p>{faq.a}</p>
-                    {faq.images && (
-                      <div className="flex gap-4 mt-4">
-                        {faq.images.map((img, i) => (
-                          <img 
-                            key={i} 
-                            src={img} 
-                            alt={`License ${i+1}`} 
-                            className="w-24 h-32 object-cover rounded-lg border border-black/10 dark:border-white/10 cursor-pointer hover:opacity-80 transition-opacity shadow-sm"
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              setSelectedImage(img);
-                            }}
-                          />
-                        ))}
-                      </div>
-                    )}
-                  </div>
-                </div>
-              </div>
-            ))}
+      {/* FAQ Banner Section */}
+      <div className="py-24 bg-white dark:bg-[#121212] border-t border-black/5 dark:border-white/5">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="bg-[#111] rounded-[2rem] p-8 md:p-12 border border-black/5 dark:border-white/5 flex flex-col md:flex-row items-center justify-between gap-8">
+            <div className="text-left">
+              <h3 className="text-2xl md:text-3xl font-sans font-medium text-white mb-4">
+                {t('더 궁금한 점이 있으신가요?', 'Have more questions?')}
+              </h3>
+              <p className="text-gray-400 font-light text-base md:text-lg leading-relaxed max-w-2xl">
+                {t('시험 응시 및 자격증 발급과 관련하여 가장 많이 궁금해하시는 질문들을 모았습니다.', 'We have collected the most frequently asked questions regarding exam application and certification issuance.')}
+              </p>
+            </div>
+            <button 
+              onClick={() => {
+                window.scrollTo(0, 0);
+                window.location.hash = 'faq';
+              }}
+              className="shrink-0 px-8 py-4 bg-[#222] text-white rounded-full font-bold hover:bg-[#333] transition-all inline-flex items-center gap-3"
+            >
+              <span>{t('자주 묻는 질문', 'FAQ')}</span>
+              <ChevronRight className="w-5 h-5 text-emerald-500" />
+            </button>
           </div>
         </div>
       </div>
 
-      {/* Image Modal */}
-      {selectedImage && (
-        <div 
-          className="fixed inset-0 z-[200] flex items-center justify-center p-4 bg-black/90 backdrop-blur-sm"
-          onClick={() => setSelectedImage(null)}
-        >
-          <div className="relative max-w-4xl w-full max-h-[90vh] flex items-center justify-center">
-            <img 
-              src={selectedImage} 
-              alt="License Full" 
-              className="max-w-full max-h-full object-contain rounded-lg shadow-2xl"
-              onClick={(e) => e.stopPropagation()}
-            />
-            <button 
-              onClick={() => setSelectedImage(null)}
-              className="absolute -top-12 right-0 text-white hover:text-emerald-400 transition-colors"
-            >
-              <span className="text-sm font-bold tracking-widest uppercase">Close</span>
-            </button>
-          </div>
-        </div>
-      )}
     </motion.div>
   );
 };
