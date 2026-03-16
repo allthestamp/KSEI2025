@@ -467,11 +467,13 @@ export default function ExamPage({ t, setShowApplyModal, setCurrentPage, isMobil
             {[
               { 
                 title: t('우수 포트폴리오 예시', 'Excellent Portfolio Example'), 
-                desc: t('다양한 스탬프 기법을 활용한 우수 포트폴리오 영상입니다.', 'This is an excellent portfolio video using various stamp techniques.') 
+                desc: t('다양한 스탬프 기법을 활용한 우수 포트폴리오 영상입니다.', 'This is an excellent portfolio video using various stamp techniques.'),
+                url: "https://www.youtube.com/embed/pdh9Wr2bKJY"
               },
               { 
                 title: t('실기 시험 진행 예시 및 촬영 가이드', 'Practical Exam Process & Filming Guide'), 
-                desc: t('실제 실기 시험이 진행되는 과정과 카메라 각도, 조명 등 촬영 시 주의사항 안내 영상입니다.', 'This is a standard example of the practical exam process and a guide on precautions when filming, such as camera angle and lighting.') 
+                desc: t('실제 실기 시험이 진행되는 과정과 카메라 각도, 조명 등 촬영 시 주의사항 안내 영상입니다.', 'This is a standard example of the practical exam process and a guide on precautions when filming, such as camera angle and lighting.'),
+                url: "https://www.youtube.com/embed/GKR6NiKmdFk"
               }
             ].map((video, idx) => (
               <motion.div 
@@ -484,7 +486,7 @@ export default function ExamPage({ t, setShowApplyModal, setCurrentPage, isMobil
                 <div className="aspect-video w-full bg-gray-200 dark:bg-gray-800 relative">
                   <iframe 
                     className="absolute inset-0 w-full h-full"
-                    src="https://www.youtube.com/embed/dQw4w9WgXcQ" 
+                    src={video.url} 
                     title={video.title}
                     frameBorder="0" 
                     allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
