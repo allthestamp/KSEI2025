@@ -38,7 +38,7 @@ export default function ExamPage({ t, setShowApplyModal, setCurrentPage, isMobil
               {t('시험 안내 및 접수 방법', 'Exam Information & How to Apply')}
             </h1>
             <p className="text-center text-lg md:text-xl text-gray-600 dark:text-gray-400 font-light max-w-3xl mx-auto leading-relaxed">
-              {t('한국스탬프교육진흥원의 자격증 시험 안내 및 접수 방법을 확인하세요. 체계적인 검정 시스템을 통해 여러분의 전문성을 증명해 드립니다.', 'Check the certification exam information and application process of the Korea Stamp Education Institute. We prove your expertise through a systematic testing system.')}
+              {t('한국스탬프교육진흥원의 자격증 시험 안내 및 접수 방법을 확인하세요. \n체계적인 검정 시스템을 통해 여러분의 전문성을 증명해 드립니다.', 'Check the certification exam information and application process of the Korea Stamp Education Institute. We prove your expertise through a systematic testing system.')}
             </p>
           </motion.div>
         </div>
@@ -393,7 +393,7 @@ export default function ExamPage({ t, setShowApplyModal, setCurrentPage, isMobil
                 {t('성공적인 시험을 위한 꿀팁', 'Tips for Exam Success')}
               </h3>
               <p className="text-gray-600 dark:text-gray-400 font-light mb-10 leading-relaxed">
-                {t('자격증 취득을 준비하시는 분들을 위해 평가 위원들이 전하는 핵심 팁입니다. 작은 차이가 합격을 결정합니다.', 'Here are key tips from evaluators for those preparing for certification. Small differences determine success.')}
+                {t('자격증 취득을 준비하시는 분들을 위해 평가 위원들이 전하는 핵심 팁입니다. \n작은 차이가 합격을 결정합니다.', 'Here are key tips from evaluators for those preparing for certification. Small differences determine success.')}
               </p>
               
               <div className="space-y-4">
@@ -459,7 +459,7 @@ export default function ExamPage({ t, setShowApplyModal, setCurrentPage, isMobil
             </div>
             <h3 className="text-3xl md:text-4xl font-sans font-medium text-black dark:text-white mb-4">{t('포트폴리오 및 실기 예시', 'Portfolio & Practical Examples')}</h3>
             <p className="text-center text-gray-600 dark:text-gray-400 font-light max-w-2xl mx-auto">
-              {t('성공적인 자격증 취득을 위한 우수 포트폴리오와 온라인 실기 시험 예시 영상입니다. 참고하여 본인만의 개성 있는 결과물을 준비해 보세요.', 'These are examples of excellent portfolios and online practical exams. Use them as a reference to prepare your own unique work.')}
+              {t('성공적인 자격증 취득을 위한 포트폴리오와 온라인 실기 시험 예시 영상입니다. \n참고하여 본인만의 개성 있는 결과물을 준비해 보세요.', 'These are examples of excellent portfolios and online practical exams. Use them as a reference to prepare your own unique work.')}
             </p>
           </div>
 

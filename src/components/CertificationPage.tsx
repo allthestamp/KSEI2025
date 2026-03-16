@@ -37,7 +37,7 @@ export default function CertificationPage({ t, setCurrentPage, isMobile }: Props
               {t('자격증 발급 안내', 'Certification Issuance')}
             </h1>
             <p className="text-center text-lg md:text-xl text-gray-600 dark:text-gray-400 font-light max-w-3xl mx-auto leading-relaxed">
-              {t('자격증은 시험 응시와 함께 신청되며, 합격 시 별도의 추가 절차 없이 발급됩니다. 여러분의 전문성을 증명하는 소중한 자격증을 안전하게 전달해 드립니다.', 'Certification is applied for along with the exam and is issued without additional procedures upon passing. We safely deliver your precious certificate that proves your expertise.')}
+              {t('자격증은 시험 응시와 함께 신청되며, 합격 시 별도의 추가 절차 없이 발급됩니다. \n여러분의 전문성을 증명하는 소중한 자격증을 안전하게 전달해 드립니다.', 'Certification is applied for along with the exam and is issued without additional procedures upon passing. We safely deliver your precious certificate that proves your expertise.')}
             </p>
           </motion.div>
         </div>
@@ -156,7 +156,7 @@ export default function CertificationPage({ t, setCurrentPage, isMobile }: Props
               </div>
               <h3 className="text-3xl md:text-4xl font-sans font-medium text-black dark:text-white mb-6">{t('자격증 발급 및 결제', 'Issuance & Payment')}</h3>
               <p className="text-gray-600 dark:text-gray-400 font-light text-lg leading-relaxed">
-                {t('자격증 검정료 및 발급 비용 안내입니다. 입금 시 반드시 신청자 본인 성함으로 입금해 주시기 바랍니다.', 'Information on certification exam and issuance fees. Please ensure the deposit is made under the applicant\'s name.')}
+                {t('자격증 검정료 및 발급 비용 안내입니다. \n입금 시 반드시 신청자 본인 성함으로 입금해 주시기 바랍니다.', 'Information on certification exam and issuance fees. Please ensure the deposit is made under the applicant\'s name.')}
               </p>
             </div>
             
