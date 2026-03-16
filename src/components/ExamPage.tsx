@@ -448,74 +448,31 @@ export default function ExamPage({ t, setShowApplyModal, setCurrentPage, isMobil
 
 
 
-      {/* Portfolio Examples Section - Subtle Green Background */}
+      {/* Portfolio & Practical Exam Examples Section */}
       <div className="py-24 bg-white dark:bg-[#121212] border-y border-black/5 dark:border-white/5">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
             <div className="flex items-center justify-center gap-4 mb-6">
               <div className="h-[1px] w-12 bg-black dark:bg-white" />
-              <span className="text-[11px] font-bold tracking-[0.4em] uppercase text-black dark:text-white">PORTFOLIO EXAMPLES</span>
+              <span className="text-[11px] font-bold tracking-[0.4em] uppercase text-black dark:text-white">EXAM EXAMPLES</span>
               <div className="h-[1px] w-12 bg-black dark:bg-white" />
             </div>
-            <h3 className="text-3xl md:text-4xl font-sans font-medium text-black dark:text-white mb-4">{t('우수 포트폴리오 예시', 'Portfolio Examples')}</h3>
+            <h3 className="text-3xl md:text-4xl font-sans font-medium text-black dark:text-white mb-4">{t('포트폴리오 및 실기 예시', 'Portfolio & Practical Examples')}</h3>
             <p className="text-center text-gray-600 dark:text-gray-400 font-light max-w-2xl mx-auto">
-              {t('실제 제출된 우수 포트폴리오 예시입니다. 참고하여 본인만의 개성 있는 포트폴리오를 준비해 보세요.', 'These are examples of excellent portfolios. Use them as a reference to prepare your own unique portfolio.')}
+              {t('성공적인 자격증 취득을 위한 우수 포트폴리오와 온라인 실기 시험 예시 영상입니다. 참고하여 본인만의 개성 있는 결과물을 준비해 보세요.', 'These are examples of excellent portfolios and online practical exams. Use them as a reference to prepare your own unique work.')}
             </p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
             {[
-              { title: t('1급 포트폴리오 예시', 'Level 1 Portfolio Example'), desc: t('다양한 스탬프 기법을 활용한 1급 과정 우수 포트폴리오 영상입니다.', 'This is an excellent portfolio video for the Level 1 course using various stamp techniques.') },
-              { title: t('마스터 포트폴리오 예시', 'Master Portfolio Example'), desc: t('고급 기법과 창의적인 도안이 돋보이는 마스터 과정 우수 포트폴리오 영상입니다.', 'This is an excellent portfolio video for the Master course featuring advanced techniques and creative designs.') }
-            ].map((video, idx) => (
-              <motion.div 
-                key={idx}
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                className="group bg-white dark:bg-[#1e1e1e] rounded-[2.5rem] overflow-hidden border border-black/5 dark:border-white/5 shadow-sm hover:shadow-2xl transition-all duration-500"
-              >
-                <div className="aspect-video w-full bg-gray-200 dark:bg-gray-800 relative">
-                  <iframe 
-                    className="absolute inset-0 w-full h-full"
-                    src="https://www.youtube.com/embed/dQw4w9WgXcQ" 
-                    title={video.title}
-                    frameBorder="0" 
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
-                    allowFullScreen
-                  ></iframe>
-                </div>
-                <div className="p-8 md:p-10">
-                  <h4 className="text-xl font-bold text-black dark:text-white mb-3 group-hover:text-emerald-500 transition-colors">{video.title}</h4>
-                  <p className="text-sm text-gray-600 dark:text-gray-400 leading-relaxed">
-                    {video.desc}
-                  </p>
-                </div>
-              </motion.div>
-            ))}
-          </div>
-        </div>
-      </div>
-
-      {/* Online Practical Exam Example Section - White Background */}
-      <div className="py-24 bg-emerald-50/40 dark:bg-emerald-900/5 border-y border-black/5 dark:border-white/5">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <div className="flex items-center justify-center gap-4 mb-6">
-              <div className="h-[1px] w-12 bg-black dark:bg-white" />
-              <span className="text-[11px] font-bold tracking-[0.4em] uppercase text-black dark:text-white">PRACTICAL EXAM EXAMPLES</span>
-              <div className="h-[1px] w-12 bg-black dark:bg-white" />
-            </div>
-            <h3 className="text-3xl md:text-4xl font-sans font-medium text-black dark:text-white mb-4">{t('온라인 실기 예시', 'Online Practical Examples')}</h3>
-            <p className="text-center text-gray-600 dark:text-gray-400 font-light max-w-2xl mx-auto">
-              {t('온라인 실기 시험 응시를 위한 촬영 방법 및 예시 영상입니다. 얼굴과 작업 과정이 잘 보이도록 촬영해 주세요.', 'This is a filming method and example video for the online practical exam. Please film so that your face and the work process are clearly visible.')}
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
-            {[
-              { title: t('실기 시험 촬영 가이드', 'Practical Exam Filming Guide'), desc: t('카메라 각도, 조명, 작업 영역 확보 등 실기 시험 촬영 시 주의사항 안내 영상입니다.', 'This video guides you through precautions when filming for the practical exam, such as camera angle, lighting, and securing the work area.') },
-              { title: t('실기 시험 진행 예시', 'Practical Exam Process Example'), desc: t('실제 실기 시험이 진행되는 과정과 제출용 영상의 표준 예시입니다.', 'This is a standard example of the practical exam process and the video for submission.') }
+              { 
+                title: t('우수 포트폴리오 예시', 'Excellent Portfolio Example'), 
+                desc: t('다양한 스탬프 기법을 활용한 우수 포트폴리오 영상입니다.', 'This is an excellent portfolio video using various stamp techniques.') 
+              },
+              { 
+                title: t('실기 시험 진행 예시 및 촬영 가이드', 'Practical Exam Process & Filming Guide'), 
+                desc: t('실제 실기 시험이 진행되는 과정과 카메라 각도, 조명 등 촬영 시 주의사항 안내 영상입니다.', 'This is a standard example of the practical exam process and a guide on precautions when filming, such as camera angle and lighting.') 
+              }
             ].map((video, idx) => (
               <motion.div 
                 key={idx}
@@ -527,7 +484,7 @@ export default function ExamPage({ t, setShowApplyModal, setCurrentPage, isMobil
                 <div className="aspect-video w-full bg-gray-200 dark:bg-gray-800 relative">
                   <iframe 
                     className="absolute inset-0 w-full h-full"
-                    src="https://www.youtube.com/embed/GKR6NiKmdFk" 
+                    src="https://www.youtube.com/embed/dQw4w9WgXcQ" 
                     title={video.title}
                     frameBorder="0" 
                     allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
