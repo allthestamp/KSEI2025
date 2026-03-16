@@ -527,7 +527,7 @@ export default function ExamPage({ t, setShowApplyModal, setCurrentPage, isMobil
                 <div className="aspect-video w-full bg-gray-200 dark:bg-gray-800 relative">
                   <iframe 
                     className="absolute inset-0 w-full h-full"
-                    src="https://www.youtube.com/embed/dQw4w9WgXcQ" 
+                    src="https://www.youtube.com/embed/GKR6NiKmdFk" 
                     title={video.title}
                     frameBorder="0" 
                     allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
