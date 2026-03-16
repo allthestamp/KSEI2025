@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useLayoutEffect } from 'react';
-import { Menu, X, Stamp, BookOpen, Briefcase, Award, Video, FileText, MapPin, Phone, Sun, Moon, ArrowUp, Mail, Globe, Clock, ChevronDown, MessageCircle, Building, Palette, GraduationCap, UserCheck, CreditCard, FileCheck, ChevronLeft, ChevronRight, FileEdit, Store, ShoppingBag, Building2, Target, Rocket, Heart } from 'lucide-react';
+import { Menu, X, Stamp, BookOpen, Briefcase, Award, Video, FileText, MapPin, Phone, Sun, Moon, ArrowUp, Mail, Globe, Clock, ChevronDown, MessageCircle, Building, Palette, GraduationCap, UserCheck, CreditCard, FileCheck, ChevronLeft, ChevronRight, FileEdit, Store, ShoppingBag, Building2, Target, Rocket, Heart, Copy, Check } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import emailjs from '@emailjs/browser';
 import CertificationPage from './components/CertificationPage';
@@ -131,6 +131,14 @@ export default function App() {
     examMethod: '',
     agreePrivacy: false
   });
+
+  const [copied, setCopied] = useState(false);
+
+  const handleCopy = () => {
+    navigator.clipboard.writeText('351-1372-1557-33');
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
 
   const handleApplySubmit = async () => {
     const { name, idNumber, phone, email, address, levels, payerName, depositTime, receiptInfo, examMethod, agreePrivacy } = formData;
@@ -336,7 +344,7 @@ export default function App() {
         <div className="absolute inset-0 bg-black/50 backdrop-blur-sm" onClick={() => setIsMobileMenuOpen(false)} />
         <div className={`absolute top-0 right-0 w-64 h-full bg-white dark:bg-[#121212] shadow-2xl transform transition-transform duration-300 flex flex-col ${isMobileMenuOpen ? 'translate-x-0' : 'translate-x-full'}`}>
           <div className="p-4 border-b border-black/10 dark:border-white/10 flex justify-between items-center">
-            <span className="font-serif font-bold text-black dark:text-white">{t('메뉴', 'Menu')}</span>
+            <span className="font-sans font-bold text-black dark:text-white">{t('메뉴', 'Menu')}</span>
             <button onClick={() => setIsMobileMenuOpen(false)} className="p-2 text-black dark:text-white">
               <X className="w-6 h-6" />
             </button>
@@ -370,7 +378,7 @@ export default function App() {
               <motion.img 
                 initial={{ scale: 1.1, opacity: 0 }}
                 animate={{ scale: 1, opacity: theme === 'light' ? 0.8 : 0.4 }}
-                transition={{ duration: 2 }}
+                transition={{ duration: isMobile ? 1 : 2 }}
                 src="https://i.ibb.co/Lh0gDPck/Kakao-Talk-20240626-100558300.jpg" 
                 alt="Background" 
                 className="w-full h-full object-cover"
@@ -385,7 +393,7 @@ export default function App() {
                   scale: [1, 1.1, 1]
                 }}
                 transition={{ 
-                  duration: 8, 
+                  duration: isMobile ? 4 : 8, 
                   repeat: Infinity, 
                   ease: "easeInOut" 
                 }}
@@ -397,8 +405,8 @@ export default function App() {
               <motion.div
                 initial={{ opacity: 0, y: 50 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 1, delay: 0.5 }}
-                className="flex flex-col items-center justify-center min-h-[60vh]"
+                transition={{ duration: isMobile ? 0.5 : 1, delay: isMobile ? 0.2 : 0.5 }}
+                className="flex flex-col items-center justify-center min-h-[60vh] max-md:-translate-y-16"
               >
                 <span className={`inline-block px-4 py-1.5 mb-8 text-[10px] font-bold tracking-[0.3em] uppercase rounded-full bg-black dark:bg-emerald-500 text-white`}>
                   {t('스탬프 교육의 새로운 기준', 'New Standard in Stamp Education')}
@@ -425,7 +433,7 @@ export default function App() {
               </span>
               <motion.div 
                 animate={{ y: [0, 10, 0] }}
-                transition={{ repeat: Infinity, duration: 2 }}
+                transition={{ repeat: Infinity, duration: isMobile ? 1 : 2 }}
                 className={`w-[1px] h-8 ${theme === 'light' ? 'bg-black/30' : 'bg-white/30'}`}
               />
             </div>
@@ -439,7 +447,7 @@ export default function App() {
                 initial={{ opacity: 0, y: 30 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
-                transition={{ duration: 0.8 }}
+                transition={{ duration: isMobile ? 0.4 : 0.8 }}
               >
                 <div className="flex items-center gap-4 mb-8">
                   <div className="h-[1px] w-12 bg-emerald-500" />
@@ -468,8 +476,8 @@ export default function App() {
                   initial={{ opacity: 0, x: 50 }}
                   whileInView={{ opacity: 1, x: 0 }}
                   viewport={{ once: true }}
-                  transition={{ duration: 0.8 }}
-                  className="flex-1"
+                  transition={{ duration: isMobile ? 0.4 : 0.8 }}
+                  className={`flex-1 ${isMobile ? '!opacity-100 !transform-none' : ''}`}
                 >
                   <div className="relative h-full">
                     <img 
@@ -488,8 +496,8 @@ export default function App() {
                   initial={{ opacity: 0, x: 50 }}
                   whileInView={{ opacity: 1, x: 0 }}
                   viewport={{ once: true }}
-                  transition={{ duration: 0.8 }}
-                  className="flex-1 flex flex-col justify-center"
+                  transition={{ duration: isMobile ? 0.4 : 0.8 }}
+                  className={`flex-1 flex flex-col justify-center ${isMobile ? '!opacity-100 !transform-none' : ''}`}
                 >
                   <div className="text-emerald-500/20 mb-8">
                     <svg width="60" height="45" viewBox="0 0 60 45" fill="currentColor">
@@ -582,10 +590,10 @@ export default function App() {
                   <h3 className="text-[36px] font-normal text-black dark:text-white tracking-tighter">{t('활동 갤러리', 'Activity Gallery')}</h3>
                 </div>
                 <div className="flex gap-4">
-                  <button onClick={prevGallery} className="w-14 h-14 rounded-full border border-black/10 dark:border-white/30 bg-white/50 dark:bg-white/20 backdrop-blur-md flex items-center justify-center hover:bg-black hover:text-white dark:text-white dark:hover:bg-white dark:hover:text-black transition-all group shadow-md">
+                  <button onClick={prevGallery} className="w-14 h-14 rounded-full border border-black/10 dark:border-transparent bg-white/50 dark:bg-white/20 backdrop-blur-md flex items-center justify-center hover:bg-black hover:text-white dark:text-white dark:hover:bg-white dark:hover:text-black transition-all group shadow-md">
                     <ChevronLeft className="w-6 h-6 group-hover:-translate-x-1 transition-transform" />
                   </button>
-                  <button onClick={nextGallery} className="w-14 h-14 rounded-full border border-black/10 dark:border-white/30 bg-white/50 dark:bg-white/20 backdrop-blur-md flex items-center justify-center hover:bg-black hover:text-white dark:text-white dark:hover:bg-white dark:hover:text-black transition-all group shadow-md">
+                  <button onClick={nextGallery} className="w-14 h-14 rounded-full border border-black/10 dark:border-transparent bg-white/50 dark:bg-white/20 backdrop-blur-md flex items-center justify-center hover:bg-black hover:text-white dark:text-white dark:hover:bg-white dark:hover:text-black transition-all group shadow-md">
                     <ChevronRight className="w-6 h-6 group-hover:translate-x-1 transition-transform" />
                   </button>
                 </div>
@@ -635,7 +643,7 @@ export default function App() {
                   scale: [1, 1.2, 1],
                   opacity: [0.1, 0.2, 0.1]
                 }}
-                transition={{ duration: 10, repeat: Infinity }}
+                transition={{ duration: isMobile ? 5 : 10, repeat: Infinity }}
                 className="absolute top-[-20%] left-[-10%] w-[60%] h-[60%] bg-white blur-[150px] rounded-full"
               ></motion.div>
               <motion.div 
@@ -643,7 +651,7 @@ export default function App() {
                   scale: [1.2, 1, 1.2],
                   opacity: [0.1, 0.2, 0.1]
                 }}
-                transition={{ duration: 12, repeat: Infinity }}
+                transition={{ duration: isMobile ? 6 : 12, repeat: Infinity }}
                 className="absolute bottom-[-20%] right-[-10%] w-[60%] h-[60%] bg-white blur-[150px] rounded-full"
               ></motion.div>
             </div>
@@ -712,18 +720,19 @@ export default function App() {
 
         </div>
       ) : currentPage === 'certification' ? (
-        <CertificationPage t={t} setCurrentPage={setCurrentPage} />
+        <CertificationPage t={t} setCurrentPage={setCurrentPage} isMobile={isMobile} />
       ) : currentPage === 'cert-info' ? (
         <CertificationInfoPage 
           t={t} 
           setShowCertModal={setShowCertModal}
           setSelectedCert={setSelectedCert}
           setCurrentPage={setCurrentPage}
+          isMobile={isMobile}
         />
       ) : currentPage === 'exam' ? (
-        <ExamPage t={t} setShowApplyModal={setShowApplyModal} setCurrentPage={setCurrentPage} />
+        <ExamPage t={t} setShowApplyModal={setShowApplyModal} setCurrentPage={setCurrentPage} isMobile={isMobile} />
       ) : (
-        <FaqPage t={t} />
+        <FaqPage t={t} isMobile={isMobile} />
       )}
 
       {/* Footer */}
@@ -744,7 +753,7 @@ export default function App() {
               </div>
             </div>
             
-            <div className="lg:col-span-8 flex flex-wrap md:flex-nowrap justify-end gap-10 md:gap-16">
+            <div className="lg:col-span-8 grid grid-cols-2 md:flex md:flex-nowrap justify-start md:justify-end gap-10 md:gap-16">
               <div>
                 <h4 className="text-black dark:text-white font-bold mb-6 tracking-[0.2em] uppercase text-[10px]">{t('기관소개', 'About Us')}</h4>
                 <ul className="text-gray-500 dark:text-gray-400 space-y-4 text-sm">
@@ -1131,7 +1140,21 @@ export default function App() {
                       <label className="block text-sm font-bold text-black dark:text-white mb-2">
                         {t('입금자명', 'Payer Name')} {formErrors.payerName && <span className="text-red-500 font-normal ml-2">{formErrors.payerName}</span>}
                       </label>
-                      <p className="text-xs text-gray-500 dark:text-gray-400 mb-3 leading-relaxed">{t('송금자 성함을 기재 해 주세요. (응시료 납부 완료 후, 안내 메일이 발송됩니다.)', 'Please enter the remitter\'s name. (A guide email will be sent after the exam fee payment is completed.)')}<br/><strong className="text-emerald-600 dark:text-emerald-400">{t('농협 351-1372-1557-33 (한국스탬프교육진흥원)', 'Nonghyup 351-1372-1557-33 (Korea Stamp Education Institute)')}</strong></p>
+                      <p className="text-xs text-gray-500 dark:text-gray-400 mb-3 leading-relaxed">
+                        {t('송금자 성함을 기재 해 주세요. (응시료 납부 완료 후, 안내 메일이 발송됩니다.)', 'Please enter the remitter\'s name. (A guide email will be sent after the exam fee payment is completed.)')}
+                        <br/>
+                        <span 
+                          onClick={handleCopy}
+                          className="inline-flex items-center gap-1.5 mt-1 cursor-pointer group/copy"
+                        >
+                          <strong className="text-emerald-600 dark:text-emerald-400 group-hover/copy:text-emerald-700 dark:group-hover/copy:text-emerald-300 transition-colors">
+                            {t('농협 351-1372-1557-33 (한국스탬프교육진흥원)', 'Nonghyup 351-1372-1557-33 (Korea Stamp Education Institute)')}
+                          </strong>
+                          <span className="p-1 rounded bg-gray-100 dark:bg-white/10 text-gray-500 dark:text-gray-400 group-hover/copy:bg-emerald-100 dark:group-hover/copy:bg-emerald-900/30 group-hover/copy:text-emerald-600 dark:group-hover/copy:text-emerald-400 transition-colors">
+                            {copied ? <Check className="w-3 h-3" /> : <Copy className="w-3 h-3" />}
+                          </span>
+                        </span>
+                      </p>
                       <input type="text" value={formData.payerName} onChange={e => setFormData({...formData, payerName: e.target.value})} className="w-full p-4 rounded-2xl border border-black/10 dark:border-white/10 bg-gray-50 dark:bg-[#2a2a2a] text-black dark:text-white focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 outline-none transition-all" placeholder={t('송금자 성함', 'Remitter\'s name')} />
                     </div>
                     <div>

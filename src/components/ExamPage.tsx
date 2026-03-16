@@ -1,57 +1,58 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { motion } from 'motion/react';
-import { FileEdit, CreditCard, CheckCircle, Search, ChevronRight, PlayCircle, FileText, HelpCircle, Award, Clock, Info, Trophy, ShieldCheck, CheckCircle2, Building2, User, ArrowRight, Phone } from 'lucide-react';
+import { FileEdit, CreditCard, CheckCircle, Search, ChevronRight, PlayCircle, FileText, HelpCircle, Award, Clock, Info, Trophy, ShieldCheck, CheckCircle2, Building2, User, ArrowRight, Phone, Copy, Check } from 'lucide-react';
 
 interface Props {
   t: (ko: string, en: string) => string;
   setShowApplyModal: (show: boolean) => void;
   setCurrentPage?: (page: string) => void;
+  isMobile?: boolean;
 }
 
-export default function ExamPage({ t, setShowApplyModal, setCurrentPage }: Props) {
+export default function ExamPage({ t, setShowApplyModal, setCurrentPage, isMobile }: Props) {
+  const [copied, setCopied] = useState(false);
+
+  const handleCopy = () => {
+    navigator.clipboard.writeText('351-1372-1557-33');
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
+
   return (
     <div className="pt-20 bg-white dark:bg-[#121212] min-h-screen transition-colors duration-300 relative overflow-hidden">
-      {/* Background Pattern */}
-      <div className="absolute inset-0 z-0 pointer-events-none opacity-[0.03] dark:opacity-[0.05]" 
-           style={{ backgroundImage: `radial-gradient(#000 1px, transparent 1px)`, backgroundSize: '32px 32px' }}></div>
-      
       {/* Hero Section */}
       <div className="relative py-24 bg-white dark:bg-[#121212] overflow-hidden">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           <motion.div 
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
-            className="text-left md:text-center"
+            transition={{ duration: isMobile ? 0.4 : 0.8 }}
+            className="text-center"
           >
-            <h2 className="text-[11px] font-bold tracking-[0.4em] uppercase text-emerald-600 dark:text-emerald-500 mb-6 flex items-center justify-start md:justify-center gap-4">
-              <span className="w-12 h-[1px] bg-emerald-600 dark:bg-emerald-500"></span>
-              EXAM & APPLY
-              <span className="hidden md:block w-12 h-[1px] bg-emerald-600 dark:bg-emerald-500"></span>
-            </h2>
+            <div className="flex items-center justify-center gap-4 mb-6">
+              <div className="h-[1px] w-12 bg-emerald-600 dark:bg-emerald-500" />
+              <span className="text-[11px] font-bold tracking-[0.4em] uppercase text-emerald-600 dark:text-emerald-500">EXAM & APPLY</span>
+              <div className="h-[1px] w-12 bg-emerald-600 dark:bg-emerald-500" />
+            </div>
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-sans font-medium text-black dark:text-white leading-tight mb-8 tracking-tight">
               {t('시험 안내 및 접수 방법', 'Exam Information & How to Apply')}
             </h1>
-            <p className="text-left md:text-center text-lg md:text-xl text-gray-600 dark:text-gray-400 font-light max-w-3xl mx-0 md:mx-auto leading-relaxed">
+            <p className="text-center text-lg md:text-xl text-gray-600 dark:text-gray-400 font-light max-w-3xl mx-auto leading-relaxed">
               {t('한국스탬프교육진흥원의 자격증 시험 안내 및 접수 방법을 확인하세요. 체계적인 검정 시스템을 통해 여러분의 전문성을 증명해 드립니다.', 'Check the certification exam information and application process of the Korea Stamp Education Institute. We prove your expertise through a systematic testing system.')}
             </p>
           </motion.div>
         </div>
-        
-        {/* Decorative elements */}
-        <div className="absolute top-1/2 left-0 -translate-y-1/2 w-64 h-64 bg-emerald-500/5 blur-3xl rounded-full"></div>
-        <div className="absolute bottom-0 right-0 w-96 h-96 bg-emerald-500/5 blur-3xl rounded-full"></div>
       </div>
 
       {/* Exam Info Section - Subtle Green Background */}
-      <div className="py-24 bg-emerald-50/40 dark:bg-white/5 border-y border-black/5 dark:border-white/5 relative">
+      <div className="py-24 bg-emerald-50/40 dark:bg-emerald-900/5 border-y border-black/5 dark:border-white/5 relative">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="mb-8 text-left md:text-center">
-            <h2 className="text-[11px] font-bold tracking-[0.4em] uppercase text-black dark:text-white mb-4 flex items-center justify-start md:justify-center gap-4">
-              <span className="w-12 h-[1px] bg-black dark:bg-white"></span>
-              EXAM INFO
-              <span className="hidden md:block w-12 h-[1px] bg-black dark:bg-white"></span>
-            </h2>
+          <div className="mb-8 text-center">
+            <div className="flex items-center justify-center gap-4 mb-6">
+              <div className="h-[1px] w-12 bg-black dark:bg-white" />
+              <span className="text-[11px] font-bold tracking-[0.4em] uppercase text-black dark:text-white">EXAM INFO</span>
+              <div className="h-[1px] w-12 bg-black dark:bg-white" />
+            </div>
             <h3 className="text-3xl md:text-4xl font-sans font-medium text-black dark:text-white">{t('시험 안내', 'Exam Information')}</h3>
           </div>
           
@@ -122,12 +123,12 @@ export default function ExamPage({ t, setShowApplyModal, setCurrentPage }: Props
       {/* How to Apply Infographic Section - White Background */}
       <div className="py-24 bg-white dark:bg-[#121212]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-left md:text-center mb-20">
-            <h2 className="text-[11px] font-bold tracking-[0.4em] uppercase text-black dark:text-white mb-4 flex items-center justify-start md:justify-center gap-4">
-              <span className="w-12 h-[1px] bg-black dark:bg-white"></span>
-              HOW TO APPLY
-              <span className="hidden md:block w-12 h-[1px] bg-black dark:bg-white"></span>
-            </h2>
+          <div className="text-center mb-20">
+            <div className="flex items-center justify-center gap-4 mb-6">
+              <div className="h-[1px] w-12 bg-black dark:bg-white" />
+              <span className="text-[11px] font-bold tracking-[0.4em] uppercase text-black dark:text-white">HOW TO APPLY</span>
+              <div className="h-[1px] w-12 bg-black dark:bg-white" />
+            </div>
             <h3 className="text-3xl md:text-4xl font-sans font-medium text-black dark:text-white">{t('접수 방법 안내', 'Application Process')}</h3>
           </div>
 
@@ -147,7 +148,7 @@ export default function ExamPage({ t, setShowApplyModal, setCurrentPage }: Props
                   initial={{ opacity: 0, y: 20 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
-                  transition={{ delay: idx * 0.1 }}
+                  transition={{ delay: isMobile ? idx * 0.05 : idx * 0.1 }}
                   className="flex flex-col items-center text-center group"
                 >
                   <div className="w-20 h-20 rounded-3xl bg-white dark:bg-[#1e1e1e] border-2 border-emerald-500 flex items-center justify-center mb-8 shadow-xl group-hover:scale-110 group-hover:bg-emerald-500 transition-all duration-500 relative">
@@ -171,14 +172,14 @@ export default function ExamPage({ t, setShowApplyModal, setCurrentPage }: Props
       </div>
 
       {/* Issuance & Payment Info Section - New Section */}
-      <div className="py-24 bg-emerald-50/40 dark:bg-white/5 border-y border-black/5 dark:border-white/5">
+      <div className="py-24 bg-emerald-50/40 dark:bg-emerald-900/5 border-y border-black/5 dark:border-white/5">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="mb-8 text-left md:text-center">
-            <h2 className="text-[11px] font-bold tracking-[0.4em] uppercase text-black dark:text-white mb-4 flex items-center justify-start md:justify-center gap-4">
-              <span className="w-12 h-[1px] bg-black dark:bg-white"></span>
-              FEES & PAYMENT
-              <span className="hidden md:block w-12 h-[1px] bg-black dark:bg-white"></span>
-            </h2>
+          <div className="mb-8 text-center">
+            <div className="flex items-center justify-center gap-4 mb-6">
+              <div className="h-[1px] w-12 bg-black dark:bg-white" />
+              <span className="text-[11px] font-bold tracking-[0.4em] uppercase text-black dark:text-white">FEES & PAYMENT</span>
+              <div className="h-[1px] w-12 bg-black dark:bg-white" />
+            </div>
             <h3 className="text-3xl md:text-4xl font-sans font-medium text-black dark:text-white">
               {t('입금 안내', 'Payment Guide')}
             </h3>
@@ -242,13 +243,25 @@ export default function ExamPage({ t, setShowApplyModal, setCurrentPage }: Props
               <div className="space-y-4">
                 {[
                   { label: t('은행명', 'Bank'), value: t('농협', 'NH Bank') },
-                  { label: t('계좌번호', 'Account Number'), value: '351-1372-1557-33' },
+                  { label: t('계좌번호', 'Account Number'), value: '351-1372-1557-33', isAccount: true },
                   { label: t('예금주', 'Account Holder'), value: t('한국스탬프교육진흥원', 'KSEI') }
                 ].map((item, idx) => (
                   <div key={idx} className="flex items-center gap-5 p-5 rounded-2xl bg-gray-50 dark:bg-black/20 border border-transparent hover:border-emerald-500/20 transition-all group/row">
-                    <div className="flex flex-col">
+                    <div className="flex flex-col w-full">
                       <span className="text-[10px] font-bold text-emerald-600/60 dark:text-emerald-500/60 uppercase tracking-widest mb-0.5">{item.label}</span>
-                      <span className="font-bold text-xl text-black dark:text-white tracking-tight">{item.value}</span>
+                      {item.isAccount ? (
+                        <div 
+                          onClick={handleCopy}
+                          className="inline-flex items-center gap-2 cursor-pointer group/copy"
+                        >
+                          <span className="font-bold text-xl text-black dark:text-white tracking-tight group-hover/copy:text-emerald-600 dark:group-hover/copy:text-emerald-400 transition-colors">{item.value}</span>
+                          <div className="p-1.5 rounded-md bg-gray-200 dark:bg-white/10 text-gray-500 dark:text-gray-400 group-hover/copy:bg-emerald-100 dark:group-hover/copy:bg-emerald-900/30 group-hover/copy:text-emerald-600 dark:group-hover/copy:text-emerald-400 transition-colors">
+                            {copied ? <Check className="w-4 h-4" /> : <Copy className="w-4 h-4" />}
+                          </div>
+                        </div>
+                      ) : (
+                        <span className="font-bold text-xl text-black dark:text-white tracking-tight">{item.value}</span>
+                      )}
                     </div>
                   </div>
                 ))}
@@ -272,10 +285,10 @@ export default function ExamPage({ t, setShowApplyModal, setCurrentPage }: Props
             {/* Left side: Checklist */}
             <div className="lg:w-3/5 w-full">
               <div className="mb-10">
-                <h2 className="text-[11px] font-bold tracking-[0.4em] uppercase text-black dark:text-white mb-4 flex items-center gap-4">
-                  <span className="w-12 h-[1px] bg-black dark:bg-white"></span>
-                  CHECKLIST
-                </h2>
+                <div className="flex items-center justify-start gap-4 mb-6">
+                  <div className="h-[1px] w-12 bg-black dark:bg-white" />
+                  <span className="text-[11px] font-bold tracking-[0.4em] uppercase text-black dark:text-white">CHECKLIST</span>
+                </div>
                 <h3 className="text-3xl font-sans font-medium text-black dark:text-white mb-6">
                   {t('필요 서류 체크리스트', 'Required Documents Checklist')}
                 </h3>
@@ -330,7 +343,7 @@ export default function ExamPage({ t, setShowApplyModal, setCurrentPage }: Props
                   href="https://docs.google.com/uc?export=download&id=1TiFod1jnWRbEsp8-CAbewWGOtSFmWRGw" 
                   target="_blank" 
                   rel="noopener noreferrer"
-                  className="flex items-center justify-between p-6 bg-emerald-50 dark:bg-emerald-900/10 rounded-2xl border border-emerald-100 dark:border-emerald-900/20 group hover:bg-emerald-100 dark:hover:bg-emerald-900/20 transition-all"
+                  className="flex items-center justify-between p-6 bg-emerald-50/40 dark:bg-emerald-900/10 rounded-2xl border border-emerald-100 dark:border-emerald-900/20 group hover:bg-emerald-100 dark:hover:bg-emerald-900/20 transition-all"
                 >
                   <div className="flex items-center gap-4">
                     <div className="w-12 h-12 rounded-xl bg-white dark:bg-black/20 flex items-center justify-center shadow-sm">
@@ -348,7 +361,7 @@ export default function ExamPage({ t, setShowApplyModal, setCurrentPage }: Props
                   href="https://drive.google.com/file/d/1hcp7JkAiNtIB-aKXiNEWjnoKKjmWfDxv/view?usp=sharing" 
                   target="_blank" 
                   rel="noopener noreferrer"
-                  className="flex items-center justify-between p-6 bg-emerald-50 dark:bg-emerald-900/10 rounded-2xl border border-emerald-100 dark:border-emerald-900/20 group hover:bg-emerald-100 dark:hover:bg-emerald-900/20 transition-all"
+                  className="flex items-center justify-between p-6 bg-emerald-50/40 dark:bg-emerald-900/10 rounded-2xl border border-emerald-100 dark:border-emerald-900/20 group hover:bg-emerald-100 dark:hover:bg-emerald-900/20 transition-all"
                 >
                   <div className="flex items-center gap-4">
                     <div className="w-12 h-12 rounded-xl bg-white dark:bg-black/20 flex items-center justify-center shadow-sm">
@@ -368,14 +381,14 @@ export default function ExamPage({ t, setShowApplyModal, setCurrentPage }: Props
       </div>
 
       {/* Tips Section - Subtle Green Background */}
-      <div className="py-24 bg-emerald-50/40 dark:bg-white/5 border-y border-black/5 dark:border-white/5">
+      <div className="py-24 bg-emerald-50/40 dark:bg-emerald-900/5 border-y border-black/5 dark:border-white/5">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col lg:flex-row gap-16 items-center">
             <div className="lg:w-1/2">
-              <h2 className="text-[11px] font-bold tracking-[0.4em] uppercase text-black dark:text-white mb-6 flex items-center gap-4">
-                <span className="w-12 h-[1px] bg-black dark:bg-white"></span>
-                EXAM TIPS
-              </h2>
+              <div className="flex items-center justify-start gap-4 mb-6">
+                <div className="h-[1px] w-12 bg-black dark:bg-white" />
+                <span className="text-[11px] font-bold tracking-[0.4em] uppercase text-black dark:text-white">EXAM TIPS</span>
+              </div>
               <h3 className="text-3xl md:text-4xl font-sans font-medium text-black dark:text-white mb-8 leading-tight">
                 {t('성공적인 시험을 위한 꿀팁', 'Tips for Exam Success')}
               </h3>
@@ -394,7 +407,7 @@ export default function ExamPage({ t, setShowApplyModal, setCurrentPage }: Props
                     initial={{ opacity: 0, x: -20 }}
                     whileInView={{ opacity: 1, x: 0 }}
                     viewport={{ once: true }}
-                    transition={{ delay: idx * 0.1 }}
+                    transition={{ delay: isMobile ? idx * 0.05 : idx * 0.1 }}
                     className="flex gap-6 p-6 bg-white dark:bg-[#1e1e1e] rounded-2xl border border-black/5 dark:border-white/5 shadow-sm"
                   >
                     <div className="w-10 h-10 rounded-full bg-emerald-500/10 flex items-center justify-center shrink-0 text-emerald-600 dark:text-emerald-400 font-bold">
@@ -417,14 +430,14 @@ export default function ExamPage({ t, setShowApplyModal, setCurrentPage }: Props
                   referrerPolicy="no-referrer"
                 />
               </div>
-              <div className="absolute -bottom-6 -left-6 bg-white dark:bg-[#1e1e1e] p-6 rounded-2xl shadow-xl border border-black/5 dark:border-white/5">
-                <div className="flex items-center gap-4">
-                  <div className="w-12 h-12 rounded-full bg-emerald-500 flex items-center justify-center text-white">
-                    <Award className="w-6 h-6" />
+              <div className="absolute -bottom-6 left-4 md:-left-6 bg-white dark:bg-[#1e1e1e] p-4 md:p-6 rounded-2xl shadow-xl border border-black/5 dark:border-white/5 max-w-[calc(100%-2rem)] md:max-w-none">
+                <div className="flex items-center gap-3 md:gap-4">
+                  <div className="w-10 h-10 md:w-12 md:h-12 shrink-0 rounded-full bg-emerald-500 flex items-center justify-center text-white">
+                    <Award className="w-5 h-5 md:w-6 md:h-6" />
                   </div>
                   <div>
-                    <p className="text-xs text-gray-500 dark:text-gray-400">{t('평균 합격률', 'Avg. Pass Rate')}</p>
-                    <p className="text-xl font-bold text-black dark:text-white">95% +</p>
+                    <p className="text-[10px] md:text-xs text-gray-500 dark:text-gray-400 whitespace-nowrap">{t('평균 합격률', 'Avg. Pass Rate')}</p>
+                    <p className="text-lg md:text-xl font-bold text-black dark:text-white">95% +</p>
                   </div>
                 </div>
               </div>
@@ -438,14 +451,14 @@ export default function ExamPage({ t, setShowApplyModal, setCurrentPage }: Props
       {/* Portfolio Examples Section - Subtle Green Background */}
       <div className="py-24 bg-white dark:bg-[#121212] border-y border-black/5 dark:border-white/5">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-left md:text-center mb-16">
-            <h2 className="text-[11px] font-bold tracking-[0.4em] uppercase text-black dark:text-white mb-4 flex items-center justify-start md:justify-center gap-4">
-              <span className="w-12 h-[1px] bg-black dark:bg-white"></span>
-              PORTFOLIO EXAMPLES
-              <span className="hidden md:block w-12 h-[1px] bg-black dark:bg-white"></span>
-            </h2>
+          <div className="text-center mb-16">
+            <div className="flex items-center justify-center gap-4 mb-6">
+              <div className="h-[1px] w-12 bg-black dark:bg-white" />
+              <span className="text-[11px] font-bold tracking-[0.4em] uppercase text-black dark:text-white">PORTFOLIO EXAMPLES</span>
+              <div className="h-[1px] w-12 bg-black dark:bg-white" />
+            </div>
             <h3 className="text-3xl md:text-4xl font-sans font-medium text-black dark:text-white mb-4">{t('우수 포트폴리오 예시', 'Portfolio Examples')}</h3>
-            <p className="text-left md:text-center text-gray-600 dark:text-gray-400 font-light max-w-2xl mx-0 md:mx-auto">
+            <p className="text-center text-gray-600 dark:text-gray-400 font-light max-w-2xl mx-auto">
               {t('실제 제출된 우수 포트폴리오 예시입니다. 참고하여 본인만의 개성 있는 포트폴리오를 준비해 보세요.', 'These are examples of excellent portfolios. Use them as a reference to prepare your own unique portfolio.')}
             </p>
           </div>
@@ -485,16 +498,16 @@ export default function ExamPage({ t, setShowApplyModal, setCurrentPage }: Props
       </div>
 
       {/* Online Practical Exam Example Section - White Background */}
-      <div className="py-24 bg-emerald-50/40 dark:bg-white/5 border-y border-black/5 dark:border-white/5">
+      <div className="py-24 bg-emerald-50/40 dark:bg-emerald-900/5 border-y border-black/5 dark:border-white/5">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-left md:text-center mb-16">
-            <h2 className="text-[11px] font-bold tracking-[0.4em] uppercase text-black dark:text-white mb-4 flex items-center justify-start md:justify-center gap-4">
-              <span className="w-12 h-[1px] bg-black dark:bg-white"></span>
-              PRACTICAL EXAM EXAMPLES
-              <span className="hidden md:block w-12 h-[1px] bg-black dark:bg-white"></span>
-            </h2>
+          <div className="text-center mb-16">
+            <div className="flex items-center justify-center gap-4 mb-6">
+              <div className="h-[1px] w-12 bg-black dark:bg-white" />
+              <span className="text-[11px] font-bold tracking-[0.4em] uppercase text-black dark:text-white">PRACTICAL EXAM EXAMPLES</span>
+              <div className="h-[1px] w-12 bg-black dark:bg-white" />
+            </div>
             <h3 className="text-3xl md:text-4xl font-sans font-medium text-black dark:text-white mb-4">{t('온라인 실기 예시', 'Online Practical Examples')}</h3>
-            <p className="text-left md:text-center text-gray-600 dark:text-gray-400 font-light max-w-2xl mx-0 md:mx-auto">
+            <p className="text-center text-gray-600 dark:text-gray-400 font-light max-w-2xl mx-auto">
               {t('온라인 실기 시험 응시를 위한 촬영 방법 및 예시 영상입니다. 얼굴과 작업 과정이 잘 보이도록 촬영해 주세요.', 'This is a filming method and example video for the online practical exam. Please film so that your face and the work process are clearly visible.')}
             </p>
           </div>

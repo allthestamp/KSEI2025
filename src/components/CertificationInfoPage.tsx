@@ -23,9 +23,10 @@ interface CertificationInfoPageProps {
   setShowCertModal: (show: boolean) => void;
   setSelectedCert: (cert: string) => void;
   setCurrentPage?: (page: string) => void;
+  isMobile?: boolean;
 }
 
-const CertificationInfoPage: React.FC<CertificationInfoPageProps> = ({ t, setShowCertModal, setSelectedCert, setCurrentPage }) => {
+const CertificationInfoPage: React.FC<CertificationInfoPageProps> = ({ t, setShowCertModal, setSelectedCert, setCurrentPage, isMobile }) => {
   const [openFaq, setOpenFaq] = useState<number | null>(null);
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
   const [activeTestimonial, setActiveTestimonial] = useState(0);
@@ -87,29 +88,24 @@ const CertificationInfoPage: React.FC<CertificationInfoPageProps> = ({ t, setSho
       className="pt-20"
     >
       {/* Hero Section */}
-      <div className="relative py-24 overflow-hidden bg-white dark:bg-[#0a0a0a]">
-        <div className="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none opacity-20 dark:opacity-10">
-          <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] rounded-full bg-emerald-200/30 blur-[120px]"></div>
-          <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] rounded-full bg-blue-200/30 blur-[120px]"></div>
-        </div>
-        
+      <div className="relative py-24 overflow-hidden bg-white dark:bg-[#121212]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
-          <div className="text-left md:text-center">
+          <div className="text-center">
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6 }}
+              transition={{ duration: isMobile ? 0.3 : 0.6 }}
             >
-              <h2 className="text-sm font-bold tracking-[0.2em] uppercase text-emerald-600 dark:text-emerald-400 mb-6 flex items-center justify-start md:justify-center gap-3">
-                <span className="w-12 h-[1px] bg-emerald-600/30 dark:bg-emerald-400/30"></span>
-                CERTIFICATION INFO
-                <span className="hidden md:block w-12 h-[1px] bg-emerald-600/30 dark:bg-emerald-400/30"></span>
-              </h2>
+              <div className="flex items-center justify-center gap-4 mb-6">
+                <div className="h-[1px] w-12 bg-emerald-600/30 dark:bg-emerald-400/30" />
+                <span className="text-[11px] font-bold tracking-[0.4em] uppercase text-emerald-600 dark:text-emerald-400">CERTIFICATION INFO</span>
+                <div className="h-[1px] w-12 bg-emerald-600/30 dark:bg-emerald-400/30" />
+              </div>
               <h1 className="text-4xl md:text-6xl font-sans font-medium text-black dark:text-white leading-[1.1] mb-8 tracking-tight">
                 {t('스탬프제작지도사', 'Stamp Making Instructor')}<br />
                 <span className="text-emerald-500">{t('자격증 안내', 'Certification Guide')}</span>
               </h1>
-              <p className="text-left md:text-center text-gray-600 dark:text-gray-400 max-w-2xl mx-0 md:mx-auto text-lg font-light leading-relaxed">
+              <p className="text-center text-gray-600 dark:text-gray-400 max-w-2xl mx-auto text-lg font-light leading-relaxed">
                 {t('전문적인 스탬프 제작 기술을 습득하고 교육 전문가로 거듭나기 위한 체계적인 교육 과정을 안내해 드립니다.', 'We guide you through a systematic curriculum to acquire professional stamp making skills and become an education expert.')}
               </p>
             </motion.div>
@@ -118,14 +114,14 @@ const CertificationInfoPage: React.FC<CertificationInfoPageProps> = ({ t, setSho
       </div>
 
       {/* Growth Stages Infographic */}
-      <div className="py-24 bg-emerald-50/40 dark:bg-white/5 border-y border-black/5 dark:border-white/5 transition-colors duration-300">
+      <div className="py-24 bg-emerald-50/40 dark:bg-emerald-900/5 border-y border-black/5 dark:border-white/5 transition-colors duration-300">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-left md:text-center mb-16">
-            <h2 className="text-[11px] font-bold tracking-[0.4em] uppercase text-black dark:text-white mb-4 flex items-center justify-start md:justify-center gap-4">
-              <span className="w-12 h-[1px] bg-black dark:bg-white"></span>
-              GROWTH STAGES
-              <span className="hidden md:block w-12 h-[1px] bg-black dark:bg-white"></span>
-            </h2>
+          <div className="text-center mb-16">
+            <div className="flex items-center justify-center gap-4 mb-6">
+              <div className="h-[1px] w-12 bg-black dark:bg-white" />
+              <span className="text-[11px] font-bold tracking-[0.4em] uppercase text-black dark:text-white">GROWTH STAGES</span>
+              <div className="h-[1px] w-12 bg-black dark:bg-white" />
+            </div>
             <h3 className="text-3xl md:text-4xl font-sans font-medium text-black dark:text-white">{t('전문가로 거듭나는 체계적인 성장 단계', 'Systematic Growth Stages to Become an Expert')}</h3>
           </div>
 
@@ -144,7 +140,7 @@ const CertificationInfoPage: React.FC<CertificationInfoPageProps> = ({ t, setSho
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
-                transition={{ delay: idx * 0.1 }}
+                transition={{ delay: isMobile ? idx * 0.05 : idx * 0.1 }}
                 className="relative z-10 flex flex-col items-center text-center group"
               >
                 <div className="w-24 h-24 bg-gray-50 dark:bg-[#111] rounded-full flex items-center justify-center mb-8 border border-gray-100 dark:border-white/5 shadow-sm group-hover:border-emerald-500 transition-colors">
@@ -163,18 +159,18 @@ const CertificationInfoPage: React.FC<CertificationInfoPageProps> = ({ t, setSho
       </div>
 
       {/* Why We Are Special - Bento Grid Style */}
-      <section className="py-16 bg-white dark:bg-[#0a0a0a] transition-colors duration-500 relative overflow-hidden">
+      <section className="py-16 bg-white dark:bg-[#121212] transition-colors duration-500 relative overflow-hidden">
         <div className="absolute top-0 left-0 w-full h-full opacity-[0.03] dark:opacity-[0.05] pointer-events-none">
           <div className="absolute inset-0" style={{ backgroundImage: 'radial-gradient(#000 1px, transparent 1px)', backgroundSize: '40px 40px' }}></div>
         </div>
         
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-          <div className="text-left md:text-center mb-16">
-            <h2 className="text-[11px] font-bold tracking-[0.4em] uppercase text-black dark:text-white mb-4 flex items-center justify-start md:justify-center gap-4">
-              <span className="w-12 h-[1px] bg-black dark:bg-white"></span>
-              CORE STRENGTHS
-              <span className="hidden md:block w-12 h-[1px] bg-black dark:bg-white"></span>
-            </h2>
+          <div className="text-center mb-16">
+            <div className="flex items-center justify-center gap-4 mb-6">
+              <div className="h-[1px] w-12 bg-black dark:bg-white" />
+              <span className="text-[11px] font-bold tracking-[0.4em] uppercase text-black dark:text-white">CORE STRENGTHS</span>
+              <div className="h-[1px] w-12 bg-black dark:bg-white" />
+            </div>
             <h3 className="text-3xl md:text-4xl font-sans font-medium text-black dark:text-white">
               {t('우리가 특별한 이유', 'Why We Are Special')}
             </h3>
@@ -219,14 +215,14 @@ const CertificationInfoPage: React.FC<CertificationInfoPageProps> = ({ t, setSho
       </section>
 
       {/* Certification Levels Section */}
-      <div className="py-24 bg-emerald-50/40 dark:bg-white/5 border-y border-black/5 dark:border-white/5 transition-colors duration-300" id="cert-levels">
+      <div className="py-24 bg-emerald-50/40 dark:bg-emerald-900/5 border-y border-black/5 dark:border-white/5 transition-colors duration-300" id="cert-levels">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-left md:text-center mb-16">
-            <h2 className="text-[11px] font-bold tracking-[0.4em] uppercase text-black dark:text-white mb-4 flex items-center justify-start md:justify-center gap-4">
-              <span className="w-12 h-[1px] bg-black dark:bg-white"></span>
-              CURRICULUM
-              <span className="hidden md:block w-12 h-[1px] bg-black dark:bg-white"></span>
-            </h2>
+          <div className="text-center mb-16">
+            <div className="flex items-center justify-center gap-4 mb-6">
+              <div className="h-[1px] w-12 bg-black dark:bg-white" />
+              <span className="text-[11px] font-bold tracking-[0.4em] uppercase text-black dark:text-white">CURRICULUM</span>
+              <div className="h-[1px] w-12 bg-black dark:bg-white" />
+            </div>
             <h3 className="text-3xl md:text-4xl font-sans font-medium text-black dark:text-white">{t('자격증 등급별 안내', 'Certification Levels')}</h3>
           </div>
 
@@ -318,14 +314,14 @@ const CertificationInfoPage: React.FC<CertificationInfoPageProps> = ({ t, setSho
 
 
       {/* Career Opportunities Section */}
-      <div className="py-24 bg-white dark:bg-[#0a0a0a] transition-colors duration-300" id="career-paths">
+      <div className="py-24 bg-white dark:bg-[#121212] transition-colors duration-300" id="career-paths">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-left md:text-center mb-16">
-            <h2 className="text-[11px] font-bold tracking-[0.4em] uppercase text-black dark:text-white mb-4 flex items-center justify-start md:justify-center gap-4">
-              <span className="w-12 h-[1px] bg-black dark:bg-white"></span>
-              CAREER PATHS
-              <span className="hidden md:block w-12 h-[1px] bg-black dark:bg-white"></span>
-            </h2>
+          <div className="text-center mb-16">
+            <div className="flex items-center justify-center gap-4 mb-6">
+              <div className="h-[1px] w-12 bg-black dark:bg-white" />
+              <span className="text-[11px] font-bold tracking-[0.4em] uppercase text-black dark:text-white">CAREER PATHS</span>
+              <div className="h-[1px] w-12 bg-black dark:bg-white" />
+            </div>
             <h3 className="text-3xl md:text-4xl font-sans font-medium text-black dark:text-white">{t('취득 후 활용 방안', 'Career Opportunities')}</h3>
           </div>
 
@@ -403,7 +399,7 @@ const CertificationInfoPage: React.FC<CertificationInfoPageProps> = ({ t, setSho
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
-                transition={{ delay: index * 0.1 }}
+                transition={{ delay: isMobile ? index * 0.05 : index * 0.1 }}
                 className="bg-gray-50 dark:bg-[#1e1e1e] p-8 rounded-3xl border border-black/5 dark:border-white/5 hover:border-emerald-500/30 transition-all group"
               >
                 <div className={`w-12 h-12 rounded-2xl flex items-center justify-center mb-6 ${item.color} group-hover:scale-110 transition-transform`}>
@@ -425,14 +421,14 @@ const CertificationInfoPage: React.FC<CertificationInfoPageProps> = ({ t, setSho
       </div>
 
       {/* Testimonials Section */}
-      <div className="py-24 bg-[#f8f9fa] dark:bg-[#050505] border-y border-black/5 dark:border-white/5 transition-colors duration-300 overflow-hidden">
+      <div className="py-24 bg-emerald-50/40 dark:bg-emerald-900/5 border-y border-black/5 dark:border-white/5 transition-colors duration-300 overflow-hidden">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-left md:text-center mb-16">
-            <h2 className="text-[11px] font-bold tracking-[0.4em] uppercase text-black dark:text-white mb-4 flex items-center justify-start md:justify-center gap-4">
-              <span className="w-12 h-[1px] bg-black dark:bg-white"></span>
-              REVIEW
-              <span className="hidden md:block w-12 h-[1px] bg-black dark:bg-white"></span>
-            </h2>
+          <div className="text-center mb-16">
+            <div className="flex items-center justify-center gap-4 mb-6">
+              <div className="h-[1px] w-12 bg-black dark:bg-white" />
+              <span className="text-[11px] font-bold tracking-[0.4em] uppercase text-black dark:text-white">REVIEW</span>
+              <div className="h-[1px] w-12 bg-black dark:bg-white" />
+            </div>
             <p className="text-3xl md:text-4xl font-sans font-medium text-black dark:text-white leading-tight">
               {t('자격증 응시 후기', 'Certification Testimonials')}
             </p>

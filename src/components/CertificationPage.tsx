@@ -1,56 +1,57 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { motion } from 'motion/react';
-import { CreditCard, FileText, Truck, Info, CheckCircle, FileCheck, Send, PackageCheck, Clock, HelpCircle, Award, MapPin, Phone, Mail, ChevronRight } from 'lucide-react';
+import { CreditCard, FileText, Truck, Info, CheckCircle, FileCheck, Send, PackageCheck, Clock, HelpCircle, Award, MapPin, Phone, Mail, ChevronRight, Copy, Check } from 'lucide-react';
 
 interface Props {
   t: (ko: string, en: string) => string;
   setCurrentPage?: (page: string) => void;
+  isMobile?: boolean;
 }
 
-export default function CertificationPage({ t, setCurrentPage }: Props) {
+export default function CertificationPage({ t, setCurrentPage, isMobile }: Props) {
+  const [copied, setCopied] = useState(false);
+
+  const handleCopy = () => {
+    navigator.clipboard.writeText('351-1372-1557-33');
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
+
   return (
     <div className="pt-20 bg-white dark:bg-[#121212] min-h-screen transition-colors duration-300 relative overflow-hidden">
-      {/* Background Pattern */}
-      <div className="absolute inset-0 z-0 pointer-events-none opacity-[0.03] dark:opacity-[0.05]" 
-           style={{ backgroundImage: `radial-gradient(#000 1px, transparent 1px)`, backgroundSize: '32px 32px' }}></div>
-      
       {/* Hero Section */}
       <div className="relative py-24 bg-white dark:bg-[#121212] overflow-hidden">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           <motion.div 
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
-            className="text-left md:text-center"
+            transition={{ duration: isMobile ? 0.4 : 0.8 }}
+            className="text-center"
           >
-            <h2 className="text-[11px] font-bold tracking-[0.4em] uppercase text-emerald-600 dark:text-emerald-500 mb-6 flex items-center justify-start md:justify-center gap-4">
-              <span className="w-12 h-[1px] bg-emerald-600 dark:bg-emerald-500"></span>
-              CERTIFICATION
-              <span className="hidden md:block w-12 h-[1px] bg-emerald-600 dark:bg-emerald-500"></span>
-            </h2>
+            <div className="flex items-center justify-center gap-4 mb-6">
+              <div className="h-[1px] w-12 bg-emerald-600 dark:bg-emerald-500" />
+              <span className="text-[11px] font-bold tracking-[0.4em] uppercase text-emerald-600 dark:text-emerald-500">CERTIFICATION</span>
+              <div className="h-[1px] w-12 bg-emerald-600 dark:bg-emerald-500" />
+            </div>
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-sans font-medium text-black dark:text-white leading-tight mb-8 tracking-tight">
               {t('자격증 발급 안내', 'Certification Issuance')}
             </h1>
-            <p className="text-left md:text-center text-lg md:text-xl text-gray-600 dark:text-gray-400 font-light max-w-3xl mx-0 md:mx-auto leading-relaxed">
+            <p className="text-center text-lg md:text-xl text-gray-600 dark:text-gray-400 font-light max-w-3xl mx-auto leading-relaxed">
               {t('자격증은 시험 응시와 함께 신청되며, 합격 시 별도의 추가 절차 없이 발급됩니다. 여러분의 전문성을 증명하는 소중한 자격증을 안전하게 전달해 드립니다.', 'Certification is applied for along with the exam and is issued without additional procedures upon passing. We safely deliver your precious certificate that proves your expertise.')}
             </p>
           </motion.div>
         </div>
-        
-        {/* Decorative elements */}
-        <div className="absolute top-1/2 left-0 -translate-y-1/2 w-64 h-64 bg-emerald-500/5 blur-3xl rounded-full"></div>
-        <div className="absolute bottom-0 right-0 w-96 h-96 bg-emerald-500/5 blur-3xl rounded-full"></div>
       </div>
 
       {/* Issuance Procedure Infographic */}
-      <div className="py-24 bg-emerald-50/40 dark:bg-white/5 border-y border-black/5 dark:border-white/5">
+      <div className="py-24 bg-emerald-50/40 dark:bg-emerald-900/5 border-y border-black/5 dark:border-white/5">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-left md:text-center mb-20">
-            <h2 className="text-[11px] font-bold tracking-[0.4em] uppercase text-black dark:text-white mb-4 flex items-center justify-start md:justify-center gap-4">
-              <span className="w-12 h-[1px] bg-black dark:bg-white"></span>
-              ISSUANCE PROCESS
-              <span className="hidden md:block w-12 h-[1px] bg-black dark:bg-white"></span>
-            </h2>
+          <div className="text-center mb-20">
+            <div className="flex items-center justify-center gap-4 mb-6">
+              <div className="h-[1px] w-12 bg-black dark:bg-white" />
+              <span className="text-[11px] font-bold tracking-[0.4em] uppercase text-black dark:text-white">ISSUANCE PROCESS</span>
+              <div className="h-[1px] w-12 bg-black dark:bg-white" />
+            </div>
             <h3 className="text-3xl md:text-4xl font-sans font-medium text-black dark:text-white">{t('자격증 발급 절차', 'Issuance Procedure')}</h3>
           </div>
 
@@ -70,7 +71,7 @@ export default function CertificationPage({ t, setCurrentPage }: Props) {
                   initial={{ opacity: 0, y: 20 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
-                  transition={{ delay: idx * 0.1 }}
+                  transition={{ delay: isMobile ? idx * 0.05 : idx * 0.1 }}
                   className="flex flex-col items-center text-center group"
                 >
                   <div className="w-20 h-20 rounded-3xl bg-white dark:bg-[#1e1e1e] border-2 border-emerald-500 flex items-center justify-center mb-8 shadow-xl group-hover:scale-110 group-hover:bg-emerald-500 transition-all duration-500 relative">
@@ -89,23 +90,23 @@ export default function CertificationPage({ t, setCurrentPage }: Props) {
       </div>
 
       {/* Issuance Info Details - Bento Layout */}
-      <section className="py-16 bg-white dark:bg-[#0a0a0a] transition-colors duration-500 relative overflow-hidden">
+      <section className="py-16 bg-white dark:bg-[#121212] transition-colors duration-500 relative overflow-hidden">
         <div className="absolute top-0 left-0 w-full h-full opacity-[0.03] dark:opacity-[0.05] pointer-events-none">
           <div className="absolute inset-0" style={{ backgroundImage: 'radial-gradient(#000 1px, transparent 1px)', backgroundSize: '40px 40px' }}></div>
         </div>
         
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-          <div className="text-left md:text-center mb-16">
-            <h2 className="text-[11px] font-bold tracking-[0.4em] uppercase text-black dark:text-white mb-4 flex items-center justify-start md:justify-center gap-4">
-              <span className="w-12 h-[1px] bg-black dark:bg-white"></span>
-              ISSUANCE DETAILS
-              <span className="hidden md:block w-12 h-[1px] bg-black dark:bg-white"></span>
-            </h2>
+          <div className="text-center mb-16">
+            <div className="flex items-center justify-center gap-4 mb-6">
+              <div className="h-[1px] w-12 bg-black dark:bg-white" />
+              <span className="text-[11px] font-bold tracking-[0.4em] uppercase text-black dark:text-white">ISSUANCE DETAILS</span>
+              <div className="h-[1px] w-12 bg-black dark:bg-white" />
+            </div>
             <h3 className="text-3xl md:text-4xl font-sans font-medium text-black dark:text-white">{t('발급 상세 정보', 'Issuance Details')}</h3>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             <div className="bg-white dark:bg-[#111] p-10 rounded-[3rem] border border-black/5 dark:border-white/5 shadow-sm group">
-              <div className="w-16 h-16 rounded-2xl flex items-center justify-center mb-8 border-2 border-black text-black dark:border-white dark:text-white">
+              <div className="w-16 h-16 rounded-2xl flex items-center justify-center mb-8 bg-black dark:bg-white text-white dark:text-black shadow-lg shadow-black/20 dark:shadow-white/20">
                 <Clock className="w-8 h-8" />
               </div>
               <h4 className="text-[20px] font-bold text-black dark:text-white mb-4 tracking-tight">{t('발급 소요 기간', 'Issuance Period')}</h4>
@@ -115,7 +116,7 @@ export default function CertificationPage({ t, setCurrentPage }: Props) {
             </div>
 
             <div className="bg-white dark:bg-[#111] p-10 rounded-[3rem] border border-black/5 dark:border-white/5 shadow-sm group">
-              <div className="w-16 h-16 rounded-2xl flex items-center justify-center mb-8 border-2 border-gray-600 text-gray-600 dark:border-gray-400 dark:text-gray-400">
+              <div className="w-16 h-16 rounded-2xl flex items-center justify-center mb-8 bg-black dark:bg-white text-white dark:text-black shadow-lg shadow-black/20 dark:shadow-white/20">
                 <FileText className="w-8 h-8" />
               </div>
               <h4 className="text-[20px] font-bold text-black dark:text-white mb-4 tracking-tight">{t('구비 서류', 'Required Documents')}</h4>
@@ -132,7 +133,7 @@ export default function CertificationPage({ t, setCurrentPage }: Props) {
             </div>
 
             <div className="bg-white dark:bg-[#111] p-10 rounded-[3rem] border border-black/5 dark:border-white/5 shadow-sm group">
-              <div className="w-16 h-16 rounded-2xl flex items-center justify-center mb-8 border-2 border-gray-400 text-gray-400 dark:border-gray-500 dark:text-gray-500">
+              <div className="w-16 h-16 rounded-2xl flex items-center justify-center mb-8 bg-black dark:bg-white text-white dark:text-black shadow-lg shadow-black/20 dark:shadow-white/20">
                 <CreditCard className="w-8 h-8" />
               </div>
               <h4 className="text-[20px] font-bold text-black dark:text-white mb-4 tracking-tight">{t('발급 수수료', 'Issuance Fee')}</h4>
@@ -145,14 +146,14 @@ export default function CertificationPage({ t, setCurrentPage }: Props) {
       </section>
 
       {/* Fees & Payment Section */}
-      <div className="py-24 bg-[#f8f9fa] dark:bg-[#050505] border-y border-black/5 dark:border-white/5 transition-colors duration-500">
+      <div className="py-24 bg-emerald-50/40 dark:bg-emerald-900/5 border-y border-black/5 dark:border-white/5 transition-colors duration-500">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col lg:flex-row gap-16 lg:gap-24">
             <div className="lg:w-1/3">
-              <h2 className="text-[11px] font-bold tracking-[0.4em] uppercase text-black dark:text-white mb-4 flex items-center justify-start gap-4">
-                <span className="w-12 h-[1px] bg-black dark:bg-white"></span>
-                FEES & PAYMENT
-              </h2>
+              <div className="flex items-center gap-4 mb-6">
+                <div className="h-[1px] w-12 bg-black dark:bg-white" />
+                <span className="text-[11px] font-bold tracking-[0.4em] uppercase text-black dark:text-white">FEES & PAYMENT</span>
+              </div>
               <h3 className="text-3xl md:text-4xl font-sans font-medium text-black dark:text-white mb-6">{t('자격증 발급 및 결제', 'Issuance & Payment')}</h3>
               <p className="text-gray-600 dark:text-gray-400 font-light text-lg leading-relaxed">
                 {t('자격증 검정료 및 발급 비용 안내입니다. 입금 시 반드시 신청자 본인 성함으로 입금해 주시기 바랍니다.', 'Information on certification exam and issuance fees. Please ensure the deposit is made under the applicant\'s name.')}
@@ -202,7 +203,15 @@ export default function CertificationPage({ t, setCurrentPage }: Props) {
                     </div>
                     <div>
                       <div className="text-sm font-medium text-gray-500 dark:text-gray-400 mb-2">{t('계좌번호', 'Account Number')}</div>
-                      <div className="text-xl font-mono font-light text-black dark:text-white">351-1372-1557-33</div>
+                      <div 
+                        onClick={handleCopy}
+                        className="inline-flex items-center gap-2 cursor-pointer group"
+                      >
+                        <span className="text-xl font-mono font-light text-black dark:text-white group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition-colors">351-1372-1557-33</span>
+                        <div className="p-1.5 rounded-md bg-gray-100 dark:bg-white/10 text-gray-500 dark:text-gray-400 group-hover:bg-emerald-100 dark:group-hover:bg-emerald-900/30 group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition-colors">
+                          {copied ? <Check className="w-4 h-4" /> : <Copy className="w-4 h-4" />}
+                        </div>
+                      </div>
                     </div>
                     <div>
                       <div className="text-sm font-medium text-gray-500 dark:text-gray-400 mb-2">{t('예금주', 'Account Holder')}</div>
@@ -219,14 +228,14 @@ export default function CertificationPage({ t, setCurrentPage }: Props) {
       {/* Benefits Section */}
       <div className="py-24 bg-white dark:bg-[#121212] border-y border-black/5 dark:border-white/5">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-left md:text-center mb-20">
-            <h2 className="text-[11px] font-bold tracking-[0.4em] uppercase text-black dark:text-white mb-4 flex items-center justify-start md:justify-center gap-4">
-              <span className="w-12 h-[1px] bg-black dark:bg-white"></span>
-              BENEFITS
-              <span className="hidden md:block w-12 h-[1px] bg-black dark:bg-white"></span>
-            </h2>
+          <div className="text-center mb-20">
+            <div className="flex items-center justify-center gap-4 mb-6">
+              <div className="h-[1px] w-12 bg-black dark:bg-white" />
+              <span className="text-[11px] font-bold tracking-[0.4em] uppercase text-black dark:text-white">BENEFITS</span>
+              <div className="h-[1px] w-12 bg-black dark:bg-white" />
+            </div>
             <h3 className="text-3xl md:text-4xl font-sans font-medium text-black dark:text-white mb-6">{t('자격증 취득 혜택', 'Benefits of Certification')}</h3>
-            <p className="text-left md:text-center text-gray-600 dark:text-gray-400 font-light max-w-2xl mx-0 md:mx-auto text-lg">
+            <p className="text-center text-gray-600 dark:text-gray-400 font-light max-w-2xl mx-auto text-lg">
               {t('자격증 취득 후 한국스탬프교육진흥원에서 제공하는 다양한 혜택을 누리실 수 있습니다.', 'After obtaining the certification, you can enjoy various benefits provided by the Korea Stamp Education Institute.')}
             </p>
           </div>
@@ -261,7 +270,7 @@ export default function CertificationPage({ t, setCurrentPage }: Props) {
                 const Icon = item.icon;
                 return (
                   <div key={idx} className="flex flex-col items-center text-center">
-                    <div className="w-16 h-16 bg-emerald-50 dark:bg-emerald-900/20 border-4 border-white dark:border-[#121212] rounded-full flex items-center justify-center shadow-sm mb-6 z-10 relative">
+                    <div className="w-16 h-16 bg-emerald-50/40 dark:bg-emerald-900/20 border-4 border-white dark:border-[#121212] rounded-full flex items-center justify-center shadow-sm mb-6 z-10 relative">
                       <Icon className="w-7 h-7 text-emerald-600 dark:text-emerald-400" />
                     </div>
                     <div className="bg-white dark:bg-[#1e1e1e] p-6 rounded-2xl border border-black/5 dark:border-white/5 shadow-sm w-full h-full flex flex-col">
@@ -279,16 +288,16 @@ export default function CertificationPage({ t, setCurrentPage }: Props) {
       </div>
 
       {/* Certificate Sample Section */}
-      <div className="py-24 bg-[#f8f9fa] dark:bg-[#050505] border-y border-black/5 dark:border-white/5 transition-colors duration-500">
+      <div className="py-24 bg-emerald-50/40 dark:bg-emerald-900/5 border-y border-black/5 dark:border-white/5 transition-colors duration-500">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-left md:text-center mb-20">
-            <h2 className="text-[11px] font-bold tracking-[0.4em] uppercase text-black dark:text-white mb-4 flex items-center justify-start md:justify-center gap-4">
-              <span className="w-12 h-[1px] bg-black dark:bg-white"></span>
-              SAMPLES
-              <span className="hidden md:block w-12 h-[1px] bg-black dark:bg-white"></span>
-            </h2>
+          <div className="text-center mb-20">
+            <div className="flex items-center justify-center gap-4 mb-6">
+              <div className="h-[1px] w-12 bg-black dark:bg-white" />
+              <span className="text-[11px] font-bold tracking-[0.4em] uppercase text-black dark:text-white">SAMPLES</span>
+              <div className="h-[1px] w-12 bg-black dark:bg-white" />
+            </div>
             <h3 className="text-3xl md:text-4xl font-sans font-medium text-black dark:text-white mb-6">{t('자격증 샘플', 'Certificate Sample')}</h3>
-            <p className="text-left md:text-center text-gray-600 dark:text-gray-400 font-light max-w-2xl mx-0 md:mx-auto text-lg">
+            <p className="text-center text-gray-600 dark:text-gray-400 font-light max-w-2xl mx-auto text-lg">
               {t('한국스탬프교육진흥원에서 발급하는 정식 자격증 샘플입니다. 실제 발급되는 자격증은 고유번호와 함께 위변조 방지 처리가 되어 있습니다.', 'This is a sample of the official certificate issued by the Korea Stamp Education Institute. Actual certificates are issued with a unique number and anti-counterfeiting measures.')}
             </p>
           </div>
