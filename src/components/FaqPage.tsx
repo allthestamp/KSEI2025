@@ -34,28 +34,28 @@ const faqs: FaqItem[] = [
     category: "시험/접수",
     question: "온라인으로도 시험 응시가 가능한가요?",
     questionEn: "Can I take the exam online?",
-    answer: "현재 일부 이론 과정에 한해 온라인 시험을 운영 중입니다. 실기 시험의 경우 지정된 고사장에서 대면으로 진행되나, 점차 온라인 실기 시험 시스템도 도입할 예정입니다.",
-    answerEn: "Currently, online exams are available for some theoretical courses. Practical exams are conducted face-to-face at designated test centers, but we plan to gradually introduce an online practical exam system."
+    answer: "현재 온라인 시험을 운영 중입니다. 자세한 안내는 시험/접수 안내 - 필요 서류 체크리스트 - 온라인 실기 안내문 및 평가표를 확인해주세요.",
+    answerEn: "We are currently conducting the exam online. Please refer to Exam/Application Information → Required Documents Checklist → Online Practical Exam Guide and Evaluation Criteria for detailed instructions."
   },
   {
     category: "결제/환불",
     question: "수강료 결제는 어떻게 하나요?",
     questionEn: "How do I pay the tuition fee?",
-    answer: "홈페이지 내 카드 결제 및 계좌이체가 가능합니다. 법인카드 결제 및 할부 결제도 지원하며, 현금영수증 발행도 가능합니다.",
-    answerEn: "Credit card payment and bank transfer are available on the website. Corporate card payment and installment payment are also supported, and cash receipts can be issued."
+    answer: "현재 무통장 입금 혹은 계좌이체를 지원하고 있으며, 현금영수증 발행도 가능합니다. 카드 결제는 고객센터에 문의해주세요.",
+    answerEn: "We support bank transfer (manual deposit or account transfer), and cash receipt issuance is available. For credit card payments, please contact customer support."
   },
   {
     category: "자격증 발급",
     question: "자격증을 분실했는데 재발급이 가능한가요?",
     questionEn: "I lost my certificate. Can it be reissued?",
-    answer: "네, 홈페이지 내 '자격증 재발급' 메뉴를 통해 신청 가능합니다. 본인 확인 절차 후 소정의 재발급 수수료를 결제하시면 영업일 기준 3~5일 이내에 발송됩니다.",
-    answerEn: "Yes, you can apply through the 'Certificate Reissuance' menu on the website. After verifying your identity and paying a small reissuance fee, it will be sent within 3-5 business days."
+    answer: "네, 본인 확인 절차 후 소정의 재발급 수수료를 결제하시면 영업일 기준 3~5일 이내에 발송됩니다.",
+    answerEn: "Yes, After verifying your identity and paying a small reissuance fee, it will be sent within 3-5 business days."
   },
   {
     category: "자격증 발급",
     question: "모바일 자격증도 발급되나요?",
     questionEn: "Is a mobile certificate also issued?",
-    answer: "네, 실물 자격증 카드와 함께 모바일에서도 상시 확인 가능한 디지털 자격증을 기본으로 제공합니다. 협회 앱 또는 홈페이지 마이페이지에서 확인하실 수 있습니다.",
+    answer: "아니오. 모바일 자격증은 현재 발급 예정이 없습니다. 현재 실물 자격증만 제공되고 있으며, 추후 모바일 자격증 추가 시 별도 공지를 통해 안내드리겠습니다.",
     answerEn: "Yes, along with the physical certificate card, we basically provide a digital certificate that can be checked at any time on mobile. You can check it on the association app or My Page on the website."
   },
   {
@@ -76,7 +76,7 @@ const faqs: FaqItem[] = [
     category: "시험/접수",
     question: "시험 결과는 언제 발표되나요?",
     questionEn: "When will the exam results be announced?",
-    answer: "필기 시험은 당일 확인이 가능하며, 실기 시험의 경우 채점 과정을 거쳐 응시일로부터 14일 이내에 홈페이지 공지사항 및 개별 연락을 통해 발표됩니다.",
+    answer: "실기 시험의 경우 채점 과정을 거쳐 응시일로부터 14일 이내에 홈페이지 공지사항 및 개별 연락을 통해 발표됩니다.",
     answerEn: "Written exam results can be checked on the same day. Practical exam results are announced within 14 days from the test date through website notices and individual contact after the grading process."
   },
   {

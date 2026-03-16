@@ -674,9 +674,9 @@ export default function App() {
 
               <div className="space-y-1">
                 {[
-                  { date: '2026.03.10', title: t('2026년 상반기 자격증 시험 일정 안내', '2026 First Half Certification Exam Schedule'), tag: 'Notice', content: t('2026년 상반기 자격증 시험이 5월과 6월에 진행될 예정입니다. 자세한 일정은 추후 공지사항을 확인해주세요.', 'The first half of 2026 certification exams are scheduled for May and June. Please check future notices for detailed schedules.') },
-                  { date: '2026.02.25', title: t('스탬프 아트 전문가 마스터 과정 개설', 'Stamp Art Master Course Opening'), tag: 'Course', content: t('새로운 마스터 과정이 개설되었습니다. 심화된 기술과 교육 역량을 키울 수 있는 기회입니다.', 'A new master course has been opened. It is an opportunity to develop advanced skills and educational capabilities.') },
-                  { date: '2026.02.15', title: t('한국스탬프교육진흥원 홈페이지 리뉴얼 오픈', 'KSEI Website Renewal Open'), tag: 'News', content: t('더욱 편리하고 아름다운 홈페이지로 여러분을 찾아뵙게 되었습니다. 많은 이용 부탁드립니다.', 'We are here with a more convenient and beautiful website. Please use it a lot.') }
+                  { date: '2026.03.10', title: t('2026년 상반기 자격증 온라인 클래스 일정 안내', '2026 First Half Certification Exam Schedule'), tag: 'Notice', content: t('2026년 상반기 자격증 온라인 클래스가 4월과 5월에 진행될 예정입니다. 자세한 일정은 추후 공지사항을 확인해주세요.', 'The first half of 2026 certification exams are scheduled for May and June. Please check future notices for detailed schedules.') },
+                  { date: '2026.02.25', title: t('스탬프 아트 전문가 마스터 과정 개설 예정', 'Stamp Art Master Course Opening'), tag: 'Course', content: t('새로운 마스터 과정이 개설될 예정입니다. 심화된 기술과 교육 역량을 키울 수 있는 기회입니다.', 'A new master course has been opened. It is an opportunity to develop advanced skills and educational capabilities.') },
+                  { date: '2026.03.18', title: t('한국스탬프교육진흥원 홈페이지 오픈', 'KSEI Website Renewal Open'), tag: 'News', content: t('더욱 편리하고 아름다운 홈페이지로 여러분을 찾아뵙게 되었습니다. 많은 이용 부탁드립니다.', 'We are here with a more convenient and beautiful website. Please use it a lot.') }
                 ].map((item, idx) => (
                   <div key={idx} className="border-b border-black/5 dark:border-white/5">
                     <motion.div 
