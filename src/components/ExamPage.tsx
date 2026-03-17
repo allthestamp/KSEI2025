@@ -466,9 +466,9 @@ export default function ExamPage({ t, setShowApplyModal, setCurrentPage, isMobil
           <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
             {[
               { 
-                title: t('우수 포트폴리오 예시', 'Excellent Portfolio Example'), 
-                desc: t('다양한 스탬프 기법을 활용한 우수 포트폴리오 영상입니다.', 'This is an excellent portfolio video using various stamp techniques.'),
-                url: "https://www.youtube.com/embed/pdh9Wr2bKJY"
+                title: t('포트폴리오 예시', 'Excellent Portfolio Example'), 
+                desc: t('다양한 스탬프 기법을 활용한 1급 자격증 포트폴리오 영상입니다.', 'This is an excellent portfolio video using various stamp techniques.'),
+                url: "https://www.youtube.com/embed/fjo26-SntiE"
               },
               { 
                 title: t('실기 시험 진행 예시 및 촬영 가이드', 'Practical Exam Process & Filming Guide'), 
