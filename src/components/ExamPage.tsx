@@ -520,7 +520,7 @@ export default function ExamPage({ t, setShowApplyModal, setCurrentPage, isMobil
             <button 
               onClick={() => {
                 window.scrollTo(0, 0);
-                window.location.hash = 'faq';
+                if (setCurrentPage) setCurrentPage('faq');
               }}
               className="shrink-0 px-8 py-4 bg-[#222] text-white rounded-full font-bold hover:bg-[#333] transition-all inline-flex items-center gap-3"
             >
