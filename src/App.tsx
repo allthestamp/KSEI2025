@@ -481,7 +481,7 @@ export default function App() {
                 >
                   <div className="relative h-full">
                     <img 
-                      src="https://i.postimg.cc/hPdQJVRJ/2.jpg" 
+                      src="https://i.postimg.cc/5N4gWnZj/20241026-102311.jpg" 
                       alt="Director" 
                       className="rounded-[3rem] shadow-2xl w-full h-full object-cover"
                       referrerPolicy="no-referrer"
@@ -513,10 +513,18 @@ export default function App() {
                   
                   <div className="space-y-6 text-[16px] text-gray-500 dark:text-gray-400 leading-relaxed font-light">
                     <p>
-                      {t('안녕하십니까, 한국스탬프교육진흥원입니다. 저희 기관은 스탬프라는 매개체를 통해 예술적 감수성을 깨우고, 실질적인 기술 습득을 통해 자아실현과 경제적 자립을 돕기 위해 설립되었습니다.', 'Hello, this is the Korea Stamp Education Institute. Our institution was established to awaken artistic sensitivity through the medium of stamps and to help self-realization and economic independence through practical skill acquisition.')}
+                      {t('안녕하십니까, 한국스탬프교육진흥원입니다.', 'Hello, this is the Korea Stamp Education Institute.')}
                     </p>
                     <p>
-                      {t('단순한 취미를 넘어 전문적인 커리어로 이어질 수 있도록, 저희는 끊임없이 연구하고 최고의 교육 환경을 제공할 것을 약속드립니다. 여러분의 창의적인 여정에 든든한 동반자가 되겠습니다.', 'We promise to constantly research and provide the best educational environment so that it can lead to a professional career beyond a simple hobby. We will be a reliable companion on your creative journey.')}
+                      {t('저희 진흥원은 스탬프라는 매개체를 통해 창의적인 표현과 실용적인 기술을 함께 배우고,이를 바탕으로 자아실현과 새로운 기회를 만들어갈 수 있도록 돕기 위해 설립되었습니다.', 'Our institution was established to help you learn creative expression and practical skills through the medium of stamps, and to help create self-realization and new opportunities based on this.')}
+                    </p>
+                    <p>
+                      {t('단순한 취미를 넘어 교육과 창업, 강의로 이어질 수 있는 실질적인 역량을 기를 수 있도록 지속적인 연구와 체계적인 교육 환경을 제공하고 있습니다.', 'We provide continuous research and a systematic educational environment so that you can develop practical capabilities that can lead to education, entrepreneurship, and lectures beyond a simple hobby.')}
+                    </p>
+                    <p>
+                      {t('앞으로도 스탬프 분야의 전문성을 높이고, 누구나 자신의 가능성을 확장할 수 있도록 돕는 든든한 동반자가 되겠습니다.', 'We will continue to be a reliable companion that enhances expertise in the stamp field and helps anyone expand their possibilities.')}
+                      <br className="hidden md:block" />
+                      {t('감사합니다.', 'Thank you.')}
                     </p>
                   </div>
                   
@@ -674,9 +682,32 @@ export default function App() {
 
               <div className="space-y-1">
                 {[
-                  { date: '2026.03.10', title: t('2026년 상반기 자격증 온라인 클래스 일정 안내', '2026 First Half Certification Exam Schedule'), tag: 'Notice', content: t('2026년 상반기 자격증 온라인 클래스가 4월과 5월에 진행될 예정입니다. 자세한 일정은 추후 공지사항을 확인해주세요.', 'The first half of 2026 certification exams are scheduled for May and June. Please check future notices for detailed schedules.') },
-                  { date: '2026.02.25', title: t('스탬프 아트 전문가 마스터 과정 개설 예정', 'Stamp Art Master Course Opening'), tag: 'Course', content: t('새로운 마스터 과정이 개설될 예정입니다. 심화된 기술과 교육 역량을 키울 수 있는 기회입니다.', 'A new master course has been opened. It is an opportunity to develop advanced skills and educational capabilities.') },
-                  { date: '2026.03.18', title: t('한국스탬프교육진흥원 홈페이지 오픈', 'KSEI Website Renewal Open'), tag: 'News', content: t('더욱 편리하고 아름다운 홈페이지로 여러분을 찾아뵙게 되었습니다. 많은 이용 부탁드립니다.', 'We are here with a more convenient and beautiful website. Please use it a lot.') }
+                  { 
+                    date: '2026.03.20', 
+                    title: t('청소년스탬프체험 지도사 자격증 신설 예정', 'Youth Stamp Experience Instructor Certification to be Established'), 
+                    tag: 'Notice', 
+                    content: <>{t('청소년 및 시니어 스탬프 체험을 전문으로 진행하는 선생님들을 위한 자격증 과정이 신설 될 예정입니다.', 'A certification course for teachers specializing in youth and senior stamp experiences will be established.')}</> 
+                  },
+                  { 
+                    date: '2026.03.18', 
+                    title: t('2026년 상반기 스탬프제작 온라인 클래스 일정 안내', '2026 First Half Stamp Making Online Class Schedule'), 
+                    tag: 'Notice', 
+                    content: (
+                      <>
+                        {t('2026년 상반기 온라인 클래스가 4월 1일부터 14일간 진행 될 예정입니다.', 'The first half of 2026 online class is scheduled to run for 14 days starting April 1st.')}<br />
+                        {t('자세한 내용은 아래 링크에서 확인 해 주세요.', 'Please check the link below for details.')}<br />
+                        <a href="https://mkt.shopping.naver.com/link/69b3d4473be26364be58f0ff" target="_blank" rel="noopener noreferrer" className="text-emerald-500 hover:underline">
+                          https://mkt.shopping.naver.com/link/69b3d4473be26364be58f0ff
+                        </a>
+                      </>
+                    )
+                  },
+                  { 
+                    date: '2026.03.13', 
+                    title: t('한국스탬프교육진흥원 홈페이지 오픈', 'KSEI Website Open'), 
+                    tag: 'News', 
+                    content: <>{t('더욱 편리하고 아름다운 홈페이지로 여러분을 찾아뵙게 되었습니다. 많은 이용 부탁드립니다.', 'We are here with a more convenient and beautiful website. Please use it a lot.')}</> 
+                  }
                 ].map((item, idx) => (
                   <div key={idx} className="border-b border-black/5 dark:border-white/5">
                     <motion.div 
