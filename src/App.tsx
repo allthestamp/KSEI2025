@@ -561,7 +561,11 @@ export default function App() {
                       {t('제시하는 글로벌 리더', 'setting standards')}
                     </h4>
                     <p className="text-white/80 text-[14px] leading-relaxed font-light max-w-md">
-                      {t('우리는 국내를 넘어 세계 시장에서도 인정받는 스탬프 교육의 기준이 되고자 합니다. 기술의 전수를 넘어 문화적 가치를 창출하는 기관으로 도약하겠습니다.', 'We aim to become the standard for stamp education recognized in the global market beyond Korea. We will leap forward as an institution that creates cultural value beyond the transfer of technology.')}
+                      {t('우리는 국내를 넘어 세계 시장에서도 인정받는', 'We aim to become the standard for stamp education recognized in the global market beyond Korea.')}
+                      <br className="hidden md:block" />
+                      {t('스탬프 교육의 기준이 되고자 합니다.', 'We will leap forward as an institution that creates cultural value beyond the transfer of technology.')}
+                      <br className="hidden md:block" />
+                      {t('기술의 전수를 넘어 문화적 가치를 창출하는 기관으로 도약하겠습니다.', 'We will leap forward as an institution that creates cultural value beyond the transfer of technology.')}
                     </p>
                   </div>
                 </div>
@@ -578,7 +582,11 @@ export default function App() {
                       {t('스탬프 문화의 확산', 'and spreading stamp culture')}
                     </h4>
                     <p className="text-white/60 text-[14px] leading-relaxed font-light max-w-md">
-                      {t('체계적인 커리큘럼과 실전 중심의 교육을 통해 전문 강사와 창작자를 배출하고, 스탬프를 활용한 다양한 문화 콘텐츠를 보급하여 일상의 즐거움을 더합니다.', 'Through a systematic curriculum and practical-oriented education, we produce professional instructors and creators, and spread various cultural contents using stamps to add joy to daily life.')}
+                      {t('체계적인 커리큘럼과 실전 중심의 교육을 통해 ', 'Through a systematic curriculum and practical-oriented education,')}
+                      <br className="hidden md:block" />                      
+                      {t('전문 강사와 창작자를 배출하고,', 'we produce professional instructors and creators,')}
+                      <br className="hidden md:block" />
+                      {t('스탬프를 활용한 다양한 문화 콘텐츠를 보급하여 일상의 즐거움을 더합니다.', 'and spread various cultural contents using stamps to add joy to daily life.')}
                     </p>
                   </div>
                 </div>
