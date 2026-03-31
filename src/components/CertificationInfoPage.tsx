@@ -87,31 +87,34 @@ const CertificationInfoPage: React.FC<CertificationInfoPageProps> = ({ t, setSho
       exit={{ opacity: 0 }}
       className="pt-20"
     >
-      {/* Hero Section */}
-      <div className="relative py-24 overflow-hidden bg-white dark:bg-[#121212]">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
-          <div className="text-center">
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: isMobile ? 0.3 : 0.6 }}
-            >
-              <div className="flex items-center justify-center gap-4 mb-6">
-                <div className="h-[1px] w-12 bg-emerald-600/30 dark:bg-emerald-400/30" />
-                <span className="text-[11px] font-bold tracking-[0.4em] uppercase text-emerald-600 dark:text-emerald-400">CERTIFICATION INFO</span>
-                <div className="h-[1px] w-12 bg-emerald-600/30 dark:bg-emerald-400/30" />
-              </div>
-              <h1 className="text-4xl md:text-6xl font-sans font-medium text-black dark:text-white leading-[1.1] mb-8 tracking-tight">
-                {t('스탬프제작지도사', 'Stamp Making Instructor')}<br />
-                <span className="text-emerald-500">{t('자격증 안내', 'Certification Guide')}</span>
-              </h1>
-              <p className="text-center text-gray-600 dark:text-gray-400 max-w-2xl mx-auto text-lg font-light leading-relaxed">
-                {t('전문적인 스탬프 제작 기술을 습득하고 교육 전문가로 거듭나기 위한 체계적인 교육 과정을 안내해 드립니다.', 'We guide you through a systematic curriculum to acquire professional stamp making skills and become an education expert.')}
-              </p>
-            </motion.div>
-          </div>
+      {/* Hero Section - Editorial Style */}
+      <section className="relative py-24 md:py-32 bg-white dark:bg-[#0a0a0a] overflow-hidden transition-colors duration-500">
+        <div className="absolute inset-0 z-0">
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(16,185,129,0.05)_0%,transparent_50%)] dark:bg-[radial-gradient(circle_at_50%_50%,rgba(16,185,129,0.1)_0%,transparent_50%)]"></div>
+          <div className="absolute top-0 left-0 w-full h-full bg-[url('https://www.transparenttextures.com/patterns/stardust.png')] opacity-10 dark:opacity-20"></div>
         </div>
-      </div>
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+          <motion.div 
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: isMobile ? 0.5 : 0.8 }}
+            className="text-center max-w-4xl mx-auto"
+          >
+            <div className="flex items-center justify-center gap-4 mb-8">
+              <div className="h-[1px] w-12 bg-emerald-500/50" />
+              <span className="text-[11px] font-bold tracking-[0.4em] uppercase text-emerald-600 dark:text-emerald-400">CERTIFICATION INFO</span>
+              <div className="h-[1px] w-12 bg-emerald-500/50" />
+            </div>
+            <h1 className="text-4xl md:text-6xl lg:text-7xl font-sans font-medium text-black dark:text-white leading-[1.1] tracking-tighter mb-8">
+              {t('스탬프제작지도사', 'Stamp Making Instructor')}<br />
+              <span className="text-emerald-600 dark:text-emerald-500">{t('자격증 안내', 'Certification Guide')}</span>
+            </h1>
+            <p className="text-lg md:text-xl text-gray-600 dark:text-gray-400 font-light max-w-2xl mx-auto leading-relaxed">
+              {t('전문적인 스탬프 제작 기술을 습득하고 교육 전문가로 거듭나기 위한 체계적인 교육 과정을 안내해 드립니다.', 'We guide you through a systematic curriculum to acquire professional stamp making skills and become an education expert.')}
+            </p>
+          </motion.div>
+        </div>
+      </section>
 
       {/* Growth Stages Infographic */}
       <div className="py-24 bg-emerald-50/40 dark:bg-emerald-900/5 border-y border-black/5 dark:border-white/5 transition-colors duration-300">
@@ -233,12 +236,12 @@ const CertificationInfoPage: React.FC<CertificationInfoPageProps> = ({ t, setSho
                 id: '2급',
                 level: t('2급 (기초)', 'Level 2 (Basic)'),
                 title: t('스탬프 제작의 기초', 'Basics of Stamp Making'),
-                desc: t('스탬프 제작의 기본 원리를 이해하고 기초적인 제작 기술을 습득하는 과정입니다.', 'A course to understand the basic principles of stamp making and acquire basic production techniques.'),
+                desc: t('스탬프 제작의 기본 원리와 제작 과정을 이해하고,\n기초적인 도안 구성과 제작 실습을 통해\n기본 역량을 습득하는 과정입니다.', 'A course to understand the basic principles and production processes of stamp making, and acquire basic competencies through basic design composition and production practice.'),
                 items: [
-                  t('스탬프 제작 도구 및 재료 이해', 'Understanding tools and materials'),
-                  t('기본 디자인 전사 및 조각 기법', 'Basic design transfer and carving'),
-                  t('잉크 패드 활용 및 찍기 기초', 'Ink pad utilization and stamping basics'),
-                  t('간단한 문구 및 로고 제작', 'Simple text and logo production')
+                  t('스탬프 제작 원리 및 재료 이해', 'Understanding stamp making principles and materials'),
+                  t('손글씨 및 기본 도안 제작 방법', 'Handwriting and basic design production methods'),
+                  t('팝핑머신을 활용한 제작 실습', 'Production practice using a popping machine'),
+                  t('간단한 문구 및 로고 스탬프 제작', 'Simple text and logo stamp production')
                 ],
                 icon: <BookOpen className="w-6 h-6" />,
                 color: 'bg-emerald-300 text-emerald-950 dark:bg-emerald-800 dark:text-emerald-50'
@@ -246,13 +249,13 @@ const CertificationInfoPage: React.FC<CertificationInfoPageProps> = ({ t, setSho
               {
                 id: '1급',
                 level: t('1급 (심화)', 'Level 1 (Advanced)'),
-                title: t('전문 제작 및 디자인', 'Professional Production & Design'),
-                desc: t('다양한 재료와 정교한 디자인을 활용하여 상업적 가치가 있는 스탬프를 제작하는 과정입니다.', 'A course to produce stamps with commercial value using various materials and sophisticated designs.'),
+                title: t('상업용 스탬프 제작 및 지도', 'Commercial Stamp Production & Instruction'),
+                desc: t('실무 중심의 제작 기술을 바탕으로,\n상업적 활용이 가능한 스탬프를 제작하고\n기초 교육을 진행할 수 있는 과정입니다.', 'Based on practical production techniques, this is a course where you can produce stamps for commercial use and conduct basic education.'),
                 items: [
-                  t('정교한 인물 및 풍경 조각 기법', 'Sophisticated figure and landscape carving'),
-                  t('다색 스탬프 제작 및 레이어링', 'Multi-color stamp production and layering'),
-                  t('디지털 툴 연계 디자인 최적화', 'Design optimization linked with digital tools'),
-                  t('상업용 패키징 및 브랜딩 기초', 'Commercial packaging and branding basics')
+                  t('상업용 스탬프 제작 및 응용 기술', 'Commercial stamp production and application techniques'),
+                  t('다양한 도안 구성 및 디자인 활용', 'Various design composition and design utilization'),
+                  t('스탬프 제작 지도 방법 기초', 'Basics of stamp making instruction methods'),
+                  t('공방 및 체험 수업 운영 기초 이해', 'Basic understanding of workshop and experience class operation')
                 ],
                 icon: <Stamp className="w-6 h-6" />,
                 color: 'bg-emerald-500 text-white dark:bg-emerald-600 dark:text-white',
@@ -261,13 +264,13 @@ const CertificationInfoPage: React.FC<CertificationInfoPageProps> = ({ t, setSho
               {
                 id: '마스터',
                 level: t('마스터 (전문가)', 'Master (Expert)'),
-                title: t('교육 및 비즈니스 마스터', 'Education & Business Master'),
-                desc: t('최고 수준의 제작 기술과 함께 교육 커리큘럼 설계 및 공방 운영 노하우를 전수받는 과정입니다.', 'A course to receive the highest level of production technology along with education curriculum design and workshop operation know-how.'),
+                title: t('교육 및 창업·강사 과정', 'Education & Startup/Instructor Course'),
+                desc: t('고급 제작 기술과 함께 교육 커리큘럼을 설계하고,\n강사 및 창업자로서 활동할 수 있는\n전문 역량을 갖추는 과정입니다.', 'A course to design an educational curriculum along with advanced production techniques, and acquire professional competencies to work as an instructor and founder.'),
                 items: [
-                  t('최고 난이도 창작 작품 제작', 'Production of highest difficulty creative works'),
-                  t('단계별 교육 커리큘럼 설계법', 'Step-by-step education curriculum design'),
-                  t('공방 창업 및 비즈니스 모델 구축', 'Workshop startup and business model construction'),
-                  t('강사 활동을 위한 교수법 및 스피치', 'Teaching methods and speech for instructors')
+                  t('고급 스탬프 제작 및 창작 작품 구현', 'Advanced stamp production and creative work implementation'),
+                  t('단계별 교육 커리큘럼 설계 및 지도법', 'Step-by-step education curriculum design and teaching methods'),
+                  t('체험 프로그램 및 강의 운영 방법', 'Experience program and lecture operation methods'),
+                  t('공방 창업 및 비즈니스 모델 구축', 'Workshop startup and business model construction')
                 ],
                 icon: <Award className="w-6 h-6" />,
                 color: 'bg-emerald-700 text-white dark:bg-emerald-400 dark:text-emerald-950'
@@ -296,7 +299,7 @@ const CertificationInfoPage: React.FC<CertificationInfoPageProps> = ({ t, setSho
                 <div className="mb-6">
                   <span className="text-xs font-bold tracking-widest uppercase text-emerald-600 dark:text-emerald-400 mb-2 block">{cert.level}</span>
                   <h4 className="text-xl font-bold text-black dark:text-white mb-3">{cert.title}</h4>
-                  <p className="text-sm text-gray-500 dark:text-gray-400 leading-relaxed">{cert.desc}</p>
+                  <p className="text-sm text-gray-500 dark:text-gray-400 leading-relaxed whitespace-pre-line">{cert.desc}</p>
                 </div>
                 <div className="space-y-3 mt-auto">
                   {cert.items.map((item, i) => (
@@ -537,14 +540,17 @@ const CertificationInfoPage: React.FC<CertificationInfoPageProps> = ({ t, setSho
       </div>
 
       {/* FAQ Banner Section */}
-      <div className="py-24 bg-white dark:bg-[#121212] border-t border-black/5 dark:border-white/5">
+      <section className="py-24 bg-white dark:bg-[#0a0a0a] transition-colors duration-500">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="bg-[#111] rounded-[2rem] p-8 md:p-12 border border-black/5 dark:border-white/5 flex flex-col md:flex-row items-center justify-between gap-8">
-            <div className="text-left">
-              <h3 className="text-2xl md:text-3xl font-sans font-medium text-white mb-4">
+          <div className="bg-[#050505] rounded-[2.5rem] p-10 md:p-16 flex flex-col md:flex-row items-center justify-between gap-10 relative overflow-hidden">
+            <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/stardust.png')] opacity-20"></div>
+            <div className="absolute top-0 right-0 w-64 h-64 bg-emerald-500/10 blur-[100px] rounded-full"></div>
+            
+            <div className="text-left relative z-10">
+              <h3 className="text-3xl md:text-4xl font-sans font-medium text-white mb-6 tracking-tighter">
                 {t('더 궁금한 점이 있으신가요?', 'Have more questions?')}
               </h3>
-              <p className="text-gray-400 font-light text-base md:text-lg leading-relaxed max-w-2xl">
+              <p className="text-gray-400 font-light text-lg leading-relaxed max-w-2xl">
                 {t('시험 응시 및 자격증 발급과 관련하여 가장 많이 궁금해하시는 질문들을 모았습니다.', 'We have collected the most frequently asked questions regarding exam application and certification issuance.')}
               </p>
             </div>
@@ -553,14 +559,14 @@ const CertificationInfoPage: React.FC<CertificationInfoPageProps> = ({ t, setSho
                 window.scrollTo(0, 0);
                 if (setCurrentPage) setCurrentPage('faq');
               }}
-              className="shrink-0 px-8 py-4 bg-[#222] text-white rounded-full font-bold hover:bg-[#333] transition-all inline-flex items-center gap-3"
+              className="shrink-0 px-10 py-5 bg-white text-black rounded-full font-bold hover:bg-emerald-50 transition-colors inline-flex items-center gap-3 relative z-10"
             >
               <span>{t('자주 묻는 질문', 'FAQ')}</span>
-              <ChevronRight className="w-5 h-5 text-emerald-500" />
+              <ChevronRight className="w-5 h-5" />
             </button>
           </div>
         </div>
-      </div>
+      </section>
 
     </motion.div>
   );
