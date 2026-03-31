@@ -117,184 +117,211 @@ const FaqPage: React.FC<Props> = ({ t, isMobile }) => {
   }, [selectedCategory]);
 
   return (
-    <div className="pt-32 pb-24 bg-white dark:bg-[#121212] min-h-screen transition-colors duration-500">
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 mb-24">
-        {/* Header */}
-        <div className="text-center mb-16">
+    <div className="bg-white dark:bg-[#0a0a0a] min-h-screen transition-colors duration-500">
+      {/* Hero Section */}
+      <section className="relative pt-32 pb-16 md:pt-40 md:pb-24 overflow-hidden">
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(16,185,129,0.05),transparent_50%)] dark:bg-[radial-gradient(circle_at_top_right,rgba(16,185,129,0.1),transparent_50%)]"></div>
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: isMobile ? 0.3 : 0.6 }}
+            transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+            className="text-center max-w-3xl mx-auto"
           >
-            <div className="flex items-center justify-center gap-4 mb-6">
-              <div className="h-[1px] w-12 bg-emerald-600" />
-              <span className="text-[11px] font-bold tracking-[0.4em] uppercase text-emerald-600">FAQ</span>
-              <div className="h-[1px] w-12 bg-emerald-600" />
+            <div className="flex items-center justify-center gap-4 mb-8">
+              <div className="h-[1px] w-12 bg-black dark:bg-white" />
+              <span className="text-[11px] font-bold tracking-[0.4em] uppercase text-black dark:text-white">FAQ</span>
+              <div className="h-[1px] w-12 bg-black dark:bg-white" />
             </div>
-            <h1 className="text-4xl md:text-5xl font-bold text-black dark:text-white tracking-tighter mb-6">
+            <h1 className="text-5xl md:text-7xl font-sans font-medium text-black dark:text-white tracking-tighter mb-8 leading-[1.1]">
               {t('자주 묻는 질문', 'Frequently Asked Questions')}
             </h1>
-            <p className="text-center text-gray-500 dark:text-gray-400 max-w-2xl mx-auto">
+            <p className="text-lg md:text-xl text-gray-500 dark:text-gray-400 leading-relaxed font-light">
               {t('궁금하신 점을 빠르게 확인하실 수 있습니다.', 'Find answers to your questions quickly.')} <br className="hidden md:block" />
               {t('찾으시는 내용이 없다면 고객센터로 문의해 주세요.', 'If you cannot find what you are looking for, please contact customer support.')}
             </p>
           </motion.div>
         </div>
+      </section>
 
-        {/* Filter */}
-        <div className="mb-12">
-          <div className="flex overflow-x-auto gap-2 md:justify-center pb-4 md:pb-0 scrollbar-hide snap-x px-4 md:px-0 -mx-4 md:mx-0">
-            {categories.map((category) => (
-              <button
-                key={category}
-                onClick={() => setSelectedCategory(category)}
-                className={`shrink-0 snap-start px-6 py-2 rounded-full text-xs font-bold tracking-wider transition-all ${
-                  selectedCategory === category
-                    ? 'bg-emerald-500 text-white shadow-lg shadow-emerald-500/20'
-                    : 'bg-gray-100 dark:bg-white/5 text-gray-600 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-white/10'
-                }`}
-              >
-                {category === "전체" ? t("전체", "All") :
-                 category === "자격증 발급" ? t("자격증 발급", "Certificate Issuance") :
-                 category === "시험/접수" ? t("시험/접수", "Exam/Apply") :
-                 category === "결제/환불" ? t("결제/환불", "Payment/Refund") : category}
-              </button>
-            ))}
-          </div>
-        </div>
-
-        {/* FAQ List */}
-        <div className="space-y-4">
-          {filteredFaqs.length > 0 ? (
-            filteredFaqs.map((faq, index) => (
-              <div
-                key={faq.question}
-                className="group"
-              >
+      {/* FAQ Content Section */}
+      <section className="pb-24">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+          {/* Filter */}
+          <div className="mb-16 flex justify-center">
+            <div className="inline-flex bg-gray-100/50 dark:bg-white/5 p-1.5 rounded-full backdrop-blur-sm border border-black/5 dark:border-white/5 overflow-x-auto max-w-full scrollbar-hide">
+              {categories.map((category) => (
                 <button
-                  onClick={() => setActiveQuestion(activeQuestion === faq.question ? null : faq.question)}
-                  className={`w-full text-left p-6 rounded-2xl border transition-all duration-300 ${
-                    activeQuestion === faq.question
-                      ? 'bg-emerald-50/50 dark:bg-emerald-500/5 border-emerald-500/30'
-                      : 'bg-white dark:bg-[#121212] border-black/5 dark:border-white/5 hover:border-emerald-500/30'
+                  key={category}
+                  onClick={() => setSelectedCategory(category)}
+                  className={`shrink-0 px-6 py-2.5 rounded-full text-sm font-medium tracking-wide transition-all duration-300 ${
+                    selectedCategory === category
+                      ? 'bg-white dark:bg-[#222] text-black dark:text-white shadow-sm'
+                      : 'text-gray-500 dark:text-gray-400 hover:text-black dark:hover:text-white'
                   }`}
                 >
-                  <div className="flex justify-between items-center gap-4">
-                    <div className="flex items-start gap-4">
-                      <span className={`text-lg font-bold ${activeQuestion === faq.question ? 'text-emerald-500' : 'text-gray-400'}`}>Q.</span>
-                      <span className="font-bold text-black dark:text-white leading-tight">{t(faq.question, faq.questionEn)}</span>
-                    </div>
-                    <ChevronDown className={`w-5 h-5 text-gray-400 transition-transform duration-300 ${activeQuestion === faq.question ? 'rotate-180 text-emerald-500' : ''}`} />
-                  </div>
-                  
-                  <AnimatePresence>
-                    {activeQuestion === faq.question && (
-                      <motion.div
-                        initial={{ height: 0, opacity: 0 }}
-                        animate={{ height: 'auto', opacity: 1 }}
-                        exit={{ height: 0, opacity: 0 }}
-                        transition={{ duration: isMobile ? 0.15 : 0.3 }}
-                        className="overflow-hidden"
-                      >
-                        <div className="mt-4 text-gray-600 dark:text-gray-400 leading-relaxed text-sm">
-                          {t(faq.answer, faq.answerEn)}
-                          {faq.images && (
-                            <div className="flex gap-4 mt-6">
-                              {faq.images.map((img, i) => (
-                                <img 
-                                  key={i} 
-                                  src={img} 
-                                  alt={`License ${i+1}`} 
-                                  className="w-24 h-32 object-cover rounded-lg cursor-pointer hover:opacity-80 transition-opacity shadow-sm"
-                                  onClick={(e) => {
-                                    e.stopPropagation();
-                                    setSelectedImage(img);
-                                  }}
-                                />
-                              ))}
-                            </div>
-                          )}
-                        </div>
-                      </motion.div>
-                    )}
-                  </AnimatePresence>
+                  {category === "전체" ? t("전체", "All") :
+                   category === "자격증 발급" ? t("자격증 발급", "Certificate Issuance") :
+                   category === "시험/접수" ? t("시험/접수", "Exam/Apply") :
+                   category === "결제/환불" ? t("결제/환불", "Payment/Refund") : category}
                 </button>
-              </div>
-            ))
-          ) : (
-            <div className="text-center py-20 bg-gray-50 dark:bg-white/5 rounded-3xl border border-dashed border-black/10 dark:border-white/10">
-              <p className="text-gray-500 dark:text-gray-400">{t('검색 결과가 없습니다.', 'No results found.')}</p>
+              ))}
             </div>
-          )}
+          </div>
+
+          {/* FAQ List */}
+          <div className="space-y-4">
+            {filteredFaqs.length > 0 ? (
+              filteredFaqs.map((faq, index) => (
+                <motion.div
+                  key={faq.question}
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: index * 0.05 }}
+                  className="group"
+                >
+                  <button
+                    onClick={() => setActiveQuestion(activeQuestion === faq.question ? null : faq.question)}
+                    className={`w-full text-left p-6 md:p-8 rounded-[2rem] border transition-all duration-500 ${
+                      activeQuestion === faq.question
+                        ? 'bg-emerald-50/50 dark:bg-emerald-900/10 border-emerald-500/30 shadow-sm'
+                        : 'bg-white dark:bg-[#111] border-black/5 dark:border-white/5 hover:border-black/20 dark:hover:border-white/20 hover:bg-gray-50 dark:hover:bg-white/5'
+                    }`}
+                  >
+                    <div className="flex justify-between items-center gap-6">
+                      <div className="flex items-start gap-4 md:gap-6">
+                        <span className={`text-xl font-sans font-medium mt-0.5 ${activeQuestion === faq.question ? 'text-emerald-500' : 'text-gray-400 dark:text-gray-500'}`}>Q.</span>
+                        <span className={`text-lg md:text-xl font-sans font-medium leading-tight transition-colors duration-300 ${activeQuestion === faq.question ? 'text-emerald-600 dark:text-emerald-400' : 'text-black dark:text-white'}`}>
+                          {t(faq.question, faq.questionEn)}
+                        </span>
+                      </div>
+                      <div className={`w-10 h-10 rounded-full flex items-center justify-center shrink-0 transition-colors duration-300 ${activeQuestion === faq.question ? 'bg-emerald-100 dark:bg-emerald-900/30 text-emerald-600 dark:text-emerald-400' : 'bg-gray-100 dark:bg-white/5 text-gray-400 dark:text-gray-500 group-hover:bg-gray-200 dark:group-hover:bg-white/10'}`}>
+                        <ChevronDown className={`w-5 h-5 transition-transform duration-500 ${activeQuestion === faq.question ? 'rotate-180' : ''}`} />
+                      </div>
+                    </div>
+                    
+                    <AnimatePresence>
+                      {activeQuestion === faq.question && (
+                        <motion.div
+                          initial={{ height: 0, opacity: 0 }}
+                          animate={{ height: 'auto', opacity: 1 }}
+                          exit={{ height: 0, opacity: 0 }}
+                          transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
+                          className="overflow-hidden"
+                        >
+                          <div className="pt-6 mt-6 border-t border-black/5 dark:border-white/5">
+                            <div className="flex items-start gap-4 md:gap-6">
+                              <span className="text-xl font-sans font-medium text-emerald-500 mt-0.5">A.</span>
+                              <div className="text-gray-600 dark:text-gray-400 leading-relaxed text-base md:text-lg font-light">
+                                {t(faq.answer, faq.answerEn)}
+                                {faq.images && (
+                                  <div className="flex flex-wrap gap-4 mt-8">
+                                    {faq.images.map((img, i) => (
+                                      <div 
+                                        key={i} 
+                                        className="relative group/img cursor-pointer"
+                                        onClick={(e) => {
+                                          e.stopPropagation();
+                                          setSelectedImage(img);
+                                        }}
+                                      >
+                                        <div className="absolute inset-0 bg-black/20 opacity-0 group-hover/img:opacity-100 transition-opacity duration-300 rounded-xl flex items-center justify-center pointer-events-none">
+                                          <Search className="w-6 h-6 text-white" />
+                                        </div>
+                                        <img 
+                                          src={img} 
+                                          alt={`Reference ${i+1}`} 
+                                          className="w-32 h-40 object-cover rounded-xl shadow-sm border border-black/5 dark:border-white/5"
+                                        />
+                                      </div>
+                                    ))}
+                                  </div>
+                                )}
+                              </div>
+                            </div>
+                          </div>
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
+                  </button>
+                </motion.div>
+              ))
+            ) : (
+              <div className="text-center py-24 bg-gray-50 dark:bg-[#111] rounded-[2.5rem] border border-dashed border-black/10 dark:border-white/10">
+                <MessageCircle className="w-12 h-12 text-gray-300 dark:text-gray-600 mx-auto mb-4" />
+                <p className="text-gray-500 dark:text-gray-400 font-medium">{t('검색 결과가 없습니다.', 'No results found.')}</p>
+              </div>
+            )}
+          </div>
         </div>
-      </div>
+      </section>
 
       {/* Visit Us Section - Redesigned to match page style */}
-      <div id="visit-us" className="py-24 bg-emerald-50/40 dark:bg-emerald-900/5 border-t border-black/5 dark:border-white/5">
+      <section id="visit-us" className="py-24 bg-gray-50 dark:bg-[#050505] transition-colors duration-500">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-left md:text-center mb-16">
-            <h2 className="text-[11px] font-bold tracking-[0.4em] uppercase text-black dark:text-white mb-6 flex items-center justify-start md:justify-center gap-4">
-              <span className="w-12 h-[1px] bg-black dark:bg-white"></span>
-              VISIT US
-              <span className="hidden md:block w-12 h-[1px] bg-black dark:bg-white"></span>
-            </h2>
-            <h3 className="text-[36px] font-normal text-black dark:text-white leading-tight tracking-tight">
-              {t('고객센터 안내', 'Customer Support')}
+          <div className="text-center mb-20">
+            <div className="flex items-center justify-center gap-4 mb-6">
+              <div className="h-[1px] w-12 bg-black dark:bg-white" />
+              <span className="text-[11px] font-bold tracking-[0.4em] uppercase text-black dark:text-white">CUSTOMER SUPPORT</span>
+              <div className="h-[1px] w-12 bg-black dark:bg-white" />
+            </div>
+            <h3 className="text-3xl md:text-4xl font-sans font-medium text-black dark:text-white tracking-tighter">
+              {t('고객센터 안내', 'Contact Us')}
             </h3>
           </div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 md:gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
             {/* Address Card */}
-            <div className="bg-gray-50 dark:bg-white/5 p-8 md:p-10 rounded-[2.5rem] border border-black/5 dark:border-white/5 text-center group hover:border-black/30 dark:hover:border-white/30 transition-all duration-500">
-              <div className="w-14 h-14 md:w-16 md:h-16 bg-black dark:bg-white text-white dark:text-black rounded-2xl flex items-center justify-center shadow-lg mx-auto mb-6 md:mb-8 group-hover:scale-110 transition-transform">
-                <MapPin className="w-7 h-7 md:w-8 md:h-8" />
+            <div className="bg-white dark:bg-[#111] p-10 md:p-12 rounded-[2.5rem] border border-black/5 dark:border-white/5 text-center group hover:border-emerald-500/30 hover:bg-emerald-50/30 dark:hover:bg-emerald-900/10 transition-all duration-500">
+              <div className="w-16 h-16 bg-gray-50 dark:bg-white/5 text-black dark:text-white rounded-2xl flex items-center justify-center mx-auto mb-8 group-hover:scale-110 group-hover:bg-emerald-500 group-hover:text-white transition-all duration-500">
+                <MapPin className="w-8 h-8" />
               </div>
-              <h4 className="text-xl font-bold text-black dark:text-white mb-3">{t('주소', 'Address')}</h4>
-              <p className="text-gray-500 dark:text-gray-400 mb-1">{t('대전광역시 서구 갈마역로 155', '155, Galma-yeok-ro, Seo-gu, Daejeon')}</p>
-              <p className="text-sm text-gray-400 dark:text-gray-500 mb-6">{t('(월평2동 행정복지센터 인근)', '(Near Wolpyeong 2-dong Community Center)')}</p>
+              <h4 className="text-xl font-sans font-medium text-black dark:text-white mb-4 tracking-tight">{t('주소', 'Address')}</h4>
+              <p className="text-gray-500 dark:text-gray-400 mb-2 font-light leading-relaxed">{t('대전광역시 서구 갈마역로 155', '155, Galma-yeok-ro, Seo-gu, Daejeon')}</p>
+              <p className="text-sm text-gray-400 dark:text-gray-500 mb-8 font-light">{t('(월평2동 행정복지센터 인근)', '(Near Wolpyeong 2-dong Community Center)')}</p>
               <a 
                 href="https://map.naver.com/v5/search/%EB%8C%80%EC%A0%84%EA%B0%88%EB%A7%88%EC%97%AD%EB%A1%9C155/address/14178351.468305739,4348507.410123518,15,0,0,0,dh" 
                 target="_blank" 
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 text-emerald-600 font-bold hover:underline"
+                className="inline-flex items-center gap-2 text-sm font-bold tracking-wide text-black dark:text-white hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors uppercase"
               >
                 {t('네이버 지도 열기', 'Open Naver Map')} <ExternalLink className="w-4 h-4" />
               </a>
             </div>
 
             {/* Phone Card */}
-            <div className="bg-gray-50 dark:bg-white/5 p-8 md:p-10 rounded-[2.5rem] border border-black/5 dark:border-white/5 text-center group hover:border-black/30 dark:hover:border-white/30 transition-all duration-500">
-              <div className="w-14 h-14 md:w-16 md:h-16 bg-black dark:bg-white text-white dark:text-black rounded-2xl flex items-center justify-center shadow-lg mx-auto mb-6 md:mb-8 group-hover:scale-110 transition-transform">
-                <Phone className="w-7 h-7 md:w-8 md:h-8" />
+            <div className="bg-white dark:bg-[#111] p-10 md:p-12 rounded-[2.5rem] border border-black/5 dark:border-white/5 text-center group hover:border-emerald-500/30 hover:bg-emerald-50/30 dark:hover:bg-emerald-900/10 transition-all duration-500">
+              <div className="w-16 h-16 bg-gray-50 dark:bg-white/5 text-black dark:text-white rounded-2xl flex items-center justify-center mx-auto mb-8 group-hover:scale-110 group-hover:bg-emerald-500 group-hover:text-white transition-all duration-500">
+                <Phone className="w-8 h-8" />
               </div>
-              <h4 className="text-xl font-bold text-black dark:text-white mb-3">{t('전화번호', 'Phone')}</h4>
-              <p className="text-gray-500 dark:text-gray-400 mb-1">010-8409-2802</p>
-              <p className="text-sm text-gray-400 dark:text-gray-500 mb-6">{t('평일 10:00 - 18:00 (주말 휴무)', 'Weekdays 10:00 - 18:00 (Closed on weekends)')}</p>
+              <h4 className="text-xl font-sans font-medium text-black dark:text-white mb-4 tracking-tight">{t('전화번호', 'Phone')}</h4>
+              <p className="text-gray-500 dark:text-gray-400 mb-2 font-light leading-relaxed">010-8409-2802</p>
+              <p className="text-sm text-gray-400 dark:text-gray-500 mb-8 font-light">{t('평일 10:00 - 18:00 (주말 휴무)', 'Weekdays 10:00 - 18:00 (Closed on weekends)')}</p>
               <a 
                 href="tel:010-8409-2802" 
-                className="inline-flex items-center gap-2 text-emerald-600 font-bold hover:underline"
+                className="inline-flex items-center gap-2 text-sm font-bold tracking-wide text-black dark:text-white hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors uppercase"
               >
                 {t('전화하기', 'Call Now')} <ExternalLink className="w-4 h-4" />
               </a>
             </div>
 
             {/* Email Card */}
-            <div className="bg-gray-50 dark:bg-white/5 p-8 md:p-10 rounded-[2.5rem] border border-black/5 dark:border-white/5 text-center group hover:border-black/30 dark:hover:border-white/30 transition-all duration-500">
-              <div className="w-14 h-14 md:w-16 md:h-16 bg-black dark:bg-white text-white dark:text-black rounded-2xl flex items-center justify-center shadow-lg mx-auto mb-6 md:mb-8 group-hover:scale-110 transition-transform">
-                <Mail className="w-7 h-7 md:w-8 md:h-8" />
+            <div className="bg-white dark:bg-[#111] p-10 md:p-12 rounded-[2.5rem] border border-black/5 dark:border-white/5 text-center group hover:border-emerald-500/30 hover:bg-emerald-50/30 dark:hover:bg-emerald-900/10 transition-all duration-500">
+              <div className="w-16 h-16 bg-gray-50 dark:bg-white/5 text-black dark:text-white rounded-2xl flex items-center justify-center mx-auto mb-8 group-hover:scale-110 group-hover:bg-emerald-500 group-hover:text-white transition-all duration-500">
+                <Mail className="w-8 h-8" />
               </div>
-              <h4 className="text-xl font-bold text-black dark:text-white mb-3">{t('이메일', 'Email')}</h4>
-              <p className="text-gray-500 dark:text-gray-400 mb-6">ksei2025@naver.com</p>
+              <h4 className="text-xl font-sans font-medium text-black dark:text-white mb-4 tracking-tight">{t('이메일', 'Email')}</h4>
+              <p className="text-gray-500 dark:text-gray-400 mb-8 font-light leading-relaxed">ksei2025@naver.com</p>
               <a 
                 href="mailto:ksei2025@naver.com" 
-                className="inline-flex items-center gap-2 text-emerald-600 font-bold hover:underline"
+                className="inline-flex items-center gap-2 text-sm font-bold tracking-wide text-black dark:text-white hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors uppercase"
               >
                 {t('이메일 보내기', 'Send Email')} <ExternalLink className="w-4 h-4" />
               </a>
             </div>
           </div>
         </div>
-      </div>
+      </section>
 
       {/* Image Modal */}
       <AnimatePresence>
