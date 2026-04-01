@@ -487,7 +487,7 @@ export default function ExamPage({ t, setShowApplyModal, setCurrentPage, isMobil
               { 
                 title: t('우수 포트폴리오 예시', 'Excellent Portfolio Example'), 
                 desc: t('다양한 스탬프 기법을 활용한 우수 포트폴리오 영상입니다.', 'This is an excellent portfolio video using various stamp techniques.'),
-                url: "https://www.youtube.com/embed/pdh9Wr2bKJY"
+                url: "https://www.youtube.com/embed/fjo26-SntiE"
               },
               { 
                 title: t('실기 시험 진행 예시 및 촬영 가이드', 'Practical Exam Process & Filming Guide'), 
