@@ -301,28 +301,28 @@ export default function App() {
                 <img src="https://i.ibb.co/Dfv01BhW/Logo.png" alt="KSEI Logo" className="w-8 h-8 object-contain transition-transform duration-500 group-hover:rotate-12" />
                 <div className="absolute inset-0 bg-emerald-500/20 blur-xl rounded-full opacity-0 group-hover:opacity-100 transition-opacity" />
               </div>
-              <span className={`hidden md:block text-[10px] font-bold tracking-[0.25em] uppercase transition-colors ${isScrolled || currentPage !== 'home' ? 'text-black dark:text-white' : 'text-white'}`}>
+              <span className={`hidden md:block text-[10px] font-bold tracking-[0.25em] uppercase transition-colors ${isScrolled || currentPage !== 'home' ? 'text-black dark:text-white' : 'text-black dark:text-white'}`}>
                 {t('한국스탬프교육진흥원', 'Korea Stamp Education Institute')}
               </span>
             </div>
             
             {/* Desktop Menu */}
             <div className="hidden md:flex items-center gap-10">
-              <button onClick={scrollToTop} className={`text-[10px] font-bold tracking-[0.2em] uppercase transition-all hover:tracking-[0.25em] ${currentPage === 'home' ? 'text-emerald-600 dark:text-emerald-400' : isScrolled || currentPage !== 'home' ? 'text-gray-500 hover:text-black dark:text-gray-400 dark:hover:text-white' : 'text-gray-300 hover:text-white'}`}>{t('기관소개', 'COMPANY')}</button>
-              <button onClick={() => { setCurrentPage('cert-info'); window.scrollTo(0, 0); }} className={`text-[10px] font-bold tracking-[0.2em] uppercase transition-all hover:tracking-[0.25em] ${currentPage === 'cert-info' ? 'text-emerald-600 dark:text-emerald-400' : isScrolled || currentPage !== 'home' ? 'text-gray-500 hover:text-black dark:text-gray-400 dark:hover:text-white' : 'text-gray-300 hover:text-white'}`}>{t('자격증안내', 'CERTIFICATION')}</button>
-              <button onClick={() => { setCurrentPage('certification'); window.scrollTo(0, 0); }} className={`text-[10px] font-bold tracking-[0.2em] uppercase transition-all hover:tracking-[0.25em] ${currentPage === 'certification' ? 'text-emerald-600 dark:text-emerald-400' : isScrolled || currentPage !== 'home' ? 'text-gray-500 hover:text-black dark:text-gray-400 dark:hover:text-white' : 'text-gray-300 hover:text-white'}`}>{t('자격증발급', 'ISSUANCE')}</button>
-              <button onClick={() => { setCurrentPage('exam'); window.scrollTo(0, 0); }} className={`text-[10px] font-bold tracking-[0.2em] uppercase transition-all hover:tracking-[0.25em] ${currentPage === 'exam' ? 'text-emerald-600 dark:text-emerald-400' : isScrolled || currentPage !== 'home' ? 'text-gray-500 hover:text-black dark:text-gray-400 dark:hover:text-white' : 'text-gray-300 hover:text-white'}`}>{t('시험/접수안내', 'EXAM/APPLY')}</button>
-              <button onClick={() => { setCurrentPage('faq'); window.scrollTo(0, 0); }} className={`text-[10px] font-bold tracking-[0.2em] uppercase transition-all hover:tracking-[0.25em] ${currentPage === 'faq' ? 'text-emerald-600 dark:text-emerald-400' : isScrolled || currentPage !== 'home' ? 'text-gray-500 hover:text-black dark:text-gray-400 dark:hover:text-white' : 'text-gray-300 hover:text-white'}`}>{t('자주묻는질문', 'FAQ')}</button>
+              <button onClick={scrollToTop} className={`text-[10px] font-bold tracking-[0.2em] uppercase transition-all hover:tracking-[0.25em] ${currentPage === 'home' ? 'text-emerald-600 dark:text-emerald-400' : isScrolled || currentPage !== 'home' ? 'text-gray-500 hover:text-black dark:text-gray-400 dark:hover:text-white' : 'text-gray-600 hover:text-black dark:text-gray-300 dark:hover:text-white'}`}>{t('기관소개', 'COMPANY')}</button>
+              <button onClick={() => { setCurrentPage('cert-info'); window.scrollTo(0, 0); }} className={`text-[10px] font-bold tracking-[0.2em] uppercase transition-all hover:tracking-[0.25em] ${currentPage === 'cert-info' ? 'text-emerald-600 dark:text-emerald-400' : isScrolled || currentPage !== 'home' ? 'text-gray-500 hover:text-black dark:text-gray-400 dark:hover:text-white' : 'text-gray-600 hover:text-black dark:text-gray-300 dark:hover:text-white'}`}>{t('자격증안내', 'CERTIFICATION')}</button>
+              <button onClick={() => { setCurrentPage('certification'); window.scrollTo(0, 0); }} className={`text-[10px] font-bold tracking-[0.2em] uppercase transition-all hover:tracking-[0.25em] ${currentPage === 'certification' ? 'text-emerald-600 dark:text-emerald-400' : isScrolled || currentPage !== 'home' ? 'text-gray-500 hover:text-black dark:text-gray-400 dark:hover:text-white' : 'text-gray-600 hover:text-black dark:text-gray-300 dark:hover:text-white'}`}>{t('자격증발급', 'ISSUANCE')}</button>
+              <button onClick={() => { setCurrentPage('exam'); window.scrollTo(0, 0); }} className={`text-[10px] font-bold tracking-[0.2em] uppercase transition-all hover:tracking-[0.25em] ${currentPage === 'exam' ? 'text-emerald-600 dark:text-emerald-400' : isScrolled || currentPage !== 'home' ? 'text-gray-500 hover:text-black dark:text-gray-400 dark:hover:text-white' : 'text-gray-600 hover:text-black dark:text-gray-300 dark:hover:text-white'}`}>{t('시험/접수안내', 'EXAM/APPLY')}</button>
+              <button onClick={() => { setCurrentPage('faq'); window.scrollTo(0, 0); }} className={`text-[10px] font-bold tracking-[0.2em] uppercase transition-all hover:tracking-[0.25em] ${currentPage === 'faq' ? 'text-emerald-600 dark:text-emerald-400' : isScrolled || currentPage !== 'home' ? 'text-gray-500 hover:text-black dark:text-gray-400 dark:hover:text-white' : 'text-gray-600 hover:text-black dark:text-gray-300 dark:hover:text-white'}`}>{t('자주묻는질문', 'FAQ')}</button>
               <div className="flex items-center gap-4 ml-4">
                 <button 
                   onClick={() => setTheme(theme === 'light' ? 'dark' : 'light')}
-                  className={`p-2 rounded-full transition-colors ${isScrolled || currentPage !== 'home' ? 'hover:bg-black/5 dark:hover:bg-white/5 text-gray-500 dark:text-gray-400' : 'hover:bg-white/10 text-gray-300'}`}
+                  className={`p-2 rounded-full transition-colors ${isScrolled || currentPage !== 'home' ? 'hover:bg-black/5 dark:hover:bg-white/5 text-gray-500 dark:text-gray-400' : 'hover:bg-black/10 text-gray-600 dark:hover:bg-white/10 dark:text-gray-300'}`}
                 >
                   {theme === 'light' ? <Moon className="w-4 h-4" /> : <Sun className="w-4 h-4" />}
                 </button>
                 <button 
                   onClick={() => setLanguage(language === 'ko' ? 'en' : 'ko')}
-                  className={`text-[10px] font-bold tracking-widest uppercase px-3 py-1 rounded-full border transition-all ${isScrolled || currentPage !== 'home' ? 'border-black/10 text-gray-600 hover:bg-black hover:text-white dark:border-white/10 dark:text-gray-400 dark:hover:bg-white dark:hover:text-black' : 'border-white/20 text-white hover:bg-white hover:text-black'}`}
+                  className={`text-[10px] font-bold tracking-widest uppercase px-3 py-1 rounded-full border transition-all ${isScrolled || currentPage !== 'home' ? 'border-black/10 text-gray-600 hover:bg-black hover:text-white dark:border-white/10 dark:text-gray-400 dark:hover:bg-white dark:hover:text-black' : 'border-black/20 text-black hover:bg-black hover:text-white dark:border-white/20 dark:text-white dark:hover:bg-white dark:hover:text-black'}`}
                 >
                   {language === 'ko' ? 'EN' : 'KO'}
                 </button>
@@ -331,7 +331,7 @@ export default function App() {
 
             {/* Mobile Menu Button */}
             <div className="md:hidden flex items-center gap-4">
-              <button onClick={() => setIsMobileMenuOpen(true)} className={`p-2 ${isScrolled || currentPage !== 'home' ? 'text-black dark:text-white' : 'text-white'}`}>
+              <button onClick={() => setIsMobileMenuOpen(true)} className={`p-2 ${isScrolled || currentPage !== 'home' ? 'text-black dark:text-white' : 'text-black dark:text-white'}`}>
                 <Menu className="w-5 h-5" />
               </button>
             </div>
@@ -383,7 +383,8 @@ export default function App() {
               
                 referrerPolicy="no-referrer"
               />
-              <div className="absolute inset-0 bg-black/40" />
+              <div className="absolute inset-0 bg-white/70 dark:bg-black/60 transition-colors duration-500" />
+              <div className="absolute inset-0 bg-gradient-to-t from-white via-white/20 to-transparent dark:from-[#0a0a0a] dark:via-[#0a0a0a]/20 transition-colors duration-500" />
             </div>
 
             {/* Subtle Background Elements */}
@@ -399,14 +400,14 @@ export default function App() {
                 transition={{ duration: 0.8, ease: "easeOut" }}
                 className="flex flex-col items-center justify-center min-h-[60vh] max-md:-translate-y-16"
               >
-                <span className="inline-block px-4 py-1.5 mb-8 text-[10px] font-bold tracking-[0.3em] uppercase rounded-full bg-white text-emerald-600 shadow-lg">
+                <span className="inline-block px-4 py-1.5 mb-8 text-[10px] font-bold tracking-[0.3em] uppercase rounded-full bg-black text-white dark:bg-white dark:text-emerald-600 shadow-lg transition-colors duration-500">
                   {t('스탬프 교육의 새로운 기준', 'New Standard in Stamp Education')}
                 </span>
-                <h1 className="text-5xl md:text-8xl lg:text-9xl font-black leading-[1.1] tracking-tighter mb-8 uppercase text-white drop-shadow-2xl">
-                  <span className="block drop-shadow-[0_4px_10px_rgba(0,0,0,0.5)]">
+                <h1 className="text-5xl md:text-8xl lg:text-9xl font-black leading-[1.1] tracking-tighter mb-8 uppercase text-black dark:text-white transition-colors duration-500">
+                  <span className="block drop-shadow-sm dark:drop-shadow-[0_4px_10px_rgba(0,0,0,0.5)]">
                     {t('한국스탬프', 'KOREA')}
                   </span>
-                  <span className="text-emerald-500 block drop-shadow-[0_4px_10px_rgba(0,0,0,0.5)]">
+                  <span className="text-emerald-600 dark:text-emerald-500 block drop-shadow-sm dark:drop-shadow-[0_4px_10px_rgba(0,0,0,0.5)]">
                     {t('교육진흥원', 'STAMP')}
                   </span>
                 </h1>
@@ -414,13 +415,13 @@ export default function App() {
             </div>
 
             <div className="absolute bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center gap-4">
-              <span className="text-[10px] font-bold tracking-[0.2em] uppercase text-white/70">
+              <span className="text-[10px] font-bold tracking-[0.2em] uppercase text-black/40 dark:text-white/50 transition-colors duration-500">
                 SCROLL DOWN
               </span>
               <motion.div 
                 animate={{ y: [0, 10, 0] }}
                 transition={{ repeat: Infinity, duration: 2 }}
-                className="w-[1px] h-8 bg-white/50"
+                className="w-[1px] h-8 bg-black/20 dark:bg-white/30 transition-colors duration-500"
               />
             </div>
           </section>
