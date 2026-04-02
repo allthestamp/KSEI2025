@@ -65,7 +65,7 @@ const CertificationInfoPage: React.FC<CertificationInfoPageProps> = ({ t, setSho
     },
     {
       name: "이*현",
-      role: t("마스터 자격증 취득", "Master Certified"),
+      role: t("1급 자격증 취득", "Master Certified"),
       content: t("미술 학원을 운영하면서 아이들에게 새로운 미술 활동을 제공하고 싶어 수강하게 되었습니다. 아이들의 반응이 폭발적이고, 학부모님들의 만족도도 매우 높습니다. 강사로서의 역량을 한 단계 높일 수 있는 훌륭한 과정이었습니다.", "I took this course because I wanted to provide new art activities to children while running an art academy. The children's reactions are explosive, and the parents' satisfaction is very high. It was an excellent course to elevate my skills as an instructor."),
     },
     {
