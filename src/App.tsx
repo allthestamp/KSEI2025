@@ -455,10 +455,10 @@ export default function App() {
                 {/* Statistics Section */}
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-8 md:gap-12 py-12 border-y border-black/5 dark:border-white/5">
                   {[
-                    { label: t('누적 수강생', 'Total Students'), value: '1,500+' },
+                    { label: t('누적 수강생', 'Total Students'), value: '3,000+' },
                     { label: t('운영 클래스', 'Active Classes'), value: '50+' },
-                    { label: t('다양한 스탬프', 'Various Stamps'), value: '100+' },
-                    { label: t('수강 만족도', 'Satisfaction'), value: '98%' }
+                    { label: t('협력 기관', 'Various Stamps'), value: '100+' },
+                    { label: t('수강 만족도', 'Satisfaction'), value: '99%' }
                   ].map((stat, idx) => (
                     <motion.div 
                       key={idx}

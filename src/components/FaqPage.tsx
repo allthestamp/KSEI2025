@@ -41,8 +41,8 @@ const faqs: FaqItem[] = [
     category: "결제/환불",
     question: "수강료 결제는 어떻게 하나요?",
     questionEn: "How do I pay the tuition fee?",
-    answer: "현재 무통장 입금 혹은 계좌이체를 지원하고 있으며, 현금영수증 발행도 가능합니다. 카드 결제는 고객센터에 문의해주세요.",
-    answerEn: "We support bank transfer (manual deposit or account transfer), and cash receipt issuance is available. For credit card payments, please contact customer support."
+    answer: "현재 무통장 입금 혹은 계좌이체를 지원하고 있으며, 현금영수증 발행도 가능합니다.",
+    answerEn: "We support bank transfer (manual deposit or account transfer), and cash receipt issuance is available."
   },
   {
     category: "자격증 발급",
@@ -76,7 +76,7 @@ const faqs: FaqItem[] = [
     category: "시험/접수",
     question: "시험 결과는 언제 발표되나요?",
     questionEn: "When will the exam results be announced?",
-    answer: "실기 시험의 경우 채점 과정을 거쳐 응시일로부터 14일 이내에 홈페이지 공지사항 및 개별 연락을 통해 발표됩니다.",
+    answer: "실기 시험의 경우 채점 과정을 거쳐 응시일로부터 14일 이내에 개별 연락을 통해 발표됩니다.",
     answerEn: "Written exam results can be checked on the same day. Practical exam results are announced within 14 days from the test date through website notices and individual contact after the grading process."
   },
   {
