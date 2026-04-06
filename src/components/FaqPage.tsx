@@ -41,8 +41,8 @@ const faqs: FaqItem[] = [
     category: "시험/접수",
     question: "자격증 응시 시 사용해야 하는 스탬프 제품이 별도로 지정되어 있나요?",
     questionEn: "Is there a specific stamp product required for the certification exam?",
-    answer: "아니요. 스탬프 제품은 별도로 지정되어 있지 않으며, 포트폴리오 스탬프 기준에 맞춰 자유롭게 선택하여 사용하실 수 있습니다. 제품 선택에 어려움이 있으신 경우, 협업 업체에서 판매 중인 스탬프 키트를 참고해 주시기 바랍니다. 관련 제품은 아래 링크에서 확인하실 수 있습니다. \n https://mkt.shopping.naver.com/link/69d31b60c81d717af867bbc3",
-    answerEn: "No, there is no designated stamp product required for the certification exam. You may freely select a product that meets the portfolio stamp requirements. If you are unsure which product to choose, you may refer to the stamp kit provided by our partner company. Please see the link below for more details: \n https://mkt.shopping.naver.com/link/69d31b60c81d717af867bbc3"
+    answer: "아니요. 스탬프 제품은 별도로 지정되어 있지 않으며, 포트폴리오 스탬프 기준에 맞춰 자유롭게 선택하여 사용하실 수 있습니다.\n제품 선택에 어려움이 있으신 경우, 협업 업체에서 판매 중인 스탬프 키트를 참고해 주시기 바랍니다.\n관련 제품은 아래 링크에서 확인하실 수 있습니다.\nhttps://mkt.shopping.naver.com/link/69d31b60c81d717af867bbc3",
+    answerEn: "No, there is no designated stamp product required for the certification exam. You may freely select a product that meets the portfolio stamp requirements.\nIf you are unsure which product to choose, you may refer to the stamp kit provided by our partner company.\nPlease see the link below for more details:\nhttps://mkt.shopping.naver.com/link/69d31b60c81d717af867bbc3"
   },
   {
     category: "결제/환불",
